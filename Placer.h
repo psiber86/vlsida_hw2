@@ -23,6 +23,12 @@ private:
 
     Cell **cells;
 
+    int *forceOrderMap;
+
+    int *lockStatus;
+
+    bool bypassLock;
+
     bool debug;
 
 public:
@@ -34,7 +40,13 @@ public:
 
     void calculateConnectivity();
     
+    void computeTargetLoc(int, int*, int*);
+
+    void findNearestVacantCell(int, int *, int *);
+
     void placeByForceDirected();
+
+    void verifyPlacement();
 
     void mapCellsToLambda();
 };

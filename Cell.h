@@ -37,7 +37,7 @@ public:
 
     void connectTerminals(int, int, int, int);
 
-    int getLinkCount();
+    int getNetCount();
 
     std::map<int, std::pair<int, int> >  getTermNets();
 

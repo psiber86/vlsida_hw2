@@ -27,9 +27,6 @@ int Cell::getCellNum()
 
 void Cell::connectTerminals(int locCell, int locTerm, int remCell, int remTerm)
 {
-//    assert((terms[0][locTerm-1] == 0) && (terms[1][locTerm-1] == 0));
-//    terms[0][locTerm-1] = remCell;
-//    terms[1][locTerm-1] = remTerm;
     std::pair<int, int> rcellTerm (remCell, remTerm);
     termNets[locTerm] = rcellTerm;
 
@@ -50,7 +47,7 @@ void Cell::connectTerminals(int locCell, int locTerm, int remCell, int remTerm)
     }
 }
 
-int Cell::getLinkCount()
+int Cell::getNetCount()
 {
     return numNets;
 }
@@ -65,27 +62,27 @@ void Cell::setCellCoordinates(int y, int x)
     xcell = x;
     ycell = y;
 
-    setLambdaCoordinates(x*6, y*6);
+    setLambdaCoordinates(y*6, x*6);
 }
 
 //x and y are the bottom left corner coordinates of the cell
-void Cell::setLambdaCoordinates(int x, int y)
+void Cell::setLambdaCoordinates(int y, int x)
 {
     //set coordinates of lower left corner
     xLbot = x;
     yLbot = y;
 
     //set coordinates of upper right cor
-    xRtop = x + cellWidth;
-    yRtop = y + CELL_HEIGHT; 
+    xRtop = x + cellWidth + 1;
+    yRtop = y + CELL_HEIGHT + 1; 
 
     //TODO: optimize??
     //terminal 1
     termXY[0][0] = xLbot + T1T3_OFFSET;
-    termXY[0][1] = yRtop;
+    termXY[0][1] = yLbot + 4;
     //terminal 2
     termXY[1][0] = xLbot + T2T4_OFFSET;
-    termXY[1][1] = yRtop - 2;
+    termXY[1][1] = yLbot + 4;
     //terminal 3
     termXY[2][0] = xLbot + T1T3_OFFSET;
     termXY[2][1] = yLbot;

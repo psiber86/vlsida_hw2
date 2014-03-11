@@ -48,6 +48,9 @@ int main(int argc, char* argv[])
     placer = new Placer(cellcount, cells, debug);
     
     placer->placeCellsInitial();
+    placer->calculateConnectivity();
+    placer->printCellGrid();
+    placer->placeByForceDirected();
     placer->printCellGrid();
     placer->calculateConnectivity();
 

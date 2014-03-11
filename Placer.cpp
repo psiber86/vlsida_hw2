@@ -5,6 +5,10 @@ bool CmpForce(Cell *a, Cell *b)
 {
     return a->getForce() > b->getForce();
 }
+bool CmpNets(Cell *a, Cell *b)
+{
+    return a->getNetCount() > b->getNetCount();
+}
 
 Placer::Placer(int cellCountIn, Cell **cellList, bool debugIn)
 {
@@ -29,83 +33,99 @@ Placer::Placer(int cellCountIn, Cell **cellList, bool debugIn)
     botRowBounding = cellGridRows;
     leftColBounding = cellGridCols;
     rightColBounding = 0;
+
+    if ((forceOrderMap = (int*)malloc(sizeof(int)*(cellCount+1))) == NULL) {
+        printf("MALLOC ERROR!\n");
+        exit(1); 
+    }
+
+    if ((lockStatus = (int*)malloc(sizeof(int)*(cellCount+1))) == NULL) {
+        printf("MALLOC ERROR!\n");
+        exit(1); 
+    }
+    
+    bypassLock = false;
 }
 
-//TODO: needs to be heavily optimized, this is a terrible approach
 void Placer::placeCellsInitial()
 {
-    const int midInd = int(ceil(float(cellGridRows)/2.0)-1);
-    int numLinks;
-    //toggle between top and bottom rows for cells w/ < 4 links
-    unsigned flipRows[5];
+    const int midRow = int(ceil(cellGridRows/2.0)-1);
+    const int midCol = int(ceil(cellGridCols/2.0)-1);
+    int icell = 1;
+    int offset = 2;
 
-    //initialize flip* and column shift offsets
-    for (int i = 0; i < 5; i++) {
-        flipRows[i] = 0;
-    }
+    std::sort(cells + 1, cells + (cellCount+1), CmpNets);
 
-    for (int i = 1; i <= cellCount; i++) {
-        int coli = 0;
+    //place first cell directly in the center of the grid
+    cellGrid[midRow][midCol] = cells[icell]->getCellNum();
+    cells[icell]->setCellCoordinates(midRow, midCol);
+    if(debug) printf("placing cell %i at %i, %i\n", cells[icell]->getCellNum(), midRow, midCol);
+    icell++;
 
-        numLinks = cells[i]->getLinkCount();
-        if(debug) printf("cell %i has %i links\n", i, numLinks);
-        
-        //offset from center row by 2 rows for each category
-        //row selection is based on how many links cell has, 0 - 4
-        int linkRow;
-        if (flipRows[numLinks]) { 
-            linkRow = midInd + 2*(4-numLinks);
-            //update row boundings
-            if (linkRow > topRowBounding) {
-                topRowBounding = linkRow;
+    while (icell <= cellCount) {
+        //start at bottom left corner
+        int rowInd = midRow - offset;
+        int colInd = midCol - offset;
+
+        for ( ; rowInd < midRow + offset; rowInd += 2) {
+            //adjust grid bounding 
+            if (colInd < leftColBounding) {
+               leftColBounding = colInd;
             }
-        } else {
-            linkRow =  midInd - 2*(4-numLinks);
-            //update row boundings
-            if (linkRow < botRowBounding) {
-                botRowBounding = linkRow;
-            }
+            
+            //return if all cells have been placed
+            if (icell > cellCount) { return; }
+
+            //place the cell
+            cellGrid[rowInd][colInd] = cells[icell]->getCellNum();
+            cells[icell]->setCellCoordinates(rowInd, colInd);
+            if(debug) printf("placing cell %i at %i, %i\n", cells[icell]->getCellNum(), rowInd, colInd);
+            icell++;
         }
-
-        for (int colOffset = 0; -midInd <= colOffset && colOffset < midInd; colOffset++) {
-            if (colOffset % 2 == 0) {
-                coli = midInd - colOffset;
-                if (!cellGrid[linkRow][coli]) {
-                    cellGrid[linkRow][coli] = i;
-                    cells[i]->setCellCoordinates(linkRow, coli);
-
-                    //update column boundings
-                    if (midInd - colOffset < leftColBounding) {
-                        leftColBounding = midInd - colOffset; 
-                    }
-
-                    break;
-                }
-            } else {
-                coli = midInd + colOffset;
-                if (!cellGrid[linkRow][coli]) {
-                    cellGrid[linkRow][coli] = i;
-                    cells[i]->setCellCoordinates(linkRow, coli);
-
-                    //update column boundings
-                    if (midInd + colOffset > rightColBounding) {
-                        rightColBounding = midInd + colOffset; 
-                    }
-
-                    break;
-                }
+        for ( ; colInd < midCol + offset; colInd += 2) {
+            //adjust grid bounding 
+            if (rowInd > topRowBounding) {
+                topRowBounding = rowInd;
             }
+
+            //return if all cells have been placed
+            if (icell > cellCount) { return; }
+
+            cellGrid[rowInd][colInd] = cells[icell]->getCellNum();
+            cells[icell]->setCellCoordinates(rowInd, colInd);
+            if(debug) printf("placing cell %i at %i, %i\n", cells[icell]->getCellNum(), rowInd, colInd);
+            icell++;
+        } 
+        for (; rowInd > midRow - offset; rowInd -= 2) {
+            //adjust grid bounding
+            if (colInd > rightColBounding) {
+                rightColBounding = colInd;
+            }
+            
+            //return if all cells have been placed
+            if (icell > cellCount) { return; }
+
+            cellGrid[rowInd][colInd] = cells[icell]->getCellNum();
+            cells[icell]->setCellCoordinates(rowInd, colInd);
+            if(debug) printf("placing cell %i at %i, %i\n", cells[icell]->getCellNum(), rowInd, colInd);
+            icell++;
         }
+        for (; colInd > midCol - offset; colInd -= 2) { 
+            //adjust grid bounding
+            if (rowInd < botRowBounding) {
+                botRowBounding = rowInd;
+            }
+            
+            //return if all cells have been placed
+            if (icell > cellCount) { return; }
 
-        //toggle switches for next cell placement locations
-        flipRows[numLinks] = flipRows[numLinks]^1;
-
-        if(debug) printf("placed cell %i at %i, %i\n", i, linkRow, coli);
+            cellGrid[rowInd][colInd] = cells[icell]->getCellNum();
+            cells[icell]->setCellCoordinates(rowInd, colInd);
+            if(debug) printf("placing cell %i at %i, %i\n", cells[icell]->getCellNum(), rowInd, colInd);
+            icell++;
+        }
+        offset += 2;
     }
-
-    //add buffer space in grid
-    topRowBounding += 1;
-    botRowBounding -= 1;
 }
 
 void Placer::printCellGrid()
@@ -128,38 +148,128 @@ void Placer::printCellGrid()
         }
         printf("\n");
     }
+    printf("\n");
 }
 
 void Placer::calculateConnectivity()
 {
+    int wireLengthEst = 0;
+
     for (int i1 = 1; i1 <= cellCount; i1++) {
+        int curCell = cells[i1]->getCellNum();
         int force = 0;
 
-        if (cells[i1]->getLinkCount() == 0) { continue; }
+        if (cells[i1]->getNetCount() == 0) { continue; }
 
         std::map<int, std::pair<int, int> > remCells = cells[i1]->getTermNets();
         for (int i2 = 1; i2 <= 4; i2++) {
             int remCell = remCells[i2].first;
             int remTerm = remCells[i2].second;
 
-            if (remCell == 0) { continue; }
+            if (remCell == 0 || remCell == curCell) { continue; }
 
             if(debug) printf("calculating connectivity between local cell %i-%i and remote cell %i-%i\n",
-                             i1, i2, remCell, remTerm);
+                             curCell, i2, remCell, remTerm);
 
             std::pair<int, int> locTermXY = cells[i1]->getTerminalCoordinates(i2);
             std::pair<int, int> remTermXY = cells[remCell]->getTerminalCoordinates(remTerm);
 
             force += abs(locTermXY.first - remTermXY.first) + abs(locTermXY.second - remTermXY.second);
         }
+        wireLengthEst += force;
         cells[i1]->setForce(force);
     }
 
     std::sort(cells + 1, cells + (cellCount+1), CmpForce);
 
-    if(debug) { 
-        for (int i1 = 1; i1 <= cellCount; i1++) {
-            printf("cell %i has force %i\n", cells[i1]->getCellNum(), cells[i1]->getForce());
+    for (int i1 = 1; i1 <= cellCount; i1++) {
+        forceOrderMap[cells[i1]->getCellNum()] = i1;
+    }
+
+    printf("wire length estimate: %i\n", wireLengthEst);
+}
+
+void Placer::computeTargetLoc(int curCell, int *tarRow, int *tarCol)
+{
+    int weightXSum = 0, weightYSum = 0;
+    int weightSum = 0;
+    int weight = 0;
+
+    std::map<int, std::pair<int, int> > remCells = cells[forceOrderMap[curCell]]->getTermNets();
+
+    assert(curCell == cells[forceOrderMap[curCell]]->getCellNum());
+    
+    for (int iterm = 1; iterm <= 4; iterm++) {
+        int remCell = remCells[iterm].first;
+        int remTerm = remCells[iterm].second;
+
+        if (remCell == 0 || (remCell == curCell)) { continue; }
+
+        std::pair<int, int> locTermXY = cells[forceOrderMap[curCell]]->getTerminalCoordinates(iterm);
+        std::pair<int, int> remTermXY = cells[forceOrderMap[remCell]]->getTerminalCoordinates(remTerm);
+
+        if(debug) printf("[TARLOC-1] computing force between cell%i-%i @ %i, %i and cell %i-%i @ %i, %i\n",
+                         curCell, iterm, locTermXY.first, locTermXY.second,
+                         remCell, remTerm, remTermXY.first, remTermXY.second);
+
+        weight = abs(locTermXY.first - remTermXY.first) + abs(locTermXY.second - remTermXY.second);
+        if(debug) { 
+            printf("xdelta between cell %i-%i and cell %i-%i is %i\n", 
+                   curCell, iterm, remCell, remTerm, abs(locTermXY.first - remTermXY.first));
+            printf("ydelta between cell %i-%i and cell %i-%i is %i\n", 
+                   curCell, iterm, remCell, remTerm, abs(locTermXY.second - remTermXY.second));
+            printf("total weight between cell %i-%i and cell %i-%i is %i\n", 
+                   curCell, iterm, remCell, remTerm, weight);
+        }
+
+        weightSum += weight;
+        weightXSum += weight * remTermXY.first;
+        weightYSum += weight * remTermXY.second;
+    }
+
+    if (weightSum == 0) {
+        *tarCol = int(ceil(cellGridCols/2.0));
+        *tarRow = int(ceil(cellGridRows/2.0));
+        findNearestVacantCell(curCell, tarRow, tarCol); 
+        bypassLock = true;
+    } else {
+        *tarCol = round( (weightXSum/weightSum) * 1/6);
+        *tarRow = round( (weightYSum/weightSum) * 1/6); 
+        cells[forceOrderMap[curCell]]-> setForce(weightSum);
+    }
+    if(debug) printf("[TARLOC-2] cell %i has total weight=%i, Xweight=%i, Yweight=%i\n", 
+                     curCell, weightSum, weightXSum, weightYSum);
+    if(debug) printf("[TARLOC-3] cell %i target cell is %i, %i\n", curCell, *tarRow, *tarCol);
+}
+
+void Placer::findNearestVacantCell(int curCell, int *tarRow, int *tarCol)
+{
+    for (int offset = 1; offset <= cellGridRows; offset++) {
+        //search for vacant cells in same row
+        for (int offsetCol = *tarCol - offset; offsetCol <= *tarCol + offset; offsetCol++) {
+            if (cellGrid[*tarRow][offsetCol] == 0) {
+                *tarCol = offsetCol;
+                return;
+            }
+        }
+
+        //search for vacant cells in same col 
+        for (int offsetRow = *tarRow - offset; offsetRow <= *tarRow + offset; offsetRow++) {
+            if (cellGrid[offsetRow][*tarCol] == 0) {
+                *tarRow = offsetRow;
+                return;
+            }
+        }
+
+        //search for vacant cells diagonal to target cell
+        for (int offsetRow = *tarRow - offset; offsetRow <= *tarRow + offset; offsetRow++) {
+            for (int offsetCol = *tarCol - offset; offsetCol <= *tarCol + offset; offsetCol++) {
+                if (cellGrid[offsetRow][offsetCol] == 0) {
+                    *tarRow = offsetRow;
+                    *tarCol = offsetCol;
+                    return;
+                }
+            }
         }
     }
 }
@@ -168,55 +278,132 @@ void Placer::placeByForceDirected()
 {
     int iterCount = 0;
     int abortCount = 0;
-    bool endRipple = false;
     while (iterCount < 5) {
+        printf("***** ITER %i *****\n", iterCount);
+
         //get next seed cell with next highest force 
         for (int icell = 1; icell <= cellCount; icell++) {
+            bool endRipple = false;
+            int curCell = cells[icell]->getCellNum();
+            int tmpCell = -1;
+
+            if (lockStatus[curCell]) { 
+                if(debug) printf("cell %i is locked, moving to next cell in list\n", curCell);    
+                continue; 
+            }
+
+            //mark current cell as vacant
+            if(debug) printf("[WHILE] placing cell%i\n", curCell);
+            cellGrid[cells[forceOrderMap[curCell]]->getCellY()][cells[forceOrderMap[curCell]]->getCellX()] = 0;
+
             while (!endRipple) {
                 int tarRow = 0, tarCol = 0;
-                //TODO: compute target location of cell
+
+                computeTargetLoc(curCell, &tarRow, &tarCol);
 
                 //if target cell is vacant
-                if (!cellGrid[tarRow][tarCol]) {
-                    //TODO: move seed to target point
+                if (cellGrid[tarRow][tarCol] == 0) {
+                    if(debug) printf("[VACANT] moving cell %i to %i, %i\n", curCell, tarRow, tarCol);
+
+                    //move seed to target point
+                    cellGrid[tarRow][tarCol] = curCell;
+                    cells[forceOrderMap[curCell]]->setCellCoordinates(tarRow, tarCol);
+
+                    //lock cell
+                    if (!bypassLock) {
+                        if(debug) printf("[VACANT] locking cell%i\n", curCell);
+                        lockStatus[curCell] = 1;
+                    }
+                    bypassLock = false;
 
                     endRipple = true;
                     abortCount = 0;
                 } 
                 //if target is same as present location 
-                else if (tarRow == cells[icell]->getCellX() &&
-                         tarCol == cells[icell]->getCellY())
+                else if ((tarRow == cells[forceOrderMap[curCell]]->getCellY() &&
+                          tarCol == cells[forceOrderMap[curCell]]->getCellX()) &&
+                         cellGrid[tarRow][tarCol] == 0)
                 {
+                    if(debug) printf("[SAME] keeping cell %i at %i, %i\n", curCell, tarRow, tarCol);
+
                     endRipple = true;
                     abortCount = 0;
                 }
-                //cell is occupied AND LOCKED
-                //TODO: get cell at target location
-                else if (false) {
-                    //TODO: move selected cell to nearest vacant cell
+                //cell is occupied 
+                else if (cellGrid[tarRow][tarCol]) {
+                    tmpCell = cellGrid[tarRow][tarCol]; 
+                   
+                    if (lockStatus[tmpCell]) {      //cell is locked
+                        //move selected cell to nearest vacant cell
+                        findNearestVacantCell(curCell, &tarRow, &tarCol);
+                        cellGrid[tarRow][tarCol] = curCell;
+                        cells[forceOrderMap[curCell]]->setCellCoordinates(tarRow, tarCol);
+                        if(debug) printf("[OCCUPIED-LOCKED] moving cell %i to nearby %i, %i\n", curCell, tarRow, tarCol);
 
-                    endRipple = true;
-                    abortCount++;
-                    if (abortCount > 5) {
-                        //TODO: unlock all cells
-                        iterCount++; 
+                        endRipple = true;
+                        abortCount++;
+                        if (abortCount > 3) {
+                            //unlock all cells
+                            if(debug) printf("[ABORT] unlocking all cells\n");
+                            memset(lockStatus, 0, sizeof(int)*(cellCount+1));
+                            iterCount++; 
+                        }
+                    } else {        //cell is unlocked
+                        //move seed cell to target point and lock target point
+                        cellGrid[tarRow][tarCol] = curCell;
+                        cells[forceOrderMap[curCell]]->setCellCoordinates(tarRow, tarCol);
+                        if(debug) printf("[OCCUPIED-UNLOCKED] replacing cell %i with cell %i at %i, %i\n", 
+                                         tmpCell, curCell, tarRow, tarCol);
+
+                        //lock cell
+                        if(debug) printf("[OCCUPIED-UNLOCKED] locking cell %i\n", curCell);
+                        lockStatus[curCell] = 1;
+
+                        curCell = tmpCell;
+
+                        endRipple = false;
+                        abortCount = 0;
+
+                        if(debug) printf("[WHILE] placing cell%i\n", curCell);
                     }
-                }
-                //cell is occupied AND UNLOCKED
-                else if (false) {
-                    //TODO: select cell at target point for next move
-
-                    //TODO: move seed cell to target point and lock target point
-
-                    endRipple = false;
-                    abortCount = 0;
                 } 
                 else {
                     printf("ERROR: INVALID CELL STATE!\n");
                     exit(1);
                 }
+
+                if (endRipple) {
+                    if(debug) printf("last placed cell was cell %i\n", curCell);
+                    verifyPlacement();
+                }
             }
         }
+//        iterCount++;
+
+        printCellGrid();
+        std::sort(cells + 1, cells + (cellCount+1), CmpForce);
+        for (int i1 = 1; i1 <= cellCount; i1++) {
+            forceOrderMap[cells[i1]->getCellNum()] = i1;
+        }
     }
+}
+
+void Placer::verifyPlacement()
+{
+    int sumGrid = 0;
+    int sumCells = 0;
+
+    for (int icell = 1; icell <= cellCount; icell++) {
+        sumCells += icell;
+    }
+
+    for (int irow = 0; irow < cellGridRows; irow++) {
+        for (int icol = 0; icol < cellGridCols; icol++) {
+            sumGrid += cellGrid[irow][icol];         
+        }
+    }
+
+    if(debug) printf("sumGrid = %i, sumCell = %i\n", sumGrid, sumCells);
+    assert(sumGrid == sumCells);
 }
 
