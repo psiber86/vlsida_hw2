@@ -59,6 +59,9 @@ int main(int argc, char* argv[])
     placer->compactAndMapLambda();
     if(debug) placer->printCellGrid();
     placer->writeMagFile();
+    placer->sortCellArrays();
+
+    //routing stuff
 
     time_t tf = time(NULL);
     printf("Run time: %i hour(s), %i min(s), %i (secs)\n",

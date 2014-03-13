@@ -66,6 +66,8 @@ public:
     int findFeedThruAtLoc(int, int, int);
 
     int getFeedCellInd(int);
+
+    void sortCellArrays();
 };
 
 #endif

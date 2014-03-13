@@ -9,6 +9,10 @@ bool CmpNets(Cell *a, Cell *b)
 {
     return a->getNetCount() > b->getNetCount();
 }
+bool CmpCellNum(Cell *a, Cell *b)
+{
+    return a->getCellNum() < b->getCellNum();
+}
 
 Placer::Placer(char *filename, int cellCountIn, Cell **cellList, bool debugIn)
 {
@@ -738,6 +742,19 @@ int Placer::findFeedThruAtLoc(int curCell, int row, int col)
     }
     return 0;
 }
+
+void Placer::sortCellArrays() 
+{
+    std::sort(cells + 1, cells + (cellCount+1), CmpCellNum);
+    for (int i1 = 1; i1 <= cellCount; i1++) {
+        if(debug) printf("%i: CellNum = %i\n", i1, cells[i1]->getCellNum());
+    }
+
+    std::sort(feedCells.begin(), feedCells.end(), CmpCellNum);
+    for (int i1 = 0; i1 <= feedCellCount; i1++) {
+        if(debug) printf("%i: CellNum = %i\n", i1, feedCells[i1]->getCellNum());
+    }
+} 
 
 void Placer::writeMagFile()
 {
