@@ -68,6 +68,8 @@ public:
     int getFeedCellInd(int);
 
     void sortCellArrays();
+
+    std::vector<Cell> get_cells() const;
 };
 
 #endif
