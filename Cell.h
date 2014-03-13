@@ -22,13 +22,13 @@ private:
 
     int cellWidth;      //different for feedthrough cells 
 
-    int termXY[4][2];   //coordinates of terminals 
-
     int zeroForce;      //cost of cell in current location
 
     int orientation;
 
     bool debug;
+
+    std::map<int,int> nets;
 
 public:
     Cell(int, int, bool);
@@ -36,6 +36,7 @@ public:
     int getCellNum();
 
     void connectTerminals(int, int, int, int);
+    void connectTerminals(int, int, int, int, int);
 
     int getNetCount();
 
@@ -68,6 +69,8 @@ public:
     void flipVertCell();
 
     int getCellOrientation();
+
+    int termXY[4][2];   //coordinates of terminals 
 
 };
 

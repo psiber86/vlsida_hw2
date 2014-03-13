@@ -52,6 +52,12 @@ void Cell::connectTerminals(int locCell, int locTerm, int remCell, int remTerm)
     }
 }
 
+void Cell::connectTerminals(int locCell, int locTerm, int remCell, int remTerm, int netNum)
+{
+  this->connectTerminals(locCell, locTerm, remCell, remTerm);
+  this->nets[locTerm] = netNum;
+}
+
 int Cell::getNetCount()
 {
     return numNets;
