@@ -1,0 +1,200 @@
+magic
+tech scmos
+timestamp 1394680307
+<< m1p >>
+use CELL  1
+transform 1 0 158 0 1 144
+box 0 0 6 6
+use CELL  2
+transform -1 0 114 0 1 204
+box 0 0 6 6
+use CELL  3
+transform 1 0 137 0 -1 150
+box 0 0 6 6
+use CELL  4
+transform -1 0 171 0 1 144
+box 0 0 6 6
+use CELL  5
+transform -1 0 115 0 1 132
+box 0 0 6 6
+use CELL  6
+transform 1 0 178 0 -1 186
+box 0 0 6 6
+use CELL  7
+transform -1 0 156 0 1 156
+box 0 0 6 6
+use CELL  8
+transform -1 0 159 0 1 168
+box 0 0 6 6
+use CELL  9
+transform -1 0 116 0 1 156
+box 0 0 6 6
+use CELL  10
+transform 1 0 142 0 1 132
+box 0 0 6 6
+use CELL  11
+transform -1 0 168 0 1 180
+box 0 0 6 6
+use CELL  12
+transform 1 0 144 0 1 144
+box 0 0 6 6
+use CELL  13
+transform -1 0 126 0 1 204
+box 0 0 6 6
+use CELL  14
+transform -1 0 129 0 1 180
+box 0 0 6 6
+use CELL  15
+transform -1 0 102 0 1 156
+box 0 0 6 6
+use CELL  16
+transform -1 0 145 0 1 168
+box 0 0 6 6
+use CELL  17
+transform 1 0 151 0 1 144
+box 0 0 6 6
+use CELL  18
+transform 1 0 172 0 1 144
+box 0 0 6 6
+use CELL  19
+transform 1 0 143 0 1 156
+box 0 0 6 6
+use CELL  20
+transform 1 0 125 0 -1 150
+box 0 0 6 6
+use CELL  21
+transform 1 0 122 0 1 156
+box 0 0 6 6
+use CELL  22
+transform 1 0 135 0 1 132
+box 0 0 6 6
+use CELL  23
+transform -1 0 154 0 1 180
+box 0 0 6 6
+use CELL  24
+transform -1 0 175 0 1 180
+box 0 0 6 6
+use CELL  25
+transform -1 0 132 0 1 132
+box 0 0 6 6
+use CELL  26
+transform -1 0 138 0 1 168
+box 0 0 6 6
+use CELL  27
+transform -1 0 108 0 1 144
+box 0 0 6 6
+use CELL  28
+transform -1 0 115 0 1 144
+box 0 0 6 6
+use CELL  29
+transform -1 0 138 0 -1 126
+box 0 0 6 6
+use CELL  30
+transform 1 0 141 0 1 192
+box 0 0 6 6
+use CELL  31
+transform -1 0 166 0 1 168
+box 0 0 6 6
+use CELL  32
+transform -1 0 156 0 1 192
+box 0 0 6 6
+use CELL  33
+transform -1 0 108 0 1 168
+box 0 0 6 6
+use CELL  34
+transform -1 0 152 0 1 168
+box 0 0 6 6
+use CELL  35
+transform -1 0 133 0 1 204
+box 0 0 6 6
+use CELL  36
+transform -1 0 161 0 1 180
+box 0 0 6 6
+use CELL  37
+transform -1 0 135 0 1 156
+box 0 0 6 6
+use CELL  38
+transform -1 0 142 0 1 156
+box 0 0 6 6
+use CELL  39
+transform -1 0 136 0 1 180
+box 0 0 6 6
+use CELL  40
+transform -1 0 126 0 1 192
+box 0 0 6 6
+use CELL  41
+transform -1 0 108 0 1 132
+box 0 0 6 6
+use CELL  42
+transform -1 0 109 0 1 156
+box 0 0 6 6
+use CELL  43
+transform -1 0 133 0 1 192
+box 0 0 6 6
+use CELL  44
+transform -1 0 140 0 1 192
+box 0 0 6 6
+use CELL  45
+transform -1 0 124 0 1 144
+box 0 0 6 6
+use FEEDTHRU  F-1
+transform 1 0 114 0 1 192
+box 0 0 3 6
+use FEEDTHRU  F-2
+transform 1 0 117 0 1 192
+box 0 0 3 6
+use FEEDTHRU  F-3
+transform 1 0 166 0 1 168
+box 0 0 3 6
+use FEEDTHRU  F-4
+transform 1 0 175 0 1 180
+box 0 0 3 6
+use FEEDTHRU  F-5
+transform 1 0 147 0 1 192
+box 0 0 3 6
+use FEEDTHRU  F-6
+transform 1 0 126 0 1 168
+box 0 0 3 6
+use FEEDTHRU  F-7
+transform 1 0 114 0 1 180
+box 0 0 3 6
+use FEEDTHRU  F-8
+transform 1 0 129 0 1 168
+box 0 0 3 6
+use FEEDTHRU  F-9
+transform 1 0 114 0 1 168
+box 0 0 3 6
+use FEEDTHRU  F-10
+transform 1 0 120 0 1 180
+box 0 0 3 6
+use FEEDTHRU  F-11
+transform 1 0 119 0 1 156
+box 0 0 3 6
+use FEEDTHRU  F-12
+transform 1 0 131 0 1 144
+box 0 0 3 6
+use FEEDTHRU  F-13
+transform 1 0 132 0 1 132
+box 0 0 3 6
+use FEEDTHRU  F-14
+transform 1 0 134 0 1 144
+box 0 0 3 6
+use FEEDTHRU  F-15
+transform 1 0 142 0 1 180
+box 0 0 3 6
+use FEEDTHRU  F-16
+transform 1 0 145 0 1 180
+box 0 0 3 6
+use FEEDTHRU  F-17
+transform 1 0 117 0 1 180
+box 0 0 3 6
+use FEEDTHRU  F-18
+transform 1 0 108 0 1 168
+box 0 0 3 6
+use FEEDTHRU  F-19
+transform 1 0 116 0 1 156
+box 0 0 3 6
+use FEEDTHRU  F-20
+transform 1 0 115 0 1 144
+box 0 0 3 6
+<< end >>
