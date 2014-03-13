@@ -5,6 +5,8 @@
 
 class Placer {
 private:
+    char *magfile;
+
     signed short **cellGrid;  //layout matrix with granularity of cells
     unsigned char **lambdaGrid; //layout matric with granularity of lambdas
 
@@ -20,8 +22,11 @@ private:
     int rightColBounding;
 
     int cellCount;
+    int feedCellCount;
 
     Cell **cells;
+
+    std::vector<Cell*> feedCells;
 
     int *forceOrderMap;
 
@@ -32,7 +37,7 @@ private:
     bool debug;
 
 public:
-    Placer(int, Cell **, bool);
+    Placer(char*, int, Cell **, bool);
 
     void placeCellsInitial();
 
@@ -48,7 +53,19 @@ public:
 
     void verifyPlacement();
 
-    void mapCellsToLambda();
+    void placeFeedThruCells();
+
+    void shiftCellsLeft(int, int);
+
+    void shiftCellsRight(int, int);
+
+    void writeMagFile();
+
+    void compactAndMapLambda();
+
+    int findFeedThruAtLoc(int, int, int);
+
+    int getFeedCellInd(int);
 };
 
 #endif

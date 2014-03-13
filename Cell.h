@@ -26,7 +26,7 @@ private:
 
     int zeroForce;      //cost of cell in current location
 
-    bool lockFlag;
+    int orientation;
 
     bool debug;
 
@@ -47,6 +47,10 @@ public:
 
     int getCellY();
 
+    int getLambdaX();
+
+    int getLambdaY();
+
     std::pair<int, int> getTerminalCoordinates(int);
 
     void setForce(int);
@@ -54,6 +58,17 @@ public:
     int getForce();
 
     void setLambdaCoordinates(int, int );
+
+    void resetTermCoords();
+
+    void rotateCell();
+
+    void flipHorzCell();
+
+    void flipVertCell();
+
+    int getCellOrientation();
+
 };
 
 #endif

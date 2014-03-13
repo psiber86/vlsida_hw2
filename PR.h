@@ -5,6 +5,7 @@
 #include <string.h>
 #include <assert.h>
 #include <map>
+#include <vector>
 #include <utility>
 #include <math.h>
 #include <algorithm>
@@ -20,4 +21,13 @@
 enum cellTypes {
     STDCELL = 1,
     FEEDTHRU
+};
+
+enum cellOrientation {
+    NORM,
+    ROTATED,
+    FLIPHORZ,
+    FLIPVERT,
+
+    ORIEN_COUNT
 };

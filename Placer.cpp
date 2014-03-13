@@ -10,12 +10,15 @@ bool CmpNets(Cell *a, Cell *b)
     return a->getNetCount() > b->getNetCount();
 }
 
-Placer::Placer(int cellCountIn, Cell **cellList, bool debugIn)
+Placer::Placer(char *filename, int cellCountIn, Cell **cellList, bool debugIn)
 {
     debug = debugIn;
 
+    magfile = filename;
+
     cells = cellList;
     cellCount = cellCountIn;
+    feedCellCount = 0;
 
     cellGridRows = cellCount < 24 ? 24 : cellCount;
     cellGridCols = cellGridRows;
@@ -49,7 +52,7 @@ Placer::Placer(int cellCountIn, Cell **cellList, bool debugIn)
 
 void Placer::placeCellsInitial()
 {
-    const int midRow = int(ceil(cellGridRows/2.0)-1);
+    const int midRow = 2*round(int(ceil(cellGridRows/2.0)-1)/2.0);
     const int midCol = int(ceil(cellGridCols/2.0)-1);
     int icell = 1;
     int offset = 2;
@@ -186,59 +189,103 @@ void Placer::calculateConnectivity()
         forceOrderMap[cells[i1]->getCellNum()] = i1;
     }
 
-    printf("wire length estimate: %i\n", wireLengthEst);
+    if(debug) printf("wire length estimate: %i\n", wireLengthEst/2);
 }
 
 void Placer::computeTargetLoc(int curCell, int *tarRow, int *tarCol)
 {
-    int weightXSum = 0, weightYSum = 0;
-    int weightSum = 0;
-    int weight = 0;
+    int finalOrien = 0;
+    int weightXSum[ORIEN_COUNT] = {0, 0, 0, 0}, weightYSum[ORIEN_COUNT] = {0, 0, 0, 0};
+    int weightSum[ORIEN_COUNT] = {0, 0, 0, 0};
 
     std::map<int, std::pair<int, int> > remCells = cells[forceOrderMap[curCell]]->getTermNets();
 
     assert(curCell == cells[forceOrderMap[curCell]]->getCellNum());
     
-    for (int iterm = 1; iterm <= 4; iterm++) {
-        int remCell = remCells[iterm].first;
-        int remTerm = remCells[iterm].second;
-
-        if (remCell == 0 || (remCell == curCell)) { continue; }
-
-        std::pair<int, int> locTermXY = cells[forceOrderMap[curCell]]->getTerminalCoordinates(iterm);
-        std::pair<int, int> remTermXY = cells[forceOrderMap[remCell]]->getTerminalCoordinates(remTerm);
-
-        if(debug) printf("[TARLOC-1] computing force between cell%i-%i @ %i, %i and cell %i-%i @ %i, %i\n",
-                         curCell, iterm, locTermXY.first, locTermXY.second,
-                         remCell, remTerm, remTermXY.first, remTermXY.second);
-
-        weight = abs(locTermXY.first - remTermXY.first) + abs(locTermXY.second - remTermXY.second);
-        if(debug) { 
-            printf("xdelta between cell %i-%i and cell %i-%i is %i\n", 
-                   curCell, iterm, remCell, remTerm, abs(locTermXY.first - remTermXY.first));
-            printf("ydelta between cell %i-%i and cell %i-%i is %i\n", 
-                   curCell, iterm, remCell, remTerm, abs(locTermXY.second - remTermXY.second));
-            printf("total weight between cell %i-%i and cell %i-%i is %i\n", 
-                   curCell, iterm, remCell, remTerm, weight);
+    for (int iOrien = 0; iOrien < ORIEN_COUNT; iOrien++) {
+        switch (iOrien) {
+        case NORM:
+            break;
+        case ROTATED:
+            cells[forceOrderMap[curCell]]->rotateCell();
+            break;
+        case FLIPHORZ:
+            cells[forceOrderMap[curCell]]->flipHorzCell();
+            break;
+        case FLIPVERT:
+            cells[forceOrderMap[curCell]]->flipVertCell();
+            break;
+        default:
+            printf("INVALID ORIENTATION\n");
+            exit(1);
         }
 
-        weightSum += weight;
-        weightXSum += weight * remTermXY.first;
-        weightYSum += weight * remTermXY.second;
+        for (int iterm = 1; iterm <= 4; iterm++) {
+            int weight = 0;
+            int remCell = remCells[iterm].first;
+            int remTerm = remCells[iterm].second;
+
+            if (remCell == 0 || (remCell == curCell)) { continue; }
+
+            std::pair<int, int> locTermXY = cells[forceOrderMap[curCell]]->getTerminalCoordinates(iterm);
+            std::pair<int, int> remTermXY = cells[forceOrderMap[remCell]]->getTerminalCoordinates(remTerm);
+
+            if(debug) printf("[TARLOC-1] computing force between cell%i-%i @ %i, %i and cell %i-%i @ %i, %i\n",
+                             curCell, iterm, locTermXY.first, locTermXY.second,
+                             remCell, remTerm, remTermXY.first, remTermXY.second);
+
+            weight = abs(locTermXY.first - remTermXY.first) + abs(locTermXY.second - remTermXY.second);
+            if(debug) { 
+                printf("[ORIEN-%i] xdelta between cell %i-%i and cell %i-%i is %i\n", 
+                       iOrien, curCell, iterm, remCell, remTerm, abs(locTermXY.first - remTermXY.first));
+                printf("[ORIEN-%i] ydelta between cell %i-%i and cell %i-%i is %i\n", 
+                       iOrien, curCell, iterm, remCell, remTerm, abs(locTermXY.second - remTermXY.second));
+                printf("[ORIEN-%i] total weight between cell %i-%i and cell %i-%i is %i\n", 
+                       iOrien, curCell, iterm, remCell, remTerm, weight);
+            }
+
+            weightSum[iOrien] += weight;
+            weightXSum[iOrien] += weight * remTermXY.first;
+            weightYSum[iOrien] += weight * remTermXY.second;
+
+            if (weightSum[iOrien] < weightSum[finalOrien]) {
+                finalOrien = iOrien;
+            }
+        }
     }
 
-    if (weightSum == 0) {
+    //switch back to preferred orientation
+    switch (finalOrien) {
+    case NORM:
+        if(debug) printf("cell %i has minimal force in standard orientation\n", curCell);
+        cells[forceOrderMap[curCell]]->resetTermCoords();
+        break;
+    case ROTATED:
+        if(debug) printf("cell %i has minimal force in rotated orientation\n", curCell);
+        cells[forceOrderMap[curCell]]->rotateCell();
+        break;
+    case FLIPHORZ:
+        if(debug) printf("cell %i has minimal force in horizontal flipped orientation\n", curCell);
+        cells[forceOrderMap[curCell]]->flipHorzCell();
+        break;
+    case FLIPVERT:
+        if(debug) printf("cell %i has minimal force in vertical flipped orientation\n", curCell);
+        cells[forceOrderMap[curCell]]->flipVertCell();
+        break;
+    }
+
+    if (weightSum[finalOrien] == 0) {
         *tarCol = int(ceil(cellGridCols/2.0));
         *tarRow = int(ceil(cellGridRows/2.0));
         findNearestVacantCell(curCell, tarRow, tarCol); 
         bypassLock = true;
     } else {
-        *tarCol = round( (weightXSum/weightSum) * 1/6);
-        *tarRow = round( (weightYSum/weightSum) * 1/6); 
-        cells[forceOrderMap[curCell]]-> setForce(weightSum);
+        *tarCol = round( (weightXSum[finalOrien]/weightSum[finalOrien]) * 1/6);
+        *tarRow = round( (weightYSum[finalOrien]/weightSum[finalOrien]) * 1/6); 
+        cells[forceOrderMap[curCell]]-> setForce(weightSum[finalOrien]);
     }
     if(debug) printf("[TARLOC-2] cell %i has total weight=%i, Xweight=%i, Yweight=%i\n", 
-                     curCell, weightSum, weightXSum, weightYSum);
+                     curCell, weightSum[finalOrien], weightXSum[finalOrien], weightYSum[finalOrien]);
     if(debug) printf("[TARLOC-3] cell %i target cell is %i, %i\n", curCell, *tarRow, *tarCol);
 }
 
@@ -254,7 +301,7 @@ void Placer::findNearestVacantCell(int curCell, int *tarRow, int *tarCol)
         }
 
         //search for vacant cells in same col 
-        for (int offsetRow = *tarRow - offset; offsetRow <= *tarRow + offset; offsetRow++) {
+        for (int offsetRow = *tarRow - 2*offset; offsetRow <= *tarRow + 2*offset; offsetRow += 2) {
             if (cellGrid[offsetRow][*tarCol] == 0) {
                 *tarRow = offsetRow;
                 return;
@@ -262,7 +309,7 @@ void Placer::findNearestVacantCell(int curCell, int *tarRow, int *tarCol)
         }
 
         //search for vacant cells diagonal to target cell
-        for (int offsetRow = *tarRow - offset; offsetRow <= *tarRow + offset; offsetRow++) {
+        for (int offsetRow = *tarRow - 2*offset; offsetRow <= *tarRow + 2*offset; offsetRow += 2) {
             for (int offsetCol = *tarCol - offset; offsetCol <= *tarCol + offset; offsetCol++) {
                 if (cellGrid[offsetRow][offsetCol] == 0) {
                     *tarRow = offsetRow;
@@ -278,8 +325,14 @@ void Placer::placeByForceDirected()
 {
     int iterCount = 0;
     int abortCount = 0;
-    while (iterCount < 5) {
-        printf("***** ITER %i *****\n", iterCount);
+    while (iterCount < 15) {
+        if(debug) printf("***** ITER %i *****\n", iterCount);
+
+        //reset grid boundings
+        topRowBounding = 0;
+        botRowBounding = cellGridRows;
+        leftColBounding = cellGridCols;
+        rightColBounding = 0;
 
         //get next seed cell with next highest force 
         for (int icell = 1; icell <= cellCount; icell++) {
@@ -300,6 +353,8 @@ void Placer::placeByForceDirected()
                 int tarRow = 0, tarCol = 0;
 
                 computeTargetLoc(curCell, &tarRow, &tarCol);
+                //round tarRow to nearest multiple of 2
+                tarRow = 2 * int(round(tarRow/2.0));
 
                 //if target cell is vacant
                 if (cellGrid[tarRow][tarCol] == 0) {
@@ -372,15 +427,22 @@ void Placer::placeByForceDirected()
                     exit(1);
                 }
 
-                if (endRipple) {
-                    if(debug) printf("last placed cell was cell %i\n", curCell);
-                    verifyPlacement();
+                //update grid boundings
+                if (tarRow > topRowBounding) { 
+                    topRowBounding = tarRow;
+                } else if (tarRow < botRowBounding) {
+                    botRowBounding = tarRow;
                 }
+                if (tarCol > rightColBounding) {
+                    rightColBounding = tarCol;
+                } else if (tarCol < leftColBounding) {
+                    leftColBounding = tarCol;
+                }
+
             }
         }
-//        iterCount++;
-
-        printCellGrid();
+        verifyPlacement();
+        if(debug) printCellGrid();
         std::sort(cells + 1, cells + (cellCount+1), CmpForce);
         for (int i1 = 1; i1 <= cellCount; i1++) {
             forceOrderMap[cells[i1]->getCellNum()] = i1;
@@ -397,8 +459,8 @@ void Placer::verifyPlacement()
         sumCells += icell;
     }
 
-    for (int irow = 0; irow < cellGridRows; irow++) {
-        for (int icol = 0; icol < cellGridCols; icol++) {
+    for (int irow = botRowBounding; irow <= topRowBounding; irow++) {
+        for (int icol = leftColBounding; icol <= rightColBounding; icol++) {
             sumGrid += cellGrid[irow][icol];         
         }
     }
@@ -406,4 +468,348 @@ void Placer::verifyPlacement()
     if(debug) printf("sumGrid = %i, sumCell = %i\n", sumGrid, sumCells);
     assert(sumGrid == sumCells);
 }
+
+void Placer::placeFeedThruCells()
+{
+    //track what feed thru cells have already been placed to avoid duplicates
+    std::vector<std::pair<float, float> > placedFeedCells;
+    bool placed = false;
+    
+    for (int icell = 1; icell <= cellCount; icell++) {
+        if (cells[forceOrderMap[icell]]->getNetCount() == 0) { continue; }
+
+        int curCell = cells[forceOrderMap[icell]]->getCellNum();
+        
+        std::map<int, std::pair<int, int> > remCells = cells[forceOrderMap[icell]]->getTermNets();
+        for (int iterm = 1; iterm <= 4; iterm++) {
+            int remCell = remCells[iterm].first;
+            int remTerm = remCells[iterm].second;
+            int cellRow;
+            int delta;
+            int tarRow, tarCol;
+            int leftOf, rightOf;
+
+            if (remCell == 0 || remCell == curCell || remCell < 0) 
+            { 
+                continue; 
+            }
+
+            //check if net feed thru cells have already been placed
+            for (int i1 = 0; i1 < int(placedFeedCells.size()); i1++) {
+                float cur = float(curCell) + iterm/10.0;
+                float rem = float(remCell) + remTerm/10.0;
+                if (placedFeedCells[i1].first == rem && placedFeedCells[i1].second == cur) {
+                    placed = true;
+                }
+            }
+
+            if (placed) {
+                placed = false;
+                continue;
+            }
+
+            cellRow = cells[forceOrderMap[icell]]->getCellY();
+            tarCol = cells[forceOrderMap[icell]]->getCellX();
+            delta =  cellRow - cells[forceOrderMap[remCell]]->getCellY();
+            if (abs(delta) > 2) {
+                int iFeed = 1;
+                int numFeedThrus = abs(delta/2)-1; 
+                if(debug) printf("cell %i is separated from cell %i by %i rows\n", curCell, remCell, numFeedThrus); 
+
+                //place feed thru cell in each row until remove cell is reached
+                tarRow = cellRow; 
+                //determine which way to iterate vertically
+                if (delta > 0) { //move down rows
+                    tarRow -= 2;
+                } else {         //move up rows 
+                    tarRow += 2;
+                }
+                do {
+
+                    //determine which way to shift currently placed cells
+                    for (int icol = leftColBounding; icol <= rightColBounding; icol++) {
+                        if (cellGrid[tarRow][icol] > 0 && icol < tarCol) {
+                            leftOf++;
+                        } else if (cellGrid[tarRow][icol] > 0 && icol > tarCol) {
+                            rightOf++;
+                        }
+                    }
+                    if (leftOf <= rightOf) {
+                        shiftCellsLeft(tarRow, tarCol);
+                    } else {
+                        shiftCellsRight(tarRow, tarCol);
+                    }
+
+                    //create place feed thru cell
+                    Cell *feedThru = new Cell(++feedCellCount, FEEDTHRU, debug);
+                    if(debug) printf("creating new feed thru cell %i\n", feedCellCount);
+                
+                    //CONNECT TERMINALS
+                    //connect to current cell
+                    if (iFeed == 1) {
+                        if (debug) printf("connecting feed thru to local cell\n");
+                        if (delta > 0) { 
+                            cells[forceOrderMap[icell]]->connectTerminals(curCell, iterm, (-1)*feedCellCount, 1); 
+                            feedThru->connectTerminals((-1)*feedCellCount, 1, curCell, iterm);
+                        } else {
+                            cells[forceOrderMap[icell]]->connectTerminals(curCell, iterm, (-1)*feedCellCount, 2); 
+                            feedThru->connectTerminals((-1)*feedCellCount, 2, curCell, iterm);
+                        }
+                    }
+
+                    //connect to intermediate feed thru cells
+                    if (numFeedThrus > 1 && iFeed > 1) {
+                        if(debug) printf("connecting feed thru to intermediate feed thru\n");
+                        int remFeedCell = feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->getCellNum();
+                        if (delta > 0) { 
+                            feedThru->connectTerminals((-1)*feedCellCount, 2, (-1)*(feedCellCount-1), 1);
+                            feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->connectTerminals((-1)*remFeedCell, 1, (-1)*feedCellCount, 2);
+                        } else {
+                            feedThru->connectTerminals((-1)*feedCellCount, 1, (-1)*(feedCellCount-1), 2);
+                            feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->connectTerminals((-1)*remFeedCell, 2, (-1)*feedCellCount, 1);
+                        }
+                    }
+
+                    //connect to remote cell
+                    if (iFeed == numFeedThrus) {    
+                        if(debug) printf("connecting feed thru to remote cell\n");
+                        if (delta > 0) { 
+                            feedThru->connectTerminals((-1)*feedCellCount, 2, remCell, remTerm);
+                            cells[forceOrderMap[remCell]]->connectTerminals(remCell, remTerm, (-1)*feedCellCount, 2); 
+                        } else {
+                            feedThru->connectTerminals((-1)*feedCellCount, 1, remCell, remTerm);
+                            cells[forceOrderMap[remCell]]->connectTerminals(remCell, remTerm, (-1)*feedCellCount, 1); 
+                        }
+                    } 
+
+                    feedThru->setCellCoordinates(tarRow, tarCol); 
+                    feedCells.push_back(feedThru);
+
+                    if(debug) printf("placing feed thru cell -%i in row %i,%i\n", feedCellCount, tarRow, tarCol);
+
+                    cellGrid[tarRow][tarCol] = feedCellCount * -1;
+                    if (delta > 0) { //move down rows
+                        tarRow -= 2;
+                    } else {         //move up rows 
+                        tarRow += 2;
+                    }
+
+                    iFeed++;
+                } while (iFeed <= numFeedThrus);  
+
+                placedFeedCells.push_back( std::make_pair(float(curCell)+iterm/10.0, float(remCell)+remTerm/10.0) );
+            }
+        }
+    }
+}
+
+void Placer::shiftCellsLeft(int tarRow, int tarCol)
+{
+    for (int icol = leftColBounding - 1; icol < tarCol; icol++) {
+        //TODO: don't shift feed thru cells
+//        if (cellGrid[tarRow][icol+1] < 0) { 
+//            cellGrid[tarRow][icol] = cellGrid[tarRow][icol + 2]; 
+//            icol++;
+//        } else {
+//            cellGrid[tarRow][icol] = cellGrid[tarRow][icol + 1]; 
+//        }
+
+            //update hidden feed thru cell locations
+        int nextCell = cellGrid[tarRow][icol + 1];
+        int tmpCell = 0; 
+        if (nextCell < 0) {
+            tmpCell = findFeedThruAtLoc((-1)*nextCell, tarRow, icol); 
+        }
+        if (tmpCell != 0) {
+            if(debug) printf("found feed thru cell %i at loc %i,%i\n", tmpCell, tarRow, icol);
+            feedCells[getFeedCellInd(tmpCell)]->setCellCoordinates(tarRow, icol);
+        }
+        cellGrid[tarRow][icol] = nextCell; 
+    }
+    
+    if (cellGrid[tarRow][leftColBounding - 1] > 0) {
+        leftColBounding -= 1;
+    }
+}
+void Placer::shiftCellsRight(int tarRow, int tarCol)
+{
+    for (int icol = rightColBounding + 1; icol > tarCol; icol--) {
+        //TODO: don't shift feed thru cells if possible
+//        if (cellGrid[tarRow][icol-1] < 0) {
+//            cellGrid[tarRow][icol] = cellGrid[tarRow][icol - 2]; 
+//            icol--;
+//        } else {
+//            cellGrid[tarRow][icol] = cellGrid[tarRow][icol - 1]; 
+//        }
+//    }
+        int prevCell = cellGrid[tarRow][icol - 1];
+        int tmpCell = 0; 
+        if (prevCell < 0) {
+            tmpCell = findFeedThruAtLoc((-1)*prevCell, tarRow, icol); 
+        }
+        if (tmpCell != 0) {
+            if(debug) printf("found feed thru cell %i at loc %i,%i\n", tmpCell, tarRow, icol);
+            feedCells[getFeedCellInd(tmpCell)]->setCellCoordinates(tarRow, icol);
+        }
+        cellGrid[tarRow][icol] = prevCell; 
+    }
+
+    if (cellGrid[tarRow][rightColBounding + 1] > 0) {
+        rightColBounding += 1;
+    }
+}
+
+void Placer::compactAndMapLambda() 
+{
+    bool firstCell = true;
+    int curColPos  = 0;
+
+    for (int iRow = topRowBounding; iRow >= botRowBounding; iRow--) {
+        for (int iCol = leftColBounding; iCol <= rightColBounding; iCol++) {
+            int curCell = cellGrid[iRow][iCol];
+            int tarCol = 0;
+
+            if (firstCell && curCell != 0) {
+                firstCell = false;
+                curColPos = iCol*6; 
+            }
+
+            if (curCell > 0) {
+                tarCol = cells[forceOrderMap[curCell]]->getCellX()*6;
+                if (tarCol - curColPos >= 6) {
+                    curColPos = tarCol; 
+                }
+
+                if(debug) printf("placing cell %i at lambda %i\n", curCell, curColPos);
+                cells[forceOrderMap[curCell]]->setLambdaCoordinates(iRow*6, curColPos);
+                curColPos += 6;
+            } else if (curCell < 0) {
+                int tmpCell;
+                int ind = getFeedCellInd(curCell);
+                if(debug) printf("ind of feed cell %i is %i\n", curCell, ind);
+                tarCol = feedCells[ind]->getCellX()*6;
+                if (tarCol - curColPos >= 6) {
+                    curColPos = tarCol; 
+                }
+                if(debug) printf("placing feed cell %i at lambda %i\n", curCell, curColPos);
+                feedCells[getFeedCellInd(curCell)]->setLambdaCoordinates(iRow*6, curColPos);
+                curColPos += 3;
+
+                //find and place other feedthru cell that is assigned to this location
+                tmpCell = findFeedThruAtLoc((-1)*curCell, iRow, tarCol/6); 
+                if (tmpCell != 0) {
+                    if(debug) printf("found feed thru cell %i at loc %i,%i\n", tmpCell, iRow, tarCol/6);
+                    feedCells[getFeedCellInd(tmpCell)]->setLambdaCoordinates(iRow*6, curColPos);
+                    curColPos += 3; 
+                }
+            }
+
+            if (cellGrid[iRow][iCol+1] > 0 && curCell > 0) {
+                //leave a space between cells
+                curColPos += 1;
+            } 
+        }
+        firstCell = true;
+        curColPos = 0;
+    }
+}
+
+int Placer::getFeedCellInd(int curCell)
+{
+    for (int i1 = 0; i1 < feedCellCount; i1++) {
+        if (feedCells[i1]->getCellNum() == (curCell*(-1))) {
+            return i1;
+        }
+    }
+
+    return -1;
+}
+
+int Placer::findFeedThruAtLoc(int curCell, int row, int col)
+{
+    for (int i1 = 0; i1 < feedCellCount; i1++) {
+        if (feedCells[i1]->getCellNum() == curCell) {
+            continue;
+        } else if (feedCells[i1]->getCellX() == col &&
+            feedCells[i1]->getCellY() == row)
+        {
+            return (-1)*feedCells[i1]->getCellNum();
+        }
+    }
+    return 0;
+}
+
+void Placer::writeMagFile()
+{
+    std::ofstream fp;
+    fp.open(magfile);
+
+    fp << "magic\n";
+    fp << "tech scmos\n";
+    fp << "timestamp " << time(NULL) << "\n";
+    fp << "<< m1p >>\n";
+    //place std cells
+    for (int icell = 1; icell <= cellCount; icell++) {
+        fp << "use CELL  " << cells[forceOrderMap[icell]]->getCellNum() << "\n";
+        switch (cells[forceOrderMap[icell]]->getCellOrientation()) {
+        case NORM:
+            fp << "transform 1 0 " << cells[forceOrderMap[icell]]->getLambdaX()
+               << " 0 1 " << cells[forceOrderMap[icell]]->getLambdaY() << "\n";
+            break;
+        case ROTATED:
+            fp << "transform -1 0 " << cells[forceOrderMap[icell]]->getLambdaX() + 6
+               << " 0 -1 " << cells[forceOrderMap[icell]]->getLambdaY() + 6 << "\n";
+            break;
+        case FLIPHORZ:
+            fp << "transform 1 0 " << cells[forceOrderMap[icell]]->getLambdaX()
+               << " 0 -1 " << cells[forceOrderMap[icell]]->getLambdaY() + 6 << "\n";
+            break;
+        case FLIPVERT:
+            fp << "transform -1 0 " << cells[forceOrderMap[icell]]->getLambdaX() + 6
+               << " 0 1 " << cells[forceOrderMap[icell]]->getLambdaY() << "\n";
+            break;
+        default:
+            printf("INVALID ORIENTATION\n");
+            exit(1);
+        }
+        fp << "box 0 0 6 6\n";
+    }
+    //place feed thru cells
+    for (int ifeed = 0; ifeed < feedCellCount; ifeed++) {
+        fp << "use FEEDTHRU  F" << feedCells[ifeed]->getCellNum()*(-1) << "\n";
+        fp << "transform 1 0 " << feedCells[ifeed]->getLambdaX()
+           << " 0 1 " << feedCells[ifeed]->getLambdaY() << "\n";
+        fp << "box 0 0 3 6\n";
+    }
+    fp << "<< end >>\n";
+
+    fp.close();
+/*
+    //write cell template file
+    std::ofstream cellfp; 
+    cellfp.open("Cell.mag");
+    cellfp << "magic\n";
+    cellfp << "tech scmos\n";
+    cellfp << "timestamp " << time(NULL) << "\n";
+    cellfp << "<< metal1 >>\n";
+    cellfp << "rect 1 5 2 6\n";
+    cellfp << "rect 4 5 5 6\n";
+    cellfp << "rect 1 0 2 1\n";
+    cellfp << "rect 4 0 5 1\n";
+    cellfp << "<< metal2 >>\n";
+    cellfp << "rect 1 5 2 6\n";
+    cellfp << "rect 4 5 5 6\n";
+    cellfp << "rect 1 0 2 1\n";
+    cellfp << "rect 4 0 5 1\n";
+    cellfp << "<< comment >>\n";
+    cellfp << "rect 0 0 6 6\n";
+    cellfp << "<< labels >>\n";
+    cellfp << "rlabel metal1 1 5 2 6 0 1\n";
+    cellfp << "rlabel metal1 4 5 5 6 0 2\n";
+    cellfp << "rlabel metal1 1 0 2 1 0 3\n";
+    cellfp << "rlabel metal1 4 0 5 1 0 4\n";
+    cellfp << "<< end >>\n";
+    cellfp.close();
+*/
+} 
 

@@ -8,17 +8,19 @@ int main(int argc, char* argv[])
 {
     time_t t0 = time(NULL);
     bool debug = false;
+    char *filename = NULL;
     int linenum = 0;
     int netcount, cellcount = 0;
     Cell **cells = NULL;
     Placer *placer = NULL;
     
-    if (argc < 1) {
-        std::cout << "Usage: pr [-d]" << std::endl;
+    if (argc < 2) {
+        std::cout << "Usage: placeAndRoute <filename.mag> [-d] < <BM#>" << std::endl;
         exit(0);
-    } else if (argc == 2 && std::string(argv[1]) == "-d") {
+    } else if (argc == 3 && std::string(argv[2]) == "-d") {
         debug = true;
     }
+    filename = argv[1];
 
     //parse file and populate cell objects
     int tmp1;
@@ -45,14 +47,18 @@ int main(int argc, char* argv[])
         linenum++;
     }
 
-    placer = new Placer(cellcount, cells, debug);
+    placer = new Placer(filename, cellcount, cells, debug);
     
     placer->placeCellsInitial();
     placer->calculateConnectivity();
-    placer->printCellGrid();
+    if(debug) placer->printCellGrid();
     placer->placeByForceDirected();
-    placer->printCellGrid();
     placer->calculateConnectivity();
+    if(debug) placer->printCellGrid();
+    placer->placeFeedThruCells();
+    placer->compactAndMapLambda();
+    if(debug) placer->printCellGrid();
+    placer->writeMagFile();
 
     time_t tf = time(NULL);
     printf("Run time: %i hour(s), %i min(s), %i (secs)\n",

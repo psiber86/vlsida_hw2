@@ -27,8 +27,13 @@ int Cell::getCellNum()
 
 void Cell::connectTerminals(int locCell, int locTerm, int remCell, int remTerm)
 {
+    int numTerms = 4;
     std::pair<int, int> rcellTerm (remCell, remTerm);
     termNets[locTerm] = rcellTerm;
+
+    if (cellWidth == 3) {
+        numTerms = 2;
+    }
 
     numNets++;
     if(debug) printf("connecting %i-%i to %i-%i\n", locCell, locTerm, remCell, remTerm);
@@ -36,11 +41,11 @@ void Cell::connectTerminals(int locCell, int locTerm, int remCell, int remTerm)
     if(debug) {
         printf("Cell %i:\n", locCell);
         printf("\tTerminal: ");
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < numTerms; i++) {
             printf("\t%i", i+1);
         }
         printf("\n\tCell:     ");
-        for (int i = 1; i <= 4; i++) {
+        for (int i = 1; i <= numTerms; i++) {
             printf("\t%i", termNets[i].first);
         }
         printf("\n");
@@ -76,7 +81,33 @@ void Cell::setLambdaCoordinates(int y, int x)
     xRtop = x + cellWidth + 1;
     yRtop = y + CELL_HEIGHT + 1; 
 
-    //TODO: optimize??
+    if (cellWidth == 3) {
+        //terminal 1
+        termXY[0][0] = xLbot + T1T3_OFFSET;
+        termXY[0][1] = yLbot;
+        //terminal 2
+        termXY[1][0] = xLbot + T1T3_OFFSET;
+        termXY[1][1] = yLbot + 4;
+    } else {
+        //terminal 1
+        termXY[0][0] = xLbot + T1T3_OFFSET;
+        termXY[0][1] = yLbot + 4;
+        //terminal 2
+        termXY[1][0] = xLbot + T2T4_OFFSET;
+        termXY[1][1] = yLbot + 4;
+        //terminal 3
+        termXY[2][0] = xLbot + T1T3_OFFSET;
+        termXY[2][1] = yLbot;
+        //terminal 4
+        termXY[3][0] = xLbot + T2T4_OFFSET;
+        termXY[3][1] = yLbot;
+    } 
+}
+
+void Cell::resetTermCoords()
+{
+    orientation = NORM;
+
     //terminal 1
     termXY[0][0] = xLbot + T1T3_OFFSET;
     termXY[0][1] = yLbot + 4;
@@ -91,6 +122,65 @@ void Cell::setLambdaCoordinates(int y, int x)
     termXY[3][1] = yLbot;
 }
 
+void Cell::rotateCell() 
+{
+    orientation = ROTATED;
+
+    //terminal 4
+    termXY[3][0] = xLbot + T1T3_OFFSET;
+    termXY[3][1] = yLbot + 4;
+    //terminal 3
+    termXY[2][0] = xLbot + T2T4_OFFSET;
+    termXY[2][1] = yLbot + 4;
+    //terminal 2
+    termXY[1][0] = xLbot + T1T3_OFFSET;
+    termXY[1][1] = yLbot;
+    //terminal 1
+    termXY[0][0] = xLbot + T2T4_OFFSET;
+    termXY[0][1] = yLbot;
+}
+
+void Cell::flipHorzCell()
+{
+    orientation = FLIPHORZ;
+
+    //terminal 3
+    termXY[2][0] = xLbot + T1T3_OFFSET;
+    termXY[2][1] = yLbot + 4;
+    //terminal 4
+    termXY[3][0] = xLbot + T2T4_OFFSET;
+    termXY[3][1] = yLbot + 4;
+    //terminal 1
+    termXY[0][0] = xLbot + T1T3_OFFSET;
+    termXY[0][1] = yLbot;
+    //terminal 2
+    termXY[1][0] = xLbot + T2T4_OFFSET;
+    termXY[1][1] = yLbot;
+}
+
+void Cell::flipVertCell()
+{
+    orientation = FLIPVERT;
+
+    //terminal 2
+    termXY[1][0] = xLbot + T1T3_OFFSET;
+    termXY[1][1] = yLbot + 4;
+    //terminal 1
+    termXY[0][0] = xLbot + T2T4_OFFSET;
+    termXY[0][1] = yLbot + 4;
+    //terminal 4
+    termXY[3][0] = xLbot + T1T3_OFFSET;
+    termXY[3][1] = yLbot;
+    //terminal 3
+    termXY[2][0] = xLbot + T2T4_OFFSET;
+    termXY[2][1] = yLbot;
+}
+
+int Cell::getCellOrientation()
+{
+    return orientation;
+}
+
 int Cell::getCellX() 
 {
     return xcell;
@@ -99,6 +189,16 @@ int Cell::getCellX()
 int Cell::getCellY() 
 {
     return ycell;
+}
+
+int Cell::getLambdaX() 
+{
+    return xLbot;
+}
+
+int Cell::getLambdaY() 
+{
+    return yLbot;
 }
 
 std::pair<int, int> Cell::getTerminalCoordinates(int term) 
@@ -116,5 +216,4 @@ int Cell::getForce()
 {
     return zeroForce;
 }
-
 
