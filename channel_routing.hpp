@@ -8,6 +8,8 @@
 #include <memory>
 #include <map>
 #include <cstddef>
+#include <set>
+#include <utility>
 
 #include "Cell.h"
 
@@ -35,7 +37,9 @@ public:
   channel_router(std::vector<Cell>);
   int route(const std::vector<int, zero_allocator<int> >&, const std::vector<int, zero_allocator<int> >&);
   int route(const int, const int);
+  int route_all();
 private:
+  void insert_net(std::vector<std::set<std::pair<int,int> > >&, const int, const int);
   enum region_fill { EMPTY = 0, HORIZONTAL_WIRE, VERTICAL_WIRE, HORIZONTAL_AND_VERTICAL_WIRE, BUFFER_SPACE };
   std::vector<std::vector<int, zero_allocator<int>>> grid;
   std::map<int,std::vector<node>> rows;

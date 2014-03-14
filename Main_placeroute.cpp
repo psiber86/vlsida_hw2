@@ -3,6 +3,7 @@
 #include "PR.h"
 #include "Cell.h"
 #include "Placer.h"
+#include "channel_routing.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -63,7 +64,8 @@ int main(int argc, char* argv[])
 
     //routing stuff
 #ifdef CHANNEL_ROUTING
-    
+    channel_router channelRouter(placer->get_cells());
+    channelRouter.route_all();
 #else
 
 #endif
