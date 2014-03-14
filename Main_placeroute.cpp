@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
         int t_cell1, t_term1, t_cell2, t_term2;
         if (linenum == 0) {
             cellcount = net_number;
-            
+
             cells = new Cell*[cellcount+1];
             for (int i = 1; i < cellcount+1; i++) {
                 cells[i] = new Cell(i, STDCELL, debug);
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
             std::cin >> t_term1;
             std::cin >> t_cell2;
             std::cin >> t_term2;
-            
+
             cells[t_cell1]->connectTerminals(t_cell1, t_term1, t_cell2, t_term2, net_number);
             cells[t_cell2]->connectTerminals(t_cell2, t_term2, t_cell1, t_term1, net_number);
         } 
@@ -49,7 +49,7 @@ int main(int argc, char* argv[])
     }
 
     placer = new Placer(filename, cellcount, cells, debug);
-    
+
     placer->placeCellsInitial();
     placer->calculateConnectivity();
     if(debug) placer->printCellGrid();
@@ -65,7 +65,9 @@ int main(int argc, char* argv[])
     //routing stuff
 #ifdef CHANNEL_ROUTING
     channel_router channelRouter(placer->get_cells());
-    channelRouter.route_all();
+    delete placer;
+    placer = NULL;
+    std::cout << channelRouter.route_all() << " terminals routed" << std::endl;
 #else
 
 #endif

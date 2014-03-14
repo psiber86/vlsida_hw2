@@ -28,8 +28,20 @@ private:
 
     bool debug;
 
+    int nets[4];
+
 public:
     Cell(int, int, bool);
+    Cell(const Cell& other) : numNets(other.numNets), xcell(other.xcell), ycell(other.ycell), xLbot(other.xLbot),
+      yLbot(other.yLbot), xRtop(other.xRtop), yRtop(other.yRtop), cellWidth(other.cellWidth),
+      zeroForce(other.zeroForce), orientation(other.orientation), debug(other.debug)
+    {
+      for (int i = 0; i < 4; i++) {
+        this->termXY[i][0] = other.termXY[i][0];
+        this->termXY[i][1] = other.termXY[i][1];
+        this->nets[i] = other.nets[i];
+      }
+    }
 
     int getCellNum();
 
@@ -70,7 +82,7 @@ public:
 
     int termXY[4][2];   //coordinates of terminals 
 
-    std::map<int,int> nets;
+    const int* getNets() const { return nets; };
 };
 
 #endif

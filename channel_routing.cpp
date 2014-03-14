@@ -16,8 +16,9 @@
 channel_router::channel_router(std::vector<Cell> cells) : cells(cells) {
   for (auto &cell : cells) {
     for (int i=0; i < TERMINALS_PER_CELL; i++) {
-      if (cell.nets.count(i)) {
-        rows[cell.termXY[i][1]].push_back(node(cell.termXY[i][0], cell.termXY[i][1], cell.nets[i]));
+      const int* nets = cell.getNets();
+      if ( nets[i] ) {
+        rows[cell.termXY[i][1]].push_back(node(cell.termXY[i][0], cell.termXY[i][1], nets[i]));
       }
     }
   }
@@ -28,21 +29,28 @@ int channel_router::route(const int top_index, const int bottom_index) {
   std::cout << "Routing rows at " << top_index << " and " << bottom_index << std::endl;
 #endif
 
-  std::vector<int, zero_allocator<int> > top;
+  std::vector<int> top;
   std::sort(rows[top_index].begin(), rows[top_index].end());
   for (auto &node : rows[top_index]) {
+    // According to Josh, his coordinates are never negative
+    if ( top.size() < (unsigned int)node.x ) {
+      top.resize(node.x+1);
+    }
     top[node.x] = node.net;
   }
-  std::vector<int, zero_allocator<int> > bottom;
+  std::vector<int> bottom;
   std::sort(rows[bottom_index].begin(), rows[bottom_index].end());
   for (auto &node : rows[bottom_index]) {
+    if ( bottom.size() < (unsigned int)node.x ) {
+      bottom.resize(node.x+1);
+    }
     bottom[node.x] = node.net;
   }
 
   return this->route(top, bottom);
 }
 
-int find_rightmost(const std::vector<int, zero_allocator<int> >& terminals, int net) {
+int find_rightmost(const std::vector<int>& terminals, int net) {
   for (int i = terminals.size(); i >= 0; i--) {
     if ( terminals[i] == net ) {
       return i;
@@ -54,11 +62,9 @@ int find_rightmost(const std::vector<int, zero_allocator<int> >& terminals, int 
 void channel_router::insert_net(std::vector<std::set<std::pair<int,int> > >& tracks, const int net_left, const int net_right)
 {
   // This is messy as fuck; is there a better way?
-  std::set<std::pair<int,int> >* candidate_track;
   // Search all the tracks for one that can hold the net
   bool need_new_track = false;
   for (auto &track : tracks) {
-    candidate_track = &track;
     bool found_track = true;
     for (auto &net : track) {
       if ( net.first < net_right || net.second > net_left ) {
@@ -67,28 +73,31 @@ void channel_router::insert_net(std::vector<std::set<std::pair<int,int> > >& tra
         break;
       }
     }
-    if ( found_track ) {
+    if ( !found_track ) {
       // We didn't find a track; we ran out of tracks
       need_new_track = true;
       break;
     }
+    else {
+      track.insert(std::make_pair(net_left, net_right));
+    }
   }
   if ( need_new_track ) {
     tracks.push_back(std::set<std::pair<int,int> >());
-    candidate_track = &tracks.back();
+    tracks.back().insert(std::make_pair(net_left, net_right));
   }
-  candidate_track->insert(std::make_pair(net_left, net_right));
 }
 
-inline int greater(const int a, const int b) {
+int greater(const int a, const int b) {
   if ( a > b ) return a;
   else return b;
 }
 
-int channel_router::route(const std::vector<int, zero_allocator<int> >& top, const std::vector<int, zero_allocator<int> >& bottom)
+int channel_router::route(const std::vector<int>& top, const std::vector<int>& bottom)
 {
   std::vector<std::pair<int,int>> vcg;
   std::vector<std::set<std::pair<int,int> > > tracks;
+  tracks.resize(1); // Need at least one track to start
 
   int width = greater(top.size(), bottom.size());
 
@@ -115,5 +124,16 @@ int channel_router::route(const std::vector<int, zero_allocator<int> >& top, con
 }
 
 int channel_router::route_all() {
-
+  int num_routed = 0;
+  // Iterate starting with the second row
+  std::map<int,std::vector<node> >::iterator iter = this->rows.begin();
+  for (++iter; iter != this->rows.end(); ++iter) {
+    int bottom_row = iter->first;
+    if ( ++iter == this->rows.end() || next(iter) == this->rows.end() ) {
+      // Skip the last row too
+      break;
+    }
+    num_routed += this->route(iter->first, bottom_row);
+  }
+  return num_routed;
 }

@@ -1,3 +1,5 @@
+#include <cstdlib>
+
 #include "PR.h"
 #include "Cell.h"
 
@@ -16,8 +18,11 @@ Cell::Cell(int cellNum, int type, bool glob_debug)
     numNets = 0;
 
     memset(termXY, 0, sizeof(int)*2*4);
+    memset(nets, 0, sizeof(int)*4);
 
     zeroForce = -1;
+
+    this->nets[0] = 0;
 }
 
 int Cell::getCellNum() 

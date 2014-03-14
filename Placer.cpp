@@ -833,7 +833,7 @@ void Placer::writeMagFile()
 std::vector<Cell> Placer::get_cells() const
 {
   std::vector<Cell> all_cells;
-  for (int i = 0; i < this->cellCount; i++) {
+  for (int i = 1; i < this->cellCount+1; i++) {
     all_cells.push_back(*cells[i]);
   }
   for (auto &cell : this->feedCells) {
