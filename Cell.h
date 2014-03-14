@@ -28,8 +28,6 @@ private:
 
     bool debug;
 
-    std::map<int,int> nets;
-
 public:
     Cell(int, int, bool);
 
@@ -72,6 +70,7 @@ public:
 
     int termXY[4][2];   //coordinates of terminals 
 
+    std::map<int,int> nets;
 };
 
 #endif
