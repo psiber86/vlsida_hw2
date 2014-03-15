@@ -64,10 +64,10 @@ int main(int argc, char* argv[])
 
     //routing stuff
 #ifdef CHANNEL_ROUTING
-    channel_router channelRouter(placer->get_cells());
+    channel_router channelRouter(placer->get_cells(), netcount);
     delete placer;
     placer = NULL;
-    std::cout << channelRouter.route_all() << " terminals routed" << std::endl;
+    std::cout << channelRouter.route_all() << " of " << channelRouter.get_num_nets() << " nets routed" << std::endl;
 #else
 
 #endif

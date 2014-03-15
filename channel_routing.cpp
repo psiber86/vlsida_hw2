@@ -10,10 +10,11 @@
 
 #include "Cell.h"
 #include "channel_routing.hpp"
+#include "PR.h"
 
 #define TERMINALS_PER_CELL 4
 
-channel_router::channel_router(std::vector<Cell> cells) : cells(cells) {
+channel_router::channel_router(std::vector<Cell> cells, int num_nets) : cells(cells), num_nets(num_nets) {
   for (auto &cell : cells) {
     for (int i=0; i < TERMINALS_PER_CELL; i++) {
       const int* nets = cell.getNets();
@@ -33,18 +34,26 @@ int channel_router::route(const int top_index, const int bottom_index) {
   std::sort(rows[top_index].begin(), rows[top_index].end());
   for (auto &node : rows[top_index]) {
     // According to Josh, his coordinates are never negative
-    if ( top.size() < (unsigned int)node.x ) {
-      top.resize(node.x+1);
+    for (int i = top.size()-1; i < node.x; i++) {
+      top.push_back(0);
     }
     top[node.x] = node.net;
   }
   std::vector<int> bottom;
   std::sort(rows[bottom_index].begin(), rows[bottom_index].end());
   for (auto &node : rows[bottom_index]) {
-    if ( bottom.size() < (unsigned int)node.x ) {
-      bottom.resize(node.x+1);
+    for (int i = bottom.size()-1; i < node.x; i++) {
+      bottom.push_back(0);
     }
     bottom[node.x] = node.net;
+  }
+
+  // Make the vectors the same length
+  for (int i = top.size(); i < bottom.size(); i++) {
+    top.push_back(0);
+  }
+  for (int i = bottom.size(); i < top.size(); i++) {
+    bottom.push_back(0);
   }
 
   return this->route(top, bottom);
@@ -97,30 +106,42 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
 {
   std::vector<std::pair<int,int>> vcg;
   std::vector<std::set<std::pair<int,int> > > tracks;
+  std::vector<int> routed_nets;
   tracks.resize(1); // Need at least one track to start
 
   int width = greater(top.size(), bottom.size());
 
+  int terminals_routed = 0;
+
   // Place all the horizontal portions of the nets into tracks. Basically, implement the unconstrained
   // left-edge algorithm
+#ifdef DEBUG
+  std::cout << "Routing nets: ";
+#endif
   for (int i=0; i < width; i++) {
-    if ( bottom[i] ) {
+    if ( bottom[i] && (std::find(routed_nets.begin(), routed_nets.end(), bottom[i]) == routed_nets.end()) ) {
+      std::cout << bottom[i] << ' ';
       int net_left = bottom[i];
       int rightmost_bottom = find_rightmost(bottom, net_left);
       int rightmost_top = find_rightmost(top, net_left);
+      routed_nets.push_back(bottom[i]);
       this->insert_net(tracks, net_left, greater(rightmost_bottom, rightmost_top));
+      ++terminals_routed;
     }
-    if ( top[i] ) {
+    if ( top[i] && (std::find(routed_nets.begin(), routed_nets.end(), top[i]) == routed_nets.end()) ) {
+      std::cout << top[i] << ' ';
       int net_left = top[i];
       int rightmost_bottom = find_rightmost(bottom, net_left);
       int rightmost_top = find_rightmost(top, net_left);
+      routed_nets.push_back(top[i]);
       this->insert_net(tracks, net_left, greater(rightmost_bottom, rightmost_top));
+      ++terminals_routed;
     }
   }
 #ifdef DEBUG
-  std::cout << "Tracks used: " << tracks.size() << std::endl;
+  std::cout << std::endl << "Tracks used: " << tracks.size() << std::endl;
 #endif
-  return tracks.size();
+  return terminals_routed;
 }
 
 int channel_router::route_all() {
@@ -136,4 +157,15 @@ int channel_router::route_all() {
     num_routed += this->route(iter->first, bottom_row);
   }
   return num_routed;
+}
+
+int channel_router::get_num_nets() const
+{
+  int nets = this->num_nets;
+  for (auto &cell : this->cells) {
+    if ( cell.getCellWidth() == 3 ) {
+      nets++;
+    }
+  }
+  return nets;
 }

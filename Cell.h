@@ -83,6 +83,8 @@ public:
     int termXY[4][2];   //coordinates of terminals 
 
     const int* getNets() const { return nets; };
+
+    int getCellWidth() const { return cellWidth; };
 };
 
 #endif
