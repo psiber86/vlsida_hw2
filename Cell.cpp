@@ -25,7 +25,7 @@ Cell::Cell(int cellNum, int type, bool glob_debug)
     this->nets[0] = 0;
 }
 
-int Cell::getCellNum() 
+int Cell::getCellNum() const 
 {
     return cellId;
 }
@@ -63,12 +63,12 @@ void Cell::connectTerminals(int locCell, int locTerm, int remCell, int remTerm, 
   this->nets[locTerm] = netNum;
 }
 
-int Cell::getNetCount()
+int Cell::getNetCount() const
 {
     return numNets;
 }
 
-std::map<int, std::pair<int, int> > Cell::getTermNets()
+std::map<int, std::pair<int, int> > Cell::getTermNets() const
 {
     return termNets; 
 }
@@ -187,32 +187,32 @@ void Cell::flipVertCell()
     termXY[2][1] = yLbot;
 }
 
-int Cell::getCellOrientation()
+int Cell::getCellOrientation() const
 {
     return orientation;
 }
 
-int Cell::getCellX() 
+int Cell::getCellX() const
 {
     return xcell;
 }
 
-int Cell::getCellY() 
+int Cell::getCellY() const
 {
     return ycell;
 }
 
-int Cell::getLambdaX() 
+int Cell::getLambdaX() const
 {
     return xLbot;
 }
 
-int Cell::getLambdaY() 
+int Cell::getLambdaY() const
 {
     return yLbot;
 }
 
-std::pair<int, int> Cell::getTerminalCoordinates(int term) 
+std::pair<int, int> Cell::getTerminalCoordinates(int term) const
 {
     std::pair<int, int> loc (termXY[term-1][0], termXY[term-1][1]);
     return loc; 
@@ -223,7 +223,7 @@ void Cell::setForce(int force)
     zeroForce = force;
 }
 
-int Cell::getForce()
+int Cell::getForce() const
 {
     return zeroForce;
 }

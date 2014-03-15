@@ -43,30 +43,30 @@ public:
       }
     }
 
-    int getCellNum();
+    int getCellNum() const;
 
     void connectTerminals(int, int, int, int);
     void connectTerminals(int, int, int, int, int);
 
-    int getNetCount();
+    int getNetCount() const;
 
-    std::map<int, std::pair<int, int> >  getTermNets();
+    std::map<int, std::pair<int, int> >  getTermNets() const;
 
     void setCellCoordinates(int, int);
 
-    int getCellX();
+    int getCellX() const;
 
-    int getCellY();
+    int getCellY() const;
 
-    int getLambdaX();
+    int getLambdaX() const;
 
-    int getLambdaY();
+    int getLambdaY() const;
 
-    std::pair<int, int> getTerminalCoordinates(int);
+    std::pair<int, int> getTerminalCoordinates(int)  const;
 
     void setForce(int);
 
-    int getForce();
+    int getForce() const;
 
     void setLambdaCoordinates(int, int );
 
@@ -78,7 +78,7 @@ public:
 
     void flipVertCell();
 
-    int getCellOrientation();
+    int getCellOrientation() const;
 
     int termXY[4][2];   //coordinates of terminals 
 

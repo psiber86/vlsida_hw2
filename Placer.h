@@ -5,7 +5,7 @@
 
 class Placer {
 private:
-    char *magfile;
+    const char *magfile;
 
     signed short **cellGrid;  //layout matrix with granularity of cells
     unsigned char **lambdaGrid; //layout matric with granularity of lambdas
@@ -37,7 +37,7 @@ private:
     bool debug;
 
 public:
-    Placer(char*, int, Cell **, bool);
+    Placer(const char*, int, Cell **, bool);
 
     void placeCellsInitial();
 

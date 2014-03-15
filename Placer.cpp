@@ -14,7 +14,7 @@ bool CmpCellNum(Cell *a, Cell *b)
     return a->getCellNum() < b->getCellNum();
 }
 
-Placer::Placer(char *filename, int cellCountIn, Cell **cellList, bool debugIn)
+Placer::Placer(const char *filename, int cellCountIn, Cell **cellList, bool debugIn)
 {
     debug = debugIn;
 
