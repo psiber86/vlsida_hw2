@@ -59,7 +59,7 @@ public:
 
     void shiftCellsRight(int, int);
 
-    void writeMagFile();
+    void writeMagFile() const;
 
     void compactAndMapLambda();
 

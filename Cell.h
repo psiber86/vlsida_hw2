@@ -32,8 +32,8 @@ private:
 
 public:
     Cell(int, int, bool);
-    Cell(const Cell& other) : numNets(other.numNets), xcell(other.xcell), ycell(other.ycell), xLbot(other.xLbot),
-      yLbot(other.yLbot), xRtop(other.xRtop), yRtop(other.yRtop), cellWidth(other.cellWidth),
+ Cell(const Cell& other) : cellId(other.cellId), numNets(other.numNets), xcell(other.xcell), ycell(other.ycell),
+      xLbot(other.xLbot), yLbot(other.yLbot), xRtop(other.xRtop), yRtop(other.yRtop), cellWidth(other.cellWidth),
       zeroForce(other.zeroForce), orientation(other.orientation), debug(other.debug)
     {
       for (int i = 0; i < 4; i++) {

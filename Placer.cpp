@@ -756,7 +756,7 @@ void Placer::sortCellArrays()
     }
 } 
 
-void Placer::writeMagFile()
+void Placer::writeMagFile() const
 {
     std::ofstream fp;
     fp.open(magfile);

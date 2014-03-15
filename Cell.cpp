@@ -3,7 +3,7 @@
 #include "PR.h"
 #include "Cell.h"
 
-Cell::Cell(int cellNum, int type, bool glob_debug) 
+Cell::Cell(int cellNum, int type, bool glob_debug) : orientation(NORM)
 {
     debug = glob_debug; 
 
