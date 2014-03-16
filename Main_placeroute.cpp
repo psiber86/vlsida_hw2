@@ -1,5 +1,11 @@
-#include <time.h>
-#include <math.h>
+
+
+#include <ctime>
+#include <cmath>
+#include <string>
+#include <cstddef>
+#include <cstdlib>
+
 #include "PR.h"
 #include "Cell.h"
 #include "Placer.h"
@@ -9,15 +15,15 @@ int main(int argc, char* argv[])
 {
     time_t t0 = time(NULL);
     bool debug = false;
-    char *filename = NULL;
+    std::string filename;
     int linenum = 0;
     int netcount, cellcount = 0;
     Cell **cells = NULL;
     Placer *placer = NULL;
     
     if (argc < 2) {
-        std::cout << "Usage: placeAndRoute <filename.mag> [-d] < <BM#>" << std::endl;
-        exit(0);
+        std::cerr << "Usage: " << argv[0] << " <filename.mag> [-d] < <BM#>" << std::endl;
+        exit(1);
     } else if (argc == 3 && std::string(argv[2]) == "-d") {
         debug = true;
     }
@@ -48,7 +54,7 @@ int main(int argc, char* argv[])
         linenum++;
     }
 
-    placer = new Placer(filename, cellcount, cells, debug);
+    placer = new Placer("placer.mag", cellcount, cells, debug);
 
     placer->placeCellsInitial();
     placer->calculateConnectivity();
@@ -68,6 +74,7 @@ int main(int argc, char* argv[])
     delete placer;
     placer = NULL;
     std::cout << channelRouter.route_all() << " of " << channelRouter.get_num_nets() << " nets routed" << std::endl;
+    channelRouter.write_mag_file(filename);
 #else
 
 #endif
