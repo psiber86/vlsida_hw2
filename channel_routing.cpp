@@ -81,23 +81,28 @@ void channel_router::insert_net(std::vector<std::set<wires > >& tracks, const in
   this_net.left_up = left_up;
   this_net.right_up = right_up;
   this_net.horizontal = std::make_pair(net_left, net_right);
-  bool need_new_track = false;
+  bool need_new_track = true;
   for (auto &track : tracks) {
     bool found_track = true;
     for (auto &net : track) {
-      if ( net.horizontal.first < net_right || net.horizontal.second > net_left ) {
+      if ( !(net_right < net.horizontal.first || net_left > net.horizontal.second) ) {
         // The nets overlap
         found_track = false;
         break;
       }
     }
-    if ( !found_track ) {
-      // We didn't find a track; we ran out of tracks
-      need_new_track = true;
-      break;
-    }
-    else {
+    // if ( !found_track ) {
+    //   // We didn't find a track; we ran out of tracks
+    //   need_new_track = true;
+    //   break;
+    // }
+    // else {
+    //   track.insert(this_net);
+    // }
+    if ( found_track ) {
       track.insert(this_net);
+      need_new_track = false;
+      break;
     }
   }
   if ( need_new_track ) {
@@ -234,7 +239,7 @@ void channel_router::write_mag_file(std::string magfile)
     int extra_offset = 0;
     if ( !row_offsets.first[cell.getLambdaY()] ) {
       shift = -6;
-      extra_offset = 2;
+      extra_offset = 3;
     }
     cell.setLambdaCoordinates(cell.getLambdaY() + row_offsets.first[cell.getLambdaY() + shift] + extra_offset,
                               cell.getLambdaX());

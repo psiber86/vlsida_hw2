@@ -554,10 +554,12 @@ void Placer::placeFeedThruCells()
                         if (debug) printf("connecting feed thru to local cell\n");
                         if (delta > 0) { 
                             cells[forceOrderMap[icell]]->connectTerminals(curCell, iterm, (-1)*feedCellCount, 1); 
-                            feedThru->connectTerminals((-1)*feedCellCount, 1, curCell, iterm);
+                            feedThru->connectTerminals((-1)*feedCellCount, 1, curCell, iterm,
+                                                       cells[forceOrderMap[icell]]->getNets()[iterm]);
                         } else {
                             cells[forceOrderMap[icell]]->connectTerminals(curCell, iterm, (-1)*feedCellCount, 2); 
-                            feedThru->connectTerminals((-1)*feedCellCount, 2, curCell, iterm);
+                            feedThru->connectTerminals((-1)*feedCellCount, 2, curCell, iterm,
+                                                       cells[forceOrderMap[icell]]->getNets()[iterm]);
                         }
                     }
 
@@ -566,11 +568,17 @@ void Placer::placeFeedThruCells()
                         if(debug) printf("connecting feed thru to intermediate feed thru\n");
                         int remFeedCell = feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->getCellNum();
                         if (delta > 0) { 
-                            feedThru->connectTerminals((-1)*feedCellCount, 2, (-1)*(feedCellCount-1), 1);
-                            feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->connectTerminals((-1)*remFeedCell, 1, (-1)*feedCellCount, 2);
+                            feedThru->connectTerminals((-1)*feedCellCount, 2, (-1)*(feedCellCount-1), 1,
+                                                       cells[forceOrderMap[icell]]->getNets()[iterm]);
+                            feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->
+                              connectTerminals((-1)*remFeedCell,1, (-1)*feedCellCount, 2,
+                                               cells[forceOrderMap[icell]]->getNets()[iterm]);
                         } else {
-                            feedThru->connectTerminals((-1)*feedCellCount, 1, (-1)*(feedCellCount-1), 2);
-                            feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->connectTerminals((-1)*remFeedCell, 2, (-1)*feedCellCount, 1);
+                            feedThru->connectTerminals((-1)*feedCellCount, 1, (-1)*(feedCellCount-1), 2,
+                                                       cells[forceOrderMap[icell]]->getNets()[iterm]);
+                            feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->
+                              connectTerminals((-1)*remFeedCell, 2, (-1)*feedCellCount, 1,
+                                               cells[forceOrderMap[icell]]->getNets()[iterm]);
                         }
                     }
 
@@ -579,10 +587,12 @@ void Placer::placeFeedThruCells()
                         if(debug) printf("connecting feed thru to remote cell\n");
                         if (delta > 0) { 
                             feedThru->connectTerminals((-1)*feedCellCount, 2, remCell, remTerm);
-                            cells[forceOrderMap[remCell]]->connectTerminals(remCell, remTerm, (-1)*feedCellCount, 2); 
+                            cells[forceOrderMap[remCell]]->connectTerminals(remCell, remTerm, (-1)*feedCellCount, 2,
+                                                                       cells[forceOrderMap[icell]]->getNets()[iterm]);
                         } else {
                             feedThru->connectTerminals((-1)*feedCellCount, 1, remCell, remTerm);
-                            cells[forceOrderMap[remCell]]->connectTerminals(remCell, remTerm, (-1)*feedCellCount, 1); 
+                            cells[forceOrderMap[remCell]]->connectTerminals(remCell, remTerm, (-1)*feedCellCount, 1,
+                                                                       cells[forceOrderMap[icell]]->getNets()[iterm]);
                         }
                     } 
 
