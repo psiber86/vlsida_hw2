@@ -685,7 +685,7 @@ void Placer::compactAndMapLambda()
                 }
 
                 if(debug) printf("placing cell %i at lambda %i\n", curCell, curColPos);
-                cells[forceOrderMap[curCell]]->setLambdaCoordinates(iRow*7, curColPos);
+                cells[forceOrderMap[curCell]]->setLambdaCoordinates(iRow*3, curColPos);
                 curColPos += 6;
             } else if (curCell < 0) {
                 int tmpCell;
@@ -696,14 +696,14 @@ void Placer::compactAndMapLambda()
                     curColPos = tarCol; 
                 }
                 if(debug) printf("placing feed cell %i at lambda %i\n", curCell, curColPos);
-                feedCells[getFeedCellInd(curCell)]->setLambdaCoordinates(iRow*7, curColPos);
+                feedCells[getFeedCellInd(curCell)]->setLambdaCoordinates(iRow*3, curColPos);
                 curColPos += 3;
 
                 //find and place other feedthru cell that is assigned to this location
                 tmpCell = findFeedThruAtLoc((-1)*curCell, iRow, tarCol/6); 
                 if (tmpCell != 0) {
                     if(debug) printf("found feed thru cell %i at loc %i,%i\n", tmpCell, iRow, tarCol/6);
-                    feedCells[getFeedCellInd(tmpCell)]->setLambdaCoordinates(iRow*7, curColPos);
+                    feedCells[getFeedCellInd(tmpCell)]->setLambdaCoordinates(iRow*3, curColPos);
                     curColPos += 3; 
                 }
             }

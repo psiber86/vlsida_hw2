@@ -43,13 +43,21 @@ public:
   int get_num_nets() const;
   void write_mag_file(const std::string);
 private:
-  void insert_net(std::vector<std::set<std::pair<int,int> > >&, const int, const int);
+  struct wires {
+    bool left_up;
+    bool right_up;
+    std::pair<int,int> horizontal;
+    friend bool operator<(const wires& left, const wires& right) {
+      return ( left.horizontal.first < right.horizontal.first );
+    }
+  };
+  void insert_net(std::vector<std::set<wires> >&, const int, const int, const bool, const bool);
   // enum region_fill { EMPTY = 0, HORIZONTAL_WIRE, VERTICAL_WIRE, HORIZONTAL_AND_VERTICAL_WIRE, BUFFER_SPACE };
   // std::vector<std::vector<int> > grid;
   std::map<int,std::vector<node> > rows;
   std::vector<Cell> cells;
-  std::map<int,std::vector<std::set<std::pair<int,int> > > > routed_tracks;
-  std::map<int,int> calc_row_offsets() const;
+  std::map<int,std::vector<std::set<wires > > > routed_tracks;
+  std::pair<std::map<int,int>,std::map<int,int> > calc_row_offsets() const;
   int num_nets;
 };
 

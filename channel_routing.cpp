@@ -72,15 +72,20 @@ int find_rightmost(const std::vector<int>& terminals, int net) {
   return 0;
 }
 
-void channel_router::insert_net(std::vector<std::set<std::pair<int,int> > >& tracks, const int net_left, const int net_right)
+void channel_router::insert_net(std::vector<std::set<wires > >& tracks, const int net_left, const int net_right,
+                                const bool left_up, const bool right_up)
 {
-  // This is messy as fuck; is there a better way?
+  // This is messy; is there a better way?
   // Search all the tracks for one that can hold the net
+  wires this_net;
+  this_net.left_up = left_up;
+  this_net.right_up = right_up;
+  this_net.horizontal = std::make_pair(net_left, net_right);
   bool need_new_track = false;
   for (auto &track : tracks) {
     bool found_track = true;
     for (auto &net : track) {
-      if ( net.first < net_right || net.second > net_left ) {
+      if ( net.horizontal.first < net_right || net.horizontal.second > net_left ) {
         // The nets overlap
         found_track = false;
         break;
@@ -92,12 +97,12 @@ void channel_router::insert_net(std::vector<std::set<std::pair<int,int> > >& tra
       break;
     }
     else {
-      track.insert(std::make_pair(net_left, net_right));
+      track.insert(this_net);
     }
   }
   if ( need_new_track ) {
-    tracks.push_back(std::set<std::pair<int,int> >());
-    tracks.back().insert(std::make_pair(net_left, net_right));
+    tracks.push_back(std::set<wires>());
+    tracks.back().insert(this_net);
   }
 }
 
@@ -109,7 +114,7 @@ int greater(const int a, const int b) {
 int channel_router::route(const std::vector<int>& top, const std::vector<int>& bottom, const int row_num)
 {
   //  std::vector<std::pair<int,int>> vcg;
-  std::vector<std::set<std::pair<int,int> > > tracks;
+  std::vector<std::set<wires> > tracks;
   std::vector<int> routed_nets;
   tracks.resize(1); // Need at least one track to start
 
@@ -124,22 +129,32 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
 #endif
   for (int i=0; i < width; i++) {
     if ( bottom[i] && (std::find(routed_nets.begin(), routed_nets.end(), bottom[i]) == routed_nets.end()) ) {
+#ifdef DEBUG
       std::cout << bottom[i] << ' ';
-      int net_left = bottom[i];
-      int rightmost_bottom = find_rightmost(bottom, net_left);
-      int rightmost_top = find_rightmost(top, net_left);
+#endif
+      int net_left = i;
+      int rightmost_bottom = find_rightmost(bottom, bottom[i]);
+      int rightmost_top = find_rightmost(top, bottom[i]);
       routed_nets.push_back(bottom[i]);
-      this->insert_net(tracks, net_left, greater(rightmost_bottom, rightmost_top));
-      ++terminals_routed;
+      int net_right = greater(rightmost_bottom, rightmost_top);
+      if ( net_right > net_left ) {
+        this->insert_net(tracks, net_left, net_right, false, ( net_right == rightmost_top ));
+        ++terminals_routed;
+      }
     }
     if ( top[i] && (std::find(routed_nets.begin(), routed_nets.end(), top[i]) == routed_nets.end()) ) {
+#ifdef DEBUG
       std::cout << top[i] << ' ';
-      int net_left = top[i];
-      int rightmost_bottom = find_rightmost(bottom, net_left);
-      int rightmost_top = find_rightmost(top, net_left);
+#endif
+      int net_left = i;
+      int rightmost_bottom = find_rightmost(bottom, top[i]);
+      int rightmost_top = find_rightmost(top, top[i]);
       routed_nets.push_back(top[i]);
-      this->insert_net(tracks, net_left, greater(rightmost_bottom, rightmost_top));
-      ++terminals_routed;
+      int net_right = greater(rightmost_bottom, rightmost_top);
+      if ( net_right > net_left ) {
+        this->insert_net(tracks, net_left, net_right, true, ( net_right == rightmost_top ));
+        ++terminals_routed;
+      }
     }
   }
 #ifdef DEBUG
@@ -175,7 +190,7 @@ int channel_router::get_num_nets() const
   return nets;
 }
 
-std::map<int,int> channel_router::calc_row_offsets() const
+std::pair<std::map<int,int>,std::map<int,int> > channel_router::calc_row_offsets() const
 {
   // Need to know how far to space each row of cells
   const int cell_offset = 6;
@@ -197,14 +212,14 @@ std::map<int,int> channel_router::calc_row_offsets() const
       }
     }
   }
-  return ret;
+  return make_pair(ret,row_offsets);
 }
 
 // Portions of this method are adapted from Josh's code
 void channel_router::write_mag_file(std::string magfile)
 {
   // Find out how much we need to space out each row
-  std::map<int,int> row_offsets = this->calc_row_offsets();
+  auto row_offsets = this->calc_row_offsets();
 
   std::ofstream fp;
   fp.open(magfile);
@@ -215,15 +230,14 @@ void channel_router::write_mag_file(std::string magfile)
   fp << "<< m1p >>\n";
 
   for (auto &cell : this->cells) {
-    // Expand cells
-    // int shift;
-    // if ( row_offsets.count(cell.getLambdaY()+4) ) {
-    //   shift = 4;
-    // }
-    // else {
-    //   shift = -4;
-    // }
-    cell.setLambdaCoordinates(cell.getLambdaY() + row_offsets[cell.getLambdaY()], cell.getLambdaX());
+    int shift = 0;
+    int extra_offset = 0;
+    if ( !row_offsets.first[cell.getLambdaY()] ) {
+      shift = -6;
+      extra_offset = 2;
+    }
+    cell.setLambdaCoordinates(cell.getLambdaY() + row_offsets.first[cell.getLambdaY() + shift] + extra_offset,
+                              cell.getLambdaX());
     if ( cell.getCellWidth() == 6 ) {
       fp << "use CELL  " << cell.getCellNum() << std::endl;
     }
@@ -259,21 +273,33 @@ void channel_router::write_mag_file(std::string magfile)
   metal2 << "<< metal2 >>" << std::endl;
   for (auto channel = routed_tracks.begin(); channel != routed_tracks.end(); ++channel) {
     int tracknum = 0;
-    int row_y = channel->first + row_offsets[channel->first];
+    int row_y = channel->first + row_offsets.second[channel->first];
     for (auto &track : channel->second) {
       tracknum += 2;
       for (auto &net : track) {
         //format is rect xbot ybot xtop ytop
-        metal1 << "rect " << net.first << ' ' << row_y + tracknum << ' ' << net.second
+        metal1 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.second
                << ' ' << row_y + tracknum + 1 << std::endl;
-        metal2 << "rect " << net.first << ' ' << row_y + tracknum << ' ' << net.first + 1
-               << ' ' << std::next(channel)->first << std::endl;
-        metal2 << "rect " << net.second << ' ' << channel->first + 6 << ' ' << net.second + 1
-               << ' ' << row_y + tracknum + 1 << std::endl;
+        if ( net.left_up ) {
+          metal2 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.first + 1
+                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first] << std::endl;
+        }
+        else {
+          metal2 << "rect " << net.horizontal.first << ' ' << row_y << ' ' << net.horizontal.first + 1
+                 << ' ' << row_y + tracknum + 1 << std::endl;
+        }
+        if ( net.right_up ) {
+          metal2 << "rect " << net.horizontal.second << ' ' << row_y + tracknum << ' ' << net.horizontal.second + 1
+                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first] << std::endl;
+        }
+        else {
+          metal2 << "rect " << net.horizontal.second << ' ' << row_y << ' ' << net.horizontal.second + 1
+                 << ' ' << row_y + tracknum + 1 << std::endl;
+        }
       }
     }
   }
-  
+  fp << metal1.str() << metal2.str();
   fp << "<< end >>" << std::endl;
 
   fp.close();
