@@ -241,7 +241,7 @@ void channel_router::write_mag_file(std::string magfile)
       shift = -6;
       extra_offset = 3;
     }
-    cell.setLambdaCoordinates(cell.getLambdaY() + row_offsets.first[cell.getLambdaY() + shift] + extra_offset,
+    cell.setLambdaCoordinates(cell.getLambdaY() + row_offsets.first[cell.getLambdaY() + shift - 6] + extra_offset,
                               cell.getLambdaX());
     if ( cell.getCellWidth() == 6 ) {
       fp << "use CELL  " << cell.getCellNum() << std::endl;
@@ -278,7 +278,7 @@ void channel_router::write_mag_file(std::string magfile)
   metal2 << "<< metal2 >>" << std::endl;
   for (auto channel = routed_tracks.begin(); channel != routed_tracks.end(); ++channel) {
     int tracknum = 0;
-    int row_y = channel->first + row_offsets.second[channel->first] + 1;
+    int row_y = channel->first + row_offsets.second[channel->first-6] + 1;
     for (auto &track : channel->second) {
       tracknum += 2;
       for (auto &net : track) {
@@ -287,7 +287,7 @@ void channel_router::write_mag_file(std::string magfile)
                << ' ' << row_y + tracknum + 1 << std::endl;
         if ( net.left_up ) {
           metal2 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.first + 1
-                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first]-3 << std::endl;
+                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first-6]-3 << std::endl;
         }
         else {
           metal2 << "rect " << net.horizontal.first << ' ' << row_y << ' ' << net.horizontal.first + 1
@@ -295,7 +295,7 @@ void channel_router::write_mag_file(std::string magfile)
         }
         if ( net.right_up ) {
           metal2 << "rect " << net.horizontal.second << ' ' << row_y + tracknum << ' ' << net.horizontal.second + 1
-                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first]-3 << std::endl;
+                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first-6]-3 << std::endl;
         }
         else {
           metal2 << "rect " << net.horizontal.second << ' ' << row_y << ' ' << net.horizontal.second + 1
