@@ -193,7 +193,7 @@ int channel_router::get_num_nets() const
 std::pair<std::map<int,int>,std::map<int,int> > channel_router::calc_row_offsets() const
 {
   // Need to know how far to space each row of cells
-  const int cell_offset = 6;
+  const int cell_offset = 1;
   const int track_offset = 2;
   int offset = 0;
   std::map<int,int> row_offsets;
@@ -273,7 +273,7 @@ void channel_router::write_mag_file(std::string magfile)
   metal2 << "<< metal2 >>" << std::endl;
   for (auto channel = routed_tracks.begin(); channel != routed_tracks.end(); ++channel) {
     int tracknum = 0;
-    int row_y = channel->first + row_offsets.second[channel->first];
+    int row_y = channel->first + row_offsets.second[channel->first] + 1;
     for (auto &track : channel->second) {
       tracknum += 2;
       for (auto &net : track) {
@@ -282,7 +282,7 @@ void channel_router::write_mag_file(std::string magfile)
                << ' ' << row_y + tracknum + 1 << std::endl;
         if ( net.left_up ) {
           metal2 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.first + 1
-                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first] << std::endl;
+                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first]-3 << std::endl;
         }
         else {
           metal2 << "rect " << net.horizontal.first << ' ' << row_y << ' ' << net.horizontal.first + 1
@@ -290,7 +290,7 @@ void channel_router::write_mag_file(std::string magfile)
         }
         if ( net.right_up ) {
           metal2 << "rect " << net.horizontal.second << ' ' << row_y + tracknum << ' ' << net.horizontal.second + 1
-                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first] << std::endl;
+                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first]-3 << std::endl;
         }
         else {
           metal2 << "rect " << net.horizontal.second << ' ' << row_y << ' ' << net.horizontal.second + 1
