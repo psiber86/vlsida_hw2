@@ -73,7 +73,9 @@ int main(int argc, char* argv[])
     channel_router channelRouter(placer->get_cells(), netcount);
     delete placer;
     placer = NULL;
-    std::cout << channelRouter.route_all() << " of " << channelRouter.get_num_nets() << " nets routed" << std::endl;
+    std::cout << channelRouter.route_all();
+    std::cout << " of " << channelRouter.get_num_nets() << " nets routed" << std::endl;
+    channelRouter.print_net_stats();
     channelRouter.write_mag_file(filename);
 #else
 

@@ -42,6 +42,7 @@ public:
   int route_all();
   int get_num_nets() const;
   void write_mag_file(const std::string);
+  void print_net_stats() const;
 private:
   struct wires {
     bool left_up;
@@ -59,6 +60,10 @@ private:
   std::map<int,std::vector<std::set<wires > > > routed_tracks;
   std::pair<std::map<int,int>,std::map<int,int> > calc_row_offsets() const;
   int num_nets;
+
+  int stranded_nets;
+  int unroutable_nets;
+  int max_net_num;
 };
 
 #endif

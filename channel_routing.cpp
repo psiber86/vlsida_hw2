@@ -10,6 +10,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <cassert>
 
 #include "Cell.h"
 #include "channel_routing.hpp"
@@ -17,7 +18,8 @@
 
 #define TERMINALS_PER_CELL 4
 
-channel_router::channel_router(std::vector<Cell> cells, int num_nets) : cells(cells), num_nets(num_nets) {
+channel_router::channel_router(std::vector<Cell> cells, int max_net_num)
+  : cells(cells), num_nets(0), stranded_nets(0), unroutable_nets(0), max_net_num(max_net_num) {
   for (auto &cell : cells) {
     if ( cell.getCellWidth() == 6 ) {
       switch (cell.getCellOrientation()) {
@@ -152,10 +154,12 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
   std::cout << "Routing nets: ";
 #endif
   for (int i=0; i < width; i++) {
+    assert( bottom[i] <= this->max_net_num && top[i] <= this->max_net_num );
     if ( bottom[i] && (std::find(routed_nets.begin(), routed_nets.end(), bottom[i]) == routed_nets.end()) ) {
 #ifdef DEBUG
-      std::cout << bottom[i] << ' ';
+      std::cout << bottom[i];
 #endif
+      ++num_nets;
       int net_left = i;
       int rightmost_bottom = find_rightmost(bottom, bottom[i]);
       int rightmost_top = find_rightmost(top, bottom[i]);
@@ -163,13 +167,26 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
       int net_right = greater(rightmost_bottom, rightmost_top);
       if ( net_right > net_left ) {
         this->insert_net(tracks, net_left, net_right, false, ( net_right == rightmost_top ));
+#ifdef DEBUG
+        std::cout << "(R)";
+#endif
         ++terminals_routed;
       }
+      else {
+#ifdef DEBUG
+        std::cout << "(S)";
+        ++stranded_nets;
+#endif
+      }
+#ifdef DEBUG
+      std::cout << ' ';
+#endif
     }
     if ( top[i] && (std::find(routed_nets.begin(), routed_nets.end(), top[i]) == routed_nets.end()) ) {
 #ifdef DEBUG
-      std::cout << top[i] << ' ';
+      std::cout << top[i];
 #endif
+      ++num_nets;
       int net_left = i;
       int rightmost_bottom = find_rightmost(bottom, top[i]);
       int rightmost_top = find_rightmost(top, top[i]);
@@ -177,8 +194,20 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
       int net_right = greater(rightmost_bottom, rightmost_top);
       if ( net_right > net_left ) {
         this->insert_net(tracks, net_left, net_right, true, ( net_right == rightmost_top ));
+#ifdef DEBUG
+        std::cout << "(R)";
+#endif
         ++terminals_routed;
       }
+      else {
+#ifdef DEBUG
+        std::cout << "(S)";
+#endif
+        ++stranded_nets;
+      }
+#ifdef DEBUG
+      std::cout << ' ';
+#endif
     }
   }
 #ifdef DEBUG
@@ -199,10 +228,21 @@ int channel_router::route_all() {
   for (; iter != this->rows.end(); ++iter) {
     int bottom_row = iter->first;
     if ( std::next(iter)->first - row_spacing != iter->first ) {
+      for (auto &net : iter->second) {
+        ++unroutable_nets;
+        ++num_nets;
+      }
       continue;
     }
-    if ( ++iter == this->rows.end() || std::next(iter) == this->rows.end() ) {
+    if ( ++iter == this->rows.end() ) {
       // Skip the last row too
+      break;
+    }
+    if ( std::next(iter) == this->rows.end() ) {
+      for (auto &net : iter->second) {
+        ++unroutable_nets;
+        ++num_nets;
+      }
       break;
     }
     num_routed += this->route(iter->first, bottom_row);
@@ -212,13 +252,14 @@ int channel_router::route_all() {
 
 int channel_router::get_num_nets() const
 {
-  int nets = this->num_nets;
-  for (auto &cell : this->cells) {
-    if ( cell.getCellWidth() == 3 ) {
-      nets++;
-    }
-  }
-  return nets;
+  // int nets = this->num_nets;
+  // for (auto &cell : this->cells) {
+  //   if ( cell.getCellWidth() == 3 ) {
+  //     nets++;
+  //   }
+  // }
+  // return nets;
+  return this->num_nets;
 }
 
 std::pair<std::map<int,int>,std::map<int,int> > channel_router::calc_row_offsets() const
@@ -334,4 +375,10 @@ void channel_router::write_mag_file(std::string magfile)
   fp << "<< end >>" << std::endl;
 
   fp.close();
+}
+
+void channel_router::print_net_stats() const
+{
+  std::cout << "Stranded nets:   " << stranded_nets << std::endl;
+  std::cout << "Unroutable nets: " << unroutable_nets << std::endl;
 }
