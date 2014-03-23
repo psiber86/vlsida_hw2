@@ -172,6 +172,14 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
 #endif
         ++terminals_routed;
       }
+      else if ( net_right == net_left ) {
+        // A purely vertical net
+        this->insert_net(tracks, net_left, net_right, true, false);
+#ifdef DEBUG
+        std::cout << "(R)";
+#endif
+        ++terminals_routed;
+      }
       else {
 #ifdef DEBUG
         std::cout << "(S)";
@@ -194,6 +202,14 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
       int net_right = greater(rightmost_bottom, rightmost_top);
       if ( net_right > net_left ) {
         this->insert_net(tracks, net_left, net_right, true, ( net_right == rightmost_top ));
+#ifdef DEBUG
+        std::cout << "(R)";
+#endif
+        ++terminals_routed;
+      }
+      else if ( net_right == net_left ) {
+        // A purely vertical net
+        this->insert_net(tracks, net_left, net_right, true, false);
 #ifdef DEBUG
         std::cout << "(R)";
 #endif
