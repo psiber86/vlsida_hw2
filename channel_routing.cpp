@@ -101,34 +101,41 @@ void channel_router::insert_net(std::vector<std::set<wires > >& tracks, const in
   wires this_net;
   this_net.left_up = left_up;
   this_net.right_up = right_up;
-  this_net.horizontal = std::make_pair(net_left, net_right);
-  bool need_new_track = true;
-  for (auto &track : tracks) {
-    bool found_track = true;
-    for (auto &net : track) {
-      if ( !(net_right < net.horizontal.first || net_left > net.horizontal.second) ) {
-        // The nets overlap
-        found_track = false;
+  // Handle a special case: a purely vertical net. This does not require us to find a track
+  if ( net_left == net_right ) {
+    this_net.horizontal = std::make_pair(net_left, net_right);
+    tracks.back().insert(this_net);
+  }
+  else {
+    this_net.horizontal = std::make_pair(net_left, net_right);
+    bool need_new_track = true;
+    for (auto &track : tracks) {
+      bool found_track = true;
+      for (auto &net : track) {
+        if ( !(net_right < net.horizontal.first || net_left > net.horizontal.second) ) {
+          // The nets overlap
+          found_track = false;
+          break;
+        }
+      }
+      // if ( !found_track ) {
+      //   // We didn't find a track; we ran out of tracks
+      //   need_new_track = true;
+      //   break;
+      // }
+      // else {
+      //   track.insert(this_net);
+      // }
+      if ( found_track ) {
+        track.insert(this_net);
+        need_new_track = false;
         break;
       }
     }
-    // if ( !found_track ) {
-    //   // We didn't find a track; we ran out of tracks
-    //   need_new_track = true;
-    //   break;
-    // }
-    // else {
-    //   track.insert(this_net);
-    // }
-    if ( found_track ) {
-      track.insert(this_net);
-      need_new_track = false;
-      break;
+    if ( need_new_track ) {
+      tracks.push_back(std::set<wires>());
+      tracks.back().insert(this_net);
     }
-  }
-  if ( need_new_track ) {
-    tracks.push_back(std::set<wires>());
-    tracks.back().insert(this_net);
   }
 }
 
@@ -367,8 +374,11 @@ void channel_router::write_mag_file(std::string magfile)
       tracknum += 2;
       for (auto &net : track) {
         //format is rect xbot ybot xtop ytop
-        metal1 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.second + 1
-               << ' ' << row_y + tracknum + 1 << std::endl;
+        // Skip metal1 for pure vertical net
+        if ( net.horizontal.first != net.horizontal.second ) {
+          metal1 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.second + 1
+                 << ' ' << row_y + tracknum + 1 << std::endl;
+        }
         if ( net.left_up ) {
           int ytop;
           if ( std::next(channel) == routed_tracks.end() ) {
