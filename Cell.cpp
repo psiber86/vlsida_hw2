@@ -18,11 +18,12 @@ Cell::Cell(int cellNum, int type, bool glob_debug) : orientation(NORM)
     numNets = 0;
 
     memset(termXY, 0, sizeof(int)*2*4);
-    memset(nets, 0, sizeof(int)*4);
+
+    for (int i=0; i < 4; i++) {
+      nets[i] = 0;
+    }
 
     zeroForce = -1;
-
-    this->nets[0] = 0;
 }
 
 int Cell::getCellNum() const 
@@ -63,9 +64,11 @@ void Cell::connectTerminals(int locCell, int locTerm, int remCell, int remTerm, 
   if ( this->cellWidth == 3 ) {
     this->nets[0] = netNum;
     this->nets[1] = netNum;
+    this->nets[2] = 0;
+    this->nets[3] = 0;
   }
   else {
-    this->nets[locTerm] = netNum;
+    this->nets[locTerm-1] = netNum;
   }
 }
 

@@ -19,8 +19,27 @@
 
 channel_router::channel_router(std::vector<Cell> cells, int num_nets) : cells(cells), num_nets(num_nets) {
   for (auto &cell : cells) {
+    if ( cell.getCellWidth() == 6 ) {
+      switch (cell.getCellOrientation()) {
+      case NORM:
+	cell.resetTermCoords();
+	break;
+      case FLIPVERT:
+	cell.flipVertCell();
+	break;
+      case FLIPHORZ:
+	cell.flipHorzCell();
+	break;
+      case ROTATED:
+	cell.rotateCell();
+	break;
+      default:
+	throw "Invalid cell orientation";
+	break;
+      }
+    }
+    const int* nets = cell.getNets();
     for (int i=0; i < TERMINALS_PER_CELL; i++) {
-      const int* nets = cell.getNets();
       if ( nets[i] ) {
         rows[cell.termXY[i][1]].push_back(node(cell.termXY[i][0], cell.termXY[i][1], nets[i]));
         // row_mapping[cell.termXY[i][1]] = cell.getLambdaY();
@@ -170,12 +189,19 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
 }
 
 int channel_router::route_all() {
+  const int row_spacing = 2;
   int num_routed = 0;
   // Iterate starting with the second row
   std::map<int,std::vector<node> >::iterator iter = this->rows.begin();
-  for (++iter; iter != this->rows.end(); ++iter) {
+  // while ( std::next(iter)->first - row_spacing != iter->first ) {
+  //   ++iter;
+  // }
+  for (; iter != this->rows.end(); ++iter) {
     int bottom_row = iter->first;
-    if ( ++iter == this->rows.end() || next(iter) == this->rows.end() ) {
+    if ( std::next(iter)->first - row_spacing != iter->first ) {
+      continue;
+    }
+    if ( ++iter == this->rows.end() || std::next(iter) == this->rows.end() ) {
       // Skip the last row too
       break;
     }
@@ -241,7 +267,7 @@ void channel_router::write_mag_file(std::string magfile)
       shift = -6;
       extra_offset = 3;
     }
-    cell.setLambdaCoordinates(cell.getLambdaY() + row_offsets.first[cell.getLambdaY() + shift - 6] + extra_offset,
+    cell.setLambdaCoordinates(cell.getLambdaY() + row_offsets.first[cell.getLambdaY() + shift - 6] + 4 + extra_offset,
                               cell.getLambdaX());
     if ( cell.getCellWidth() == 6 ) {
       fp << "use CELL  " << cell.getCellNum() << std::endl;
@@ -278,7 +304,7 @@ void channel_router::write_mag_file(std::string magfile)
   metal2 << "<< metal2 >>" << std::endl;
   for (auto channel = routed_tracks.begin(); channel != routed_tracks.end(); ++channel) {
     int tracknum = 0;
-    int row_y = channel->first + row_offsets.second[channel->first-6] + 1;
+    int row_y = channel->first + row_offsets.second[channel->first-6] + 1 + 4;
     for (auto &track : channel->second) {
       tracknum += 2;
       for (auto &net : track) {
@@ -287,7 +313,7 @@ void channel_router::write_mag_file(std::string magfile)
                << ' ' << row_y + tracknum + 1 << std::endl;
         if ( net.left_up ) {
           metal2 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.first + 1
-                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first-6]-3 << std::endl;
+                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first-6] + 1 << std::endl;
         }
         else {
           metal2 << "rect " << net.horizontal.first << ' ' << row_y << ' ' << net.horizontal.first + 1
@@ -295,7 +321,7 @@ void channel_router::write_mag_file(std::string magfile)
         }
         if ( net.right_up ) {
           metal2 << "rect " << net.horizontal.second << ' ' << row_y + tracknum << ' ' << net.horizontal.second + 1
-                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first-6]-3 << std::endl;
+                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first-6] + 1 << std::endl;
         }
         else {
           metal2 << "rect " << net.horizontal.second << ' ' << row_y << ' ' << net.horizontal.second + 1

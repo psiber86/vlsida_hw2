@@ -555,11 +555,11 @@ void Placer::placeFeedThruCells()
                         if (delta > 0) { 
                             cells[forceOrderMap[icell]]->connectTerminals(curCell, iterm, (-1)*feedCellCount, 1); 
                             feedThru->connectTerminals((-1)*feedCellCount, 1, curCell, iterm,
-                                                       cells[forceOrderMap[icell]]->getNets()[iterm]);
+                                                       cells[forceOrderMap[icell]]->getNets()[iterm-1]);
                         } else {
                             cells[forceOrderMap[icell]]->connectTerminals(curCell, iterm, (-1)*feedCellCount, 2); 
                             feedThru->connectTerminals((-1)*feedCellCount, 2, curCell, iterm,
-                                                       cells[forceOrderMap[icell]]->getNets()[iterm]);
+                                                       cells[forceOrderMap[icell]]->getNets()[iterm-1]);
                         }
                     }
 
@@ -569,16 +569,16 @@ void Placer::placeFeedThruCells()
                         int remFeedCell = feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->getCellNum();
                         if (delta > 0) { 
                             feedThru->connectTerminals((-1)*feedCellCount, 2, (-1)*(feedCellCount-1), 1,
-                                                       cells[forceOrderMap[icell]]->getNets()[iterm]);
+                                                       cells[forceOrderMap[icell]]->getNets()[iterm-1]);
                             feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->
                               connectTerminals((-1)*remFeedCell,1, (-1)*feedCellCount, 2,
-                                               cells[forceOrderMap[icell]]->getNets()[iterm]);
+                                               cells[forceOrderMap[icell]]->getNets()[iterm-1]);
                         } else {
                             feedThru->connectTerminals((-1)*feedCellCount, 1, (-1)*(feedCellCount-1), 2,
-                                                       cells[forceOrderMap[icell]]->getNets()[iterm]);
+                                                       cells[forceOrderMap[icell]]->getNets()[iterm-1]);
                             feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->
                               connectTerminals((-1)*remFeedCell, 2, (-1)*feedCellCount, 1,
-                                               cells[forceOrderMap[icell]]->getNets()[iterm]);
+                                               cells[forceOrderMap[icell]]->getNets()[iterm-1]);
                         }
                     }
 
@@ -588,11 +588,11 @@ void Placer::placeFeedThruCells()
                         if (delta > 0) { 
                             feedThru->connectTerminals((-1)*feedCellCount, 2, remCell, remTerm);
                             cells[forceOrderMap[remCell]]->connectTerminals(remCell, remTerm, (-1)*feedCellCount, 2,
-                                                                       cells[forceOrderMap[icell]]->getNets()[iterm]);
+                                                                       cells[forceOrderMap[icell]]->getNets()[iterm-1]);
                         } else {
                             feedThru->connectTerminals((-1)*feedCellCount, 1, remCell, remTerm);
                             cells[forceOrderMap[remCell]]->connectTerminals(remCell, remTerm, (-1)*feedCellCount, 1,
-                                                                       cells[forceOrderMap[icell]]->getNets()[iterm]);
+                                                                       cells[forceOrderMap[icell]]->getNets()[iterm-1]);
                         }
                     } 
 
