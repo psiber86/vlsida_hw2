@@ -85,7 +85,7 @@ int channel_router::route(const int top_index, const int bottom_index) {
 }
 
 int find_rightmost(const std::vector<int>& terminals, int net) {
-  for (int i = terminals.size(); i >= 0; i--) {
+  for (int i = terminals.size()-1; i >= 0; i--) {
     if ( terminals[i] == net ) {
       return i;
     }
@@ -172,7 +172,7 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
 #endif
         ++terminals_routed;
       }
-      else if ( net_right == net_left ) {
+      else if ( net_right == net_left && rightmost_top != 0 ) {
         // A purely vertical net
         this->insert_net(tracks, net_left, net_right, true, false);
 #ifdef DEBUG
@@ -207,7 +207,7 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
 #endif
         ++terminals_routed;
       }
-      else if ( net_right == net_left ) {
+      else if ( net_right == net_left && rightmost_bottom != 0) {
         // A purely vertical net
         this->insert_net(tracks, net_left, net_right, true, false);
 #ifdef DEBUG
