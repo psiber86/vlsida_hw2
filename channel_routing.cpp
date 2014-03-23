@@ -282,13 +282,14 @@ std::pair<std::map<int,int>,std::map<int,int> > channel_router::calc_row_offsets
 {
   // Need to know how far to space each row of cells
   const int cell_offset = 1;
-  const int track_offset = 2;
-  int offset = 0;
+  const int track_offset = 0;
+  int offset = 1;
   std::map<int,int> row_offsets;
   for (auto &tracks : this->routed_tracks) {
     offset += tracks.second.size()*2 + cell_offset + track_offset;
     row_offsets[tracks.first] = offset;
   }
+  row_offsets[std::prev(row_offsets.end())->first+6] = offset;
   // Translate from terminal location to cell location
   std::map<int,int> ret;
   for (auto &cell : this->cells) {
@@ -320,10 +321,10 @@ void channel_router::write_mag_file(std::string magfile)
   for (auto &cell : this->cells) {
     int shift = 0;
     int extra_offset = 0;
-    if ( !row_offsets.first[cell.getLambdaY()] ) {
-      shift = -6;
-      extra_offset = 3;
-    }
+    // if ( !row_offsets.first[cell.getLambdaY()] ) {
+    //   shift = -6;
+    //   extra_offset = 3;
+    // }
     cell.setLambdaCoordinates(cell.getLambdaY() + row_offsets.first[cell.getLambdaY() + shift - 6] + 4 + extra_offset,
                               cell.getLambdaX());
     if ( cell.getCellWidth() == 6 ) {
@@ -366,19 +367,33 @@ void channel_router::write_mag_file(std::string magfile)
       tracknum += 2;
       for (auto &net : track) {
         //format is rect xbot ybot xtop ytop
-        metal1 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.second
+        metal1 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.second + 1
                << ' ' << row_y + tracknum + 1 << std::endl;
         if ( net.left_up ) {
+          int ytop;
+          if ( std::next(channel) == routed_tracks.end() ) {
+            ytop = channel->first + row_offsets.second[channel->first] + 6;
+          }
+          else {
+            ytop = std::next(channel)->first + row_offsets.second[std::next(channel)->first-6];
+          }
           metal2 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.first + 1
-                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first-6] + 1 << std::endl;
+                 << ' ' << ytop + 1 << std::endl;
         }
         else {
           metal2 << "rect " << net.horizontal.first << ' ' << row_y << ' ' << net.horizontal.first + 1
                  << ' ' << row_y + tracknum + 1 << std::endl;
         }
         if ( net.right_up ) {
+          int ytop;
+          if ( std::next(channel) == routed_tracks.end() ) {
+            ytop = channel->first + row_offsets.second[channel->first] + 6;
+          }
+          else {
+            ytop = std::next(channel)->first + row_offsets.second[std::next(channel)->first-6];
+          }
           metal2 << "rect " << net.horizontal.second << ' ' << row_y + tracknum << ' ' << net.horizontal.second + 1
-                 << ' ' << std::next(channel)->first + row_offsets.second[std::next(channel)->first-6] + 1 << std::endl;
+                 << ' ' << ytop + 1 << std::endl;
         }
         else {
           metal2 << "rect " << net.horizontal.second << ' ' << row_y << ' ' << net.horizontal.second + 1
