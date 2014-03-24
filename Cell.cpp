@@ -109,18 +109,32 @@ void Cell::setLambdaCoordinates(int y, int x)
         termXY[1][0] = xLbot + T1T3_OFFSET;
         termXY[1][1] = yLbot + 4;
     } else {
-        //terminal 1
-        termXY[0][0] = xLbot + T1T3_OFFSET;
-        termXY[0][1] = yLbot + 4;
-        //terminal 2
-        termXY[1][0] = xLbot + T2T4_OFFSET;
-        termXY[1][1] = yLbot + 4;
-        //terminal 3
-        termXY[2][0] = xLbot + T1T3_OFFSET;
-        termXY[2][1] = yLbot;
-        //terminal 4
-        termXY[3][0] = xLbot + T2T4_OFFSET;
-        termXY[3][1] = yLbot;
+        switch (orientation) {
+        case ROTATED:
+            this->rotateCell();
+            break;
+        case FLIPHORZ:
+            this->flipHorzCell();
+            break;
+        case FLIPVERT:
+            this->flipVertCell();
+            break;
+        case NORM:
+        default:
+            //terminal 1
+            termXY[0][0] = xLbot + T1T3_OFFSET;
+            termXY[0][1] = yLbot + 4;
+            //terminal 2
+            termXY[1][0] = xLbot + T2T4_OFFSET;
+            termXY[1][1] = yLbot + 4;
+            //terminal 3
+            termXY[2][0] = xLbot + T1T3_OFFSET;
+            termXY[2][1] = yLbot;
+            //terminal 4
+            termXY[3][0] = xLbot + T2T4_OFFSET;
+            termXY[3][1] = yLbot;
+            break;
+        }
     } 
 }
 
