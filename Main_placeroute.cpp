@@ -53,11 +53,12 @@ int main(int argc, char* argv[])
             std::cin >> t_term1;
             std::cin >> t_cell2;
             std::cin >> t_term2;
-
-	    nets[net_number][0] = t_cell1;
-	    nets[net_number][1] = t_term1;
-	    nets[net_number][2] = t_cell2;
-	    nets[net_number][3] = t_term2;
+	    
+	    nets[net_number-1][0] = t_cell1;
+	    nets[net_number-1][1] = t_term1;
+	    nets[net_number-1][2] = t_cell2;
+	    nets[net_number-1][3] = t_term2;
+	    
             cells[t_cell1]->connectTerminals(t_cell1, t_term1, t_cell2, t_term2, net_number);
             cells[t_cell2]->connectTerminals(t_cell2, t_term2, t_cell1, t_term1, net_number);
         } 
