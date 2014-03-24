@@ -21,6 +21,7 @@ int main(int argc, char* argv[])
     int netcount, cellcount = 0;
     Cell **cells = NULL;
     Placer *placer = NULL;
+    int **nets = NULL;
     
     if (argc < 2) {
         std::cerr << "Usage: " << argv[0] << " <filename.mag> [-d] < <BM#>" << std::endl;
@@ -43,12 +44,20 @@ int main(int argc, char* argv[])
             }
         } else if (linenum == 1) {
             netcount = net_number;
+	    nets = new int[netcount];
+	    for(int i = 0; i < netcount; i++){
+	      nets[i] = new int[4];
+	    }
         } else {
             std::cin >> t_cell1;
             std::cin >> t_term1;
             std::cin >> t_cell2;
             std::cin >> t_term2;
 
+	    nets[net_number][0] = t_cell1;
+	    nets[net_number][1] = t_term1;
+	    nets[net_number][2] = t_cell2;
+	    nets[net_number][3] = t_term2;
             cells[t_cell1]->connectTerminals(t_cell1, t_term1, t_cell2, t_term2, net_number);
             cells[t_cell2]->connectTerminals(t_cell2, t_term2, t_cell1, t_term1, net_number);
         } 
@@ -80,7 +89,7 @@ int main(int argc, char* argv[])
     channelRouter.write_mag_file(filename);
 #else
     std::cout << "Maze Routing." << std::endl;
-    maze_router mazeRouter(placer->get_cells(), placer->topRowBounding*6, placer->rightColBounding*6, netcount);
+    maze_router mazeRouter(placer->get_cells(), placer->topRowBounding*6+placer->topRowBounding, placer->rightColBounding*6+placer->rightColBounding, netcount, nets);
 
 #endif
 
