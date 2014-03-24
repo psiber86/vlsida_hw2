@@ -15,31 +15,17 @@
 #include "Cell.h"
 
 struct gridcell {
-  node(int x, int y, bool m1, bool m2, bool cell ) : x(x), y(y), m1(m1), m2(m2), cell(cell) {};
-  int x;
-  int y;
+  gridcell() : val(0), m1(0), m2(0), cell(0) {};
+  int val;
   bool m1;
   bool m2;
   bool cell;
 };
 
-template<typename T> class zero_allocator : public std::allocator<T> {
+class maze_router {
 public:
-  T* allocate(size_t size, const void* hint = 0) {
-    T* mem = std::allocator<T>::allocate(size, hint);
-    memset(mem, 0, sizeof(T));
-    return mem;
-  }
-};
-
-class channel_router {
-public:
-  channel_router(std::vector<Cell>, int);
-  int route(const std::vector<int>&, const std::vector<int>&, const int);
-  int route(const int, const int);
-  int route_all();
-  int get_num_nets() const;
-  void write_mag_file(const std::string);
+  maze_router(std::vector<Cell>, int, int, int);
+  //void write_mag_file(const std::string);
 private:
   struct wires {
     bool left_up;
@@ -49,12 +35,12 @@ private:
       return ( left.horizontal.first < right.horizontal.first );
     }
   };
-  void insert_net(std::vector<std::set<wires> >&, const int, const int, const bool, const bool);
-  std::map<int,std::vector<node> > rows;
+  void create_grid(int, int) ;
   std::vector<Cell> cells;
-  std::map<int,std::vector<std::set<wires > > > routed_tracks;
-  std::pair<std::map<int,int>,std::map<int,int> > calc_row_offsets() const;
   int num_nets;
+  int crows;
+  int ccols;
+  gridcell** grid;
 };
 
 #endif

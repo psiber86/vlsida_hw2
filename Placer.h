@@ -15,12 +15,6 @@ private:
     int lambdaGridRows;
     int lambdaGridCols;
 
-    //area of current placement
-    int topRowBounding;
-    int botRowBounding;
-    int leftColBounding;
-    int rightColBounding;
-
     int cellCount;
     int feedCellCount;
 
@@ -38,6 +32,12 @@ private:
 
 public:
     Placer(const char*, int, Cell **, bool);
+
+    //area of current placement
+    int topRowBounding;
+    int botRowBounding;
+    int leftColBounding;
+    int rightColBounding;
 
     void placeCellsInitial();
 

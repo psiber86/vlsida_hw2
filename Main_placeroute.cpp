@@ -10,6 +10,7 @@
 #include "Cell.h"
 #include "Placer.h"
 #include "channel_routing.hpp"
+#include "maze_routing.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -79,6 +80,7 @@ int main(int argc, char* argv[])
     channelRouter.write_mag_file(filename);
 #else
     std::cout << "Maze Routing." << std::endl;
+    maze_router mazeRouter(placer->get_cells(), placer->topRowBounding*6, placer->rightColBounding*6, netcount);
 
 #endif
 
