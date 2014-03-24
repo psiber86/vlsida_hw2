@@ -37,7 +37,7 @@ public:
 class channel_router {
 public:
   channel_router(std::vector<Cell>, int);
-  int route(const std::vector<int>&, const std::vector<int>&, const int);
+  int route(std::vector<int>&, std::vector<int>&, const int, std::vector<std::set<int> >&);
   int route(const int, const int);
   int route_all();
   int get_num_nets() const;
@@ -59,8 +59,10 @@ private:
   std::vector<Cell> cells;
   std::map<int,std::vector<std::set<wires > > > routed_tracks;
   std::pair<std::map<int,int>,std::map<int,int> > calc_row_offsets() const;
-  int num_nets;
+  std::vector<std::set<int> > construct_vcg(const std::vector<int>&, const std::vector<int>&) const;
+  inline void delete_from_vcg(const int, std::vector<std::set<int> >&) const;
 
+  int num_nets;
   int stranded_nets;
   int unroutable_nets;
   int max_net_num;

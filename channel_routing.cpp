@@ -50,6 +50,35 @@ channel_router::channel_router(std::vector<Cell> cells, int max_net_num)
   }
 }
 
+std::vector<std::set<int> > channel_router::construct_vcg(const std::vector<int>& top,
+                                                          const std::vector<int>& bottom) const
+{
+  std::vector<std::set<int> > vcg;
+  vcg.resize(max_net_num);
+  const int wire_spacing = 1;
+  if ( top.size() != bottom.size() ) {
+    throw "Attempt to construct VCG for a channel with undefined length";
+  }
+  for (unsigned int i = 0; i < top.size(); i++) {
+    if ( top[i] ) {
+      for (unsigned int j = i-wire_spacing; j < i+wire_spacing; j++) {
+        if ( bottom[j] ) {
+          vcg[top[i]].insert(bottom[j]);
+        }
+      }
+    }
+  }
+  return vcg;
+}
+
+inline void channel_router::delete_from_vcg(const int net_num, std::vector<std::set<int > >& vcg) const
+{
+  vcg[net_num].clear();
+  for (auto &top_net : vcg) {
+    top_net.erase(net_num);
+  } 
+}
+
 int channel_router::route(const int top_index, const int bottom_index) {
 #ifdef DEBUG
   std::cout << "Routing rows at " << top_index << " and " << bottom_index << std::endl;
@@ -81,7 +110,8 @@ int channel_router::route(const int top_index, const int bottom_index) {
     bottom.push_back(0);
   }
 
-  return this->route(top, bottom, bottom_index);
+  std::vector<std::set<int> > vcg = this->construct_vcg(top, bottom);
+  return this->route(top, bottom, bottom_index, vcg);
 }
 
 int find_rightmost(const std::vector<int>& terminals, int net) {
@@ -139,30 +169,37 @@ void channel_router::insert_net(std::vector<std::set<wires > >& tracks, const in
   }
 }
 
-int greater(const int a, const int b) {
+inline int greater(const int a, const int b) {
   if ( a > b ) return a;
   else return b;
 }
 
-int channel_router::route(const std::vector<int>& top, const std::vector<int>& bottom, const int row_num)
+bool vector_is_all_zeros(const std::vector<int>& vec) {
+  for (auto& elem : vec) {
+    if ( elem ) {
+      return false;
+    }
+  }
+  return true;
+}
+
+int channel_router::route(std::vector<int>& top, std::vector<int>& bottom, const int row_num,
+                          std::vector<std::set<int > >& vcg)
 {
-  //  std::vector<std::pair<int,int>> vcg;
   std::vector<std::set<wires> > tracks;
-  std::vector<int> routed_nets;
   tracks.resize(1); // Need at least one track to start
 
   int width = greater(top.size(), bottom.size());
 
   int terminals_routed = 0;
 
-  // Place all the horizontal portions of the nets into tracks. Basically, implement the unconstrained
-  // left-edge algorithm
+  // Implement the constrained left edge algorithm
 #ifdef DEBUG
   std::cout << "Routing nets: ";
 #endif
   for (int i=0; i < width; i++) {
     assert( bottom[i] <= this->max_net_num && top[i] <= this->max_net_num );
-    if ( bottom[i] && (std::find(routed_nets.begin(), routed_nets.end(), bottom[i]) == routed_nets.end()) ) {
+    if ( bottom[i] ) {
 #ifdef DEBUG
       std::cout << bottom[i];
 #endif
@@ -170,7 +207,6 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
       int net_left = i;
       int rightmost_bottom = find_rightmost(bottom, bottom[i]);
       int rightmost_top = find_rightmost(top, bottom[i]);
-      routed_nets.push_back(bottom[i]);
       int net_right = greater(rightmost_bottom, rightmost_top);
       if ( net_right > net_left ) {
         this->insert_net(tracks, net_left, net_right, false, ( net_right == rightmost_top ));
@@ -196,8 +232,17 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
 #ifdef DEBUG
       std::cout << ' ';
 #endif
+      int routed_net_num = bottom[i];
+      for (int j=0; j < width; j++) {
+        if ( bottom[j] == routed_net_num ) {
+          bottom[j] = 0;
+        }
+        if ( top[j] == routed_net_num ) {
+          top[j] = 0;
+        }
+      }
     }
-    if ( top[i] && (std::find(routed_nets.begin(), routed_nets.end(), top[i]) == routed_nets.end()) ) {
+    if ( top[i] ) {
 #ifdef DEBUG
       std::cout << top[i];
 #endif
@@ -205,7 +250,6 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
       int net_left = i;
       int rightmost_bottom = find_rightmost(bottom, top[i]);
       int rightmost_top = find_rightmost(top, top[i]);
-      routed_nets.push_back(top[i]);
       int net_right = greater(rightmost_bottom, rightmost_top);
       if ( net_right > net_left ) {
         this->insert_net(tracks, net_left, net_right, true, ( net_right == rightmost_top ));
@@ -231,6 +275,15 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
 #ifdef DEBUG
       std::cout << ' ';
 #endif
+      int routed_net_num = bottom[i];
+      for (int j=0; j < width; j++) {
+        if ( bottom[j] == routed_net_num ) {
+          bottom[j] = 0;
+        }
+        if ( top[j] == routed_net_num ) {
+          top[j] = 0;
+        }
+      }
     }
   }
 #ifdef DEBUG
