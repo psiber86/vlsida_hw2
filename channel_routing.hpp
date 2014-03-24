@@ -52,7 +52,7 @@ private:
       return ( left.horizontal.first < right.horizontal.first );
     }
   };
-  void insert_net(std::vector<std::set<wires> >&, const int, const int, const bool, const bool);
+  void insert_net(std::vector<std::set<wires> >&, const int, const int, const bool, const bool, int&);
   // enum region_fill { EMPTY = 0, HORIZONTAL_WIRE, VERTICAL_WIRE, HORIZONTAL_AND_VERTICAL_WIRE, BUFFER_SPACE };
   // std::vector<std::vector<int> > grid;
   std::map<int,std::vector<node> > rows;

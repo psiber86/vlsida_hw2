@@ -61,8 +61,8 @@ std::vector<std::set<int> > channel_router::construct_vcg(const std::vector<int>
   }
   for (unsigned int i = 0; i < top.size(); i++) {
     if ( top[i] ) {
-      for (unsigned int j = i-wire_spacing; j < i+wire_spacing; j++) {
-        if ( bottom[j] ) {
+      for (unsigned int j = i-wire_spacing; j <= i+wire_spacing; j++) {
+        if ( bottom[j] && (bottom[j] != top[i]) ) {
           vcg[top[i]].insert(bottom[j]);
         }
       }
@@ -124,7 +124,7 @@ int find_rightmost(const std::vector<int>& terminals, int net) {
 }
 
 void channel_router::insert_net(std::vector<std::set<wires > >& tracks, const int net_left, const int net_right,
-                                const bool left_up, const bool right_up)
+                                const bool left_up, const bool right_up, int &min_track)
 {
   // This is messy; is there a better way?
   // Search all the tracks for one that can hold the net
@@ -139,9 +139,11 @@ void channel_router::insert_net(std::vector<std::set<wires > >& tracks, const in
   else {
     this_net.horizontal = std::make_pair(net_left, net_right);
     bool need_new_track = true;
-    for (auto &track : tracks) {
+    auto track = tracks.begin();
+    std::advance(track, min_track);
+    for (; track != tracks.end(); ++track) {
       bool found_track = true;
-      for (auto &net : track) {
+      for (auto &net : *track) {
         if ( !(net_right < net.horizontal.first || net_left > net.horizontal.second) ) {
           // The nets overlap
           found_track = false;
@@ -157,7 +159,7 @@ void channel_router::insert_net(std::vector<std::set<wires > >& tracks, const in
       //   track.insert(this_net);
       // }
       if ( found_track ) {
-        track.insert(this_net);
+        track->insert(this_net);
         need_new_track = false;
         break;
       }
@@ -165,6 +167,7 @@ void channel_router::insert_net(std::vector<std::set<wires > >& tracks, const in
     if ( need_new_track ) {
       tracks.push_back(std::set<wires>());
       tracks.back().insert(this_net);
+      ++min_track;
     }
   }
 }
@@ -198,7 +201,8 @@ int channel_router::route(std::vector<int>& top, std::vector<int>& bottom, const
   std::cout << "Routing nets: ";
 #endif
   bool routed_something = true;
-  while ( (!vector_is_all_zeros(top) || !vector_is_all_zeros(bottom)) && routed_something ) {
+  for (int min_track = 0; (!vector_is_all_zeros(top) || !vector_is_all_zeros(bottom)) && routed_something;
+       ++min_track ) {
     routed_something = false;
     for (int i=0; i < width; i++) {
       assert( bottom[i] <= this->max_net_num && top[i] <= this->max_net_num );
@@ -214,7 +218,7 @@ int channel_router::route(std::vector<int>& top, std::vector<int>& bottom, const
         int rightmost_top = find_rightmost(top, bottom[i]);
         int net_right = greater(rightmost_bottom, rightmost_top);
         if ( net_right > net_left ) {
-          this->insert_net(tracks, net_left, net_right, false, ( net_right == rightmost_top ));
+          this->insert_net(tracks, net_left, net_right, false, ( net_right == rightmost_top ), min_track);
 #ifdef DEBUG
           std::cout << "(R)";
 #endif
@@ -224,7 +228,8 @@ int channel_router::route(std::vector<int>& top, std::vector<int>& bottom, const
         }
         else if ( net_right == net_left && rightmost_top != 0 ) {
           // A purely vertical net
-          this->insert_net(tracks, net_left, net_right, true, false);
+          int garbage = 0;
+          this->insert_net(tracks, net_left, net_right, true, false, garbage);
 #ifdef DEBUG
           std::cout << "(R)";
 #endif
@@ -262,7 +267,7 @@ int channel_router::route(std::vector<int>& top, std::vector<int>& bottom, const
         int rightmost_top = find_rightmost(top, top[i]);
         int net_right = greater(rightmost_bottom, rightmost_top);
         if ( net_right > net_left ) {
-          this->insert_net(tracks, net_left, net_right, true, ( net_right == rightmost_top ));
+          this->insert_net(tracks, net_left, net_right, true, ( net_right == rightmost_top ), min_track);
 #ifdef DEBUG
           std::cout << "(R)";
 #endif
@@ -272,7 +277,8 @@ int channel_router::route(std::vector<int>& top, std::vector<int>& bottom, const
         }
         else if ( net_right == net_left && rightmost_bottom != 0) {
           // A purely vertical net
-          this->insert_net(tracks, net_left, net_right, true, false);
+          int garbage = 0;
+          this->insert_net(tracks, net_left, net_right, true, false, garbage);
 #ifdef DEBUG
           std::cout << "(R)";
 #endif
