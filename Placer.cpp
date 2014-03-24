@@ -491,7 +491,7 @@ void Placer::placeFeedThruCells()
             int cellRow;
             int delta;
             int tarRow, tarCol;
-            int leftOf, rightOf;
+            int leftOf = 0, rightOf = 0;
 
             if (remCell == 0 || remCell < 0)
             { 

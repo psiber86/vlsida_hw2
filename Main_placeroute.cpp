@@ -18,7 +18,7 @@ int main(int argc, char* argv[])
     bool debug = false;
     std::string filename;
     int linenum = 0;
-    int netcount, cellcount = 0;
+    int netcount = 0, cellcount = 0;
     Cell **cells = NULL;
     Placer *placer = NULL;
     int **nets = NULL;
