@@ -16,25 +16,47 @@
 
 #define TERMINALS_PER_CELL 4
 
-void maze_router::create_grid(int rows, int cols){
-  grid = new gridcell*[rows];
-  for (int i = 0; i < rows; i++){
-    grid[i] = new gridcell[cols];
+void maze_router::create_grid(int cols, int rows){
+  grid = new gridcell*[cols];
+  for (int i = 0; i < cols; i++){
+    grid[i] = new gridcell[rows];
+  }
+}
+
+void maze_router::print_grid(int cols, int rows){
+  for (int i = rows-1; i >= 0; i--){
+    for (int j = 0; j < cols; j++){
+      //std::cout << j << "," << i << " ";
+      std::cout << grid[j][i].cell ;
+    }
+    std::cout << std::endl;
   }
 }
 
 maze_router::maze_router(std::vector<Cell> cells, int crows, int ccols, int num_nets) : cells(cells), crows(crows), ccols(ccols), num_nets(num_nets) {
-  std::cout << crows << "x" << ccols << std::endl;
-  this->create_grid(crows, ccols);
+  this->create_grid(ccols, crows);
+  std::cout << ccols << "x" << crows << std::endl;
   for (auto &cell : cells) {
+    // color in grid
+    int x = cell.getLambdaX();
+    int y = cell.getLambdaY();
+    
+    if (cell.getCellWidth() == 6){ //get rid of unneeded feedthrough cells
+      for (int i = x; i < x+cell.getCellWidth(); i++){
+	for (int j = y; j < y+6; j++){
+	  grid[i][j].cell = 1;
+	}
+      }
+    }
+    
     for (int i=0; i < TERMINALS_PER_CELL; i++) {
       const int* nets = cell.getNets();
-      if ( nets[i] ) {
-	//        rows[cell.termXY[i][1]].push_back(node(cell.termXY[i][0], cell.termXY[i][1], nets[i]));
-        // row_mapping[cell.termXY[i][1]] = cell.getLambdaY();
+      if( nets[i]){
+	
       }
     }
   }
+  this->print_grid(ccols, crows);
 }
 
 /*

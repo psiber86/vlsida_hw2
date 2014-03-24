@@ -35,12 +35,14 @@ private:
       return ( left.horizontal.first < right.horizontal.first );
     }
   };
-  void create_grid(int, int) ;
+  void create_grid(int, int);
+  void print_grid(int, int);
   std::vector<Cell> cells;
   int num_nets;
   int crows;
   int ccols;
   gridcell** grid;
+  int** nets;
 };
 
 #endif
