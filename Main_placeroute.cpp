@@ -66,6 +66,8 @@ int main(int argc, char* argv[])
         linenum++;
     }
 
+    std::cout << "Placing..." << std::endl;
+
     placer = new Placer("placer.mag", cellcount, cells, debug);
 
     placer->placeCellsInitial();
@@ -73,7 +75,9 @@ int main(int argc, char* argv[])
     if(debug) placer->printCellGrid();
     placer->placeByForceDirected();
     placer->calculateConnectivity();
+#ifdef DEBUG
     placer->printCellGrid();
+#endif
     placer->placeFeedThruCells();
     placer->compactAndMapLambda();
     if(debug) placer->printCellGrid();
@@ -82,19 +86,19 @@ int main(int argc, char* argv[])
 
     //routing stuff
 #ifdef CHANNEL_ROUTING
+    std::cout << "Channel routing..." << std::endl;
     channel_router channelRouter(placer->get_cells(), netcount);
     delete placer;
     placer = NULL;
     std::cout << channelRouter.route_all();
-    std::cout << " of " << channelRouter.get_num_nets() << " nets routed" << std::endl;
+    std::cout << " of " << channelRouter.get_num_nets() << " terminals routed" << std::endl;
     channelRouter.print_net_stats();
     channelRouter.write_mag_file(filename);
 #else
     std::cout << "Maze Routing." << std::endl;
-    maze_router mazeRouter(placer->get_cells(), placer->topRowBounding*6+placer->topRowBounding, placer->rightColBounding*6+placer->rightColBounding, netcount, nets);
+    maze_router mazeRouter(placer->get_cells(), placer->topRowBounding*6+placer->topRowBounding*2, placer->rightColBounding*6+placer->rightColBounding*2, netcount, nets);
     delete placer;
     placer = NULL;
-    std::cout << mazeRouter.route() << " of " << netcount << " nets routed" << std::endl;
 
 #endif
 

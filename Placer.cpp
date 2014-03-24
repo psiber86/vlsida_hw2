@@ -575,10 +575,6 @@ void Placer::placeFeedThruCells()
                 }
             }
 
-            if(debug) printf("cell %i (bottom=%i) is separated from cell %i (bottom=%i) by %i rows\n",
-                    curCell, cells[forceOrderMap[icell]]->getTermLocInCell(iterm),
-                    remCell, cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm), numFeedThrus);
-
             do {
                 //determine which way to shift currently placed cells
                 for (int icol = leftColBounding; icol <= rightColBounding; icol++) {
@@ -587,7 +583,14 @@ void Placer::placeFeedThruCells()
                     } else if (cellGrid[tarRow][icol] > 0 && icol > tarCol) {
                         rightOf++;
                     }
+#ifdef DEBUG
+                printf("cell %i (bottom=%i) is separated from cell %i (bottom=%i) by %i rows\n",
+                        curCell, cells[forceOrderMap[icell]]->getTermLocInCell(iterm),
+                        remCell, cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm), numFeedThrus);
+#endif
+
                 }
+
                 if (leftOf <= rightOf) {
                     shiftCellsLeft(tarRow, tarCol);
                 } else {
