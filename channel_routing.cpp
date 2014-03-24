@@ -288,14 +288,14 @@ int channel_router::route_all() {
 
 int channel_router::get_num_nets() const
 {
-  int nets = this->num_nets;
-  for (auto &cell : this->cells) {
-    if ( cell.getCellWidth() == 3 ) {
-      nets++;
-    }
-  }
-  return nets;
-  // return this->num_nets;
+  // int nets = this->num_nets;
+  // for (auto &cell : this->cells) {
+  //   if ( cell.getCellWidth() == 3 ) {
+  //     nets++;
+  //   }
+  // }
+  // return nets;
+  return this->num_nets;
 }
 
 std::pair<std::map<int,int>,std::map<int,int> > channel_router::calc_row_offsets() const
