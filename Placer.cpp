@@ -575,9 +575,11 @@ void Placer::placeFeedThruCells()
                     }
                 }
 
+#ifdef DEBUG
                 printf("cell %i (bottom=%i) is separated from cell %i (bottom=%i) by %i rows\n",
                         curCell, cells[forceOrderMap[icell]]->getTermLocInCell(iterm),
                         remCell, cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm), numFeedThrus);
+#endif
 
                 do {
                     //determine which way to shift currently placed cells
