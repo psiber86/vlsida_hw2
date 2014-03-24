@@ -515,7 +515,7 @@ void Placer::placeFeedThruCells()
             cellRow = cells[forceOrderMap[icell]]->getCellY();
             tarCol = cells[forceOrderMap[icell]]->getCellX();
             delta =  cellRow - cells[forceOrderMap[remCell]]->getCellY();
-            if (abs(delta) > 2 || delta == 0) {
+            if (abs(delta) > 2 || remCell == curCell) {
                 int iFeed = 1;
                 int numFeedThrus = abs(delta/2)-1;
 
