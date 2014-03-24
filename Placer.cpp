@@ -893,6 +893,7 @@ void Placer::writeMagFile() const
 std::vector<Cell> Placer::get_cells() const
 {
   std::vector<Cell> all_cells;
+  std::sort(cells + 1, cells + (cellCount+1), CmpCellNum);
   for (int i = 1; i < this->cellCount+1; i++) {
     all_cells.push_back(*cells[i]);
   }
