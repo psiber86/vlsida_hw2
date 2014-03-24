@@ -78,6 +78,7 @@ int main(int argc, char* argv[])
     channelRouter.print_net_stats();
     channelRouter.write_mag_file(filename);
 #else
+    std::cout << "Maze Routing." << std::endl;
 
 #endif
 
