@@ -463,8 +463,8 @@ void Placer::verifyPlacement()
         sumCells += icell;
     }
 
-    for (int irow = botRowBounding; irow <= topRowBounding; irow++) {
-        for (int icol = leftColBounding; icol <= rightColBounding; icol++) {
+    for (int irow = 0; irow < cellGridRows; irow++) {
+        for (int icol = 0; icol < cellGridCols; icol++) {
             sumGrid += cellGrid[irow][icol];         
         }
     }
@@ -493,7 +493,7 @@ void Placer::placeFeedThruCells()
             int tarRow, tarCol;
             int leftOf, rightOf;
 
-            if (remCell == 0 || remCell == curCell || remCell < 0) 
+            if (remCell == 0 || remCell < 0)
             { 
                 continue; 
             }
@@ -515,21 +515,71 @@ void Placer::placeFeedThruCells()
             cellRow = cells[forceOrderMap[icell]]->getCellY();
             tarCol = cells[forceOrderMap[icell]]->getCellX();
             delta =  cellRow - cells[forceOrderMap[remCell]]->getCellY();
-            if (abs(delta) > 2) {
+            if (abs(delta) > 2 || remCell == curCell) {
                 int iFeed = 1;
-                int numFeedThrus = abs(delta/2)-1; 
-                if(debug) printf("cell %i is separated from cell %i by %i rows\n", curCell, remCell, numFeedThrus); 
+                int numFeedThrus = abs(delta/2)-1;
 
-                //place feed thru cell in each row until remove cell is reached
-                tarRow = cellRow; 
+                //place feed thru cell in each row until remote cell is reached
+                tarRow = cellRow;
+                //check terminal location with respect to cell
+                //if one terminal is on the outside of pair, add 1 feed thru cell
+                //if both terminals are on outside of pair, add 2 feed thru cells
                 //determine which way to iterate vertically
                 if (delta > 0) { //move down rows
-                    tarRow -= 2;
-                } else {         //move up rows 
-                    tarRow += 2;
+                    //if locTerm is at top and remTerm is bottom of cell
+                    if (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                        cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+                    {
+                        numFeedThrus += 2;
+                    }
+                    //if locTerm is at top and remTerm is at top or
+                    //if locTerm is on top and remTerm is on top
+                    else if (  (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                                !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+                            || (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                                cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) )
+                    {
+                        numFeedThrus += 1;
+                    }
+                    else {
+                        tarRow -= 2;
+                    }
+                } else if (delta < 0) {         //move up rows
+                    //if locTerm is at bottom of cell and remTerm is top of cell
+                    if (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                        !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+                    {
+                        numFeedThrus += 2;
+                    }
+                    //if locTerm is at bottom and remTerm is at bottom or
+                    //if locTerm is on top and remTerm is on top
+                    else if (  (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                                cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+                            || (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                                !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) )
+                    {
+                        numFeedThrus += 1;
+                    }
+                    else {
+                        tarRow += 2;
+                    }
+                } else {
+                    if ( (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                          !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) ||
+                         (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                          cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) )
+                    {
+                        numFeedThrus = 1;
+                    } else {
+                        continue;
+                    }
                 }
-                do {
 
+                printf("cell %i (bottom=%i) is separated from cell %i (bottom=%i) by %i rows\n",
+                        curCell, cells[forceOrderMap[icell]]->getTermLocInCell(iterm),
+                        remCell, cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm), numFeedThrus);
+
+                do {
                     //determine which way to shift currently placed cells
                     for (int icol = leftColBounding; icol <= rightColBounding; icol++) {
                         if (cellGrid[tarRow][icol] > 0 && icol < tarCol) {
