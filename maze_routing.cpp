@@ -57,7 +57,13 @@ void maze_router::expand_grid(std::vector<Cell> &cells){
     //std::cout << "Key: " << iter->first << std::endl;
     for(int i = 0; i < iter->second.size(); i++){
       //std::cout << cells[iter->second[i]-1].getLambdaY() << " " << cells[iter->second[i]-1].getCellNum() << " " << iter->second[i] << std::endl;
-      cells[iter->second[i]-1].setLambdaCoordinates(cells[iter->second[i]-1].getLambdaY()+(3*c), cells[iter->second[i]-1].getLambdaX());
+      //cells[iter->second[i]-1].setLambdaCoordinates(cells[iter->second[i]-1].getLambdaY()+(3*c), cells[iter->second[i]-1].getLambdaX());
+      cells[iter->second[i]-1].yLbot =  cells[iter->second[i]-1].getLambdaY()+(3*c);
+      cells[iter->second[i]-1].termXY[0][1] += (3*c);
+      cells[iter->second[i]-1].termXY[1][1] += (3*c);
+      cells[iter->second[i]-1].termXY[2][1] += (3*c);
+      cells[iter->second[i]-1].termXY[3][1] += (3*c);
+
       //std::cout << cells[iter->second[i]-1].getLambdaY() << std::endl;
     }
     c++;
@@ -74,7 +80,7 @@ maze_router::maze_router(std::vector<Cell> cells, int crows, int ccols, int num_
   // expand vertical cell spacing
   this->expand_grid(cells);
   // mark cells in grid
-  for (int c = 0; c < cells.size(); i++) {
+  for (int c = 0; c < cells.size(); c++) {
     int x = cells[c].getLambdaX();
     int y = cells[c].getLambdaY();   
     std::cout << x << "," << y << std::endl;

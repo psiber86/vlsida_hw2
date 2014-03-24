@@ -17,9 +17,6 @@ private:
 
     int xcell, ycell;   //coordinates of cell in cellgrid
 
-    int xLbot, yLbot;   //lower left corner of cell in lambda grid
-    int xRtop, yRtop;   //upper right corner of cell
-
     int cellWidth;      //different for feedthrough cells 
 
     int zeroForce;      //cost of cell in current location
@@ -42,6 +39,9 @@ public:
         this->nets[i] = other.nets[i];
       }
     }
+
+    int xLbot, yLbot;   //lower left corner of cell in lambda grid
+    int xRtop, yRtop;   //upper right corner of cell
 
     int getCellNum() const;
 
