@@ -19,7 +19,7 @@
 #define TERMINALS_PER_CELL 4
 
 channel_router::channel_router(std::vector<Cell> cells, int max_net_num)
-  : cells(cells), num_nets(0), stranded_nets(0), unroutable_nets(0), max_net_num(max_net_num) {
+  : cells(cells), num_nets(0), stranded_nets(0), unroutable_nets(0), max_net_num(max_net_num), cyclical_nets(0) {
   for (auto &cell : cells) {
     if ( cell.getCellWidth() == 6 ) {
       switch (cell.getCellOrientation()) {
@@ -197,95 +197,122 @@ int channel_router::route(std::vector<int>& top, std::vector<int>& bottom, const
 #ifdef DEBUG
   std::cout << "Routing nets: ";
 #endif
-  for (int i=0; i < width; i++) {
-    assert( bottom[i] <= this->max_net_num && top[i] <= this->max_net_num );
-    if ( bottom[i] ) {
+  bool routed_something = true;
+  while ( (!vector_is_all_zeros(top) || !vector_is_all_zeros(bottom)) && routed_something ) {
+    routed_something = false;
+    for (int i=0; i < width; i++) {
+      assert( bottom[i] <= this->max_net_num && top[i] <= this->max_net_num );
+      if ( bottom[i] && vcg[bottom[i]].empty() ) {
+        routed_something = true;
+        int routed_net_num = bottom[i];
 #ifdef DEBUG
-      std::cout << bottom[i];
+        std::cout << bottom[i];
 #endif
-      ++num_nets;
-      int net_left = i;
-      int rightmost_bottom = find_rightmost(bottom, bottom[i]);
-      int rightmost_top = find_rightmost(top, bottom[i]);
-      int net_right = greater(rightmost_bottom, rightmost_top);
-      if ( net_right > net_left ) {
-        this->insert_net(tracks, net_left, net_right, false, ( net_right == rightmost_top ));
+        ++num_nets;
+        int net_left = i;
+        int rightmost_bottom = find_rightmost(bottom, bottom[i]);
+        int rightmost_top = find_rightmost(top, bottom[i]);
+        int net_right = greater(rightmost_bottom, rightmost_top);
+        if ( net_right > net_left ) {
+          this->insert_net(tracks, net_left, net_right, false, ( net_right == rightmost_top ));
 #ifdef DEBUG
-        std::cout << "(R)";
+          std::cout << "(R)";
 #endif
-        ++terminals_routed;
-      }
-      else if ( net_right == net_left && rightmost_top != 0 ) {
-        // A purely vertical net
-        this->insert_net(tracks, net_left, net_right, true, false);
-#ifdef DEBUG
-        std::cout << "(R)";
-#endif
-        ++terminals_routed;
-      }
-      else {
-#ifdef DEBUG
-        std::cout << "(S)";
-        ++stranded_nets;
-#endif
-      }
-#ifdef DEBUG
-      std::cout << ' ';
-#endif
-      int routed_net_num = bottom[i];
-      for (int j=0; j < width; j++) {
-        if ( bottom[j] == routed_net_num ) {
-          bottom[j] = 0;
+          ++terminals_routed;
+          delete_from_vcg(bottom[i], vcg);
+          i = -1;
         }
-        if ( top[j] == routed_net_num ) {
-          top[j] = 0;
+        else if ( net_right == net_left && rightmost_top != 0 ) {
+          // A purely vertical net
+          this->insert_net(tracks, net_left, net_right, true, false);
+#ifdef DEBUG
+          std::cout << "(R)";
+#endif
+          ++terminals_routed;
+          delete_from_vcg(bottom[i], vcg);
+          i = -1;
+        }
+        else {
+#ifdef DEBUG
+          std::cout << "(S)";
+          ++stranded_nets;
+#endif
+        }
+#ifdef DEBUG
+        std::cout << ' ';
+#endif
+        for (int j=0; j < width; j++) {
+          if ( bottom[j] == routed_net_num ) {
+            bottom[j] = 0;
+          }
+          if ( top[j] == routed_net_num ) {
+            top[j] = 0;
+          }
         }
       }
-    }
-    if ( top[i] ) {
+      if ( top[i] && vcg[top[i]].empty() ) {
+        routed_something = true;
+        int routed_net_num = top[i];
 #ifdef DEBUG
-      std::cout << top[i];
+        std::cout << top[i];
 #endif
-      ++num_nets;
-      int net_left = i;
-      int rightmost_bottom = find_rightmost(bottom, top[i]);
-      int rightmost_top = find_rightmost(top, top[i]);
-      int net_right = greater(rightmost_bottom, rightmost_top);
-      if ( net_right > net_left ) {
-        this->insert_net(tracks, net_left, net_right, true, ( net_right == rightmost_top ));
+        ++num_nets;
+        int net_left = i;
+        int rightmost_bottom = find_rightmost(bottom, top[i]);
+        int rightmost_top = find_rightmost(top, top[i]);
+        int net_right = greater(rightmost_bottom, rightmost_top);
+        if ( net_right > net_left ) {
+          this->insert_net(tracks, net_left, net_right, true, ( net_right == rightmost_top ));
 #ifdef DEBUG
-        std::cout << "(R)";
+          std::cout << "(R)";
 #endif
-        ++terminals_routed;
-      }
-      else if ( net_right == net_left && rightmost_bottom != 0) {
-        // A purely vertical net
-        this->insert_net(tracks, net_left, net_right, true, false);
-#ifdef DEBUG
-        std::cout << "(R)";
-#endif
-        ++terminals_routed;
-      }
-      else {
-#ifdef DEBUG
-        std::cout << "(S)";
-#endif
-        ++stranded_nets;
-      }
-#ifdef DEBUG
-      std::cout << ' ';
-#endif
-      int routed_net_num = bottom[i];
-      for (int j=0; j < width; j++) {
-        if ( bottom[j] == routed_net_num ) {
-          bottom[j] = 0;
+          ++terminals_routed;
+          delete_from_vcg(top[i], vcg);
+          i = -1;
         }
-        if ( top[j] == routed_net_num ) {
-          top[j] = 0;
+        else if ( net_right == net_left && rightmost_bottom != 0) {
+          // A purely vertical net
+          this->insert_net(tracks, net_left, net_right, true, false);
+#ifdef DEBUG
+          std::cout << "(R)";
+#endif
+          ++terminals_routed;
+          delete_from_vcg(top[i], vcg);
+          i = -1;
+        }
+        else {
+#ifdef DEBUG
+          std::cout << "(S)";
+#endif
+          ++stranded_nets;
+        }
+#ifdef DEBUG
+        std::cout << ' ';
+#endif
+        for (int j=0; j < width; j++) {
+          if ( bottom[j] == routed_net_num ) {
+            bottom[j] = 0;
+          }
+          if ( top[j] == routed_net_num ) {
+            top[j] = 0;
+          }
         }
       }
     }
   }
+  if (!routed_something) {
+    for (auto& net : top) {
+      if ( net ) {
+        ++cyclical_nets;
+      }
+    }
+    for (auto& net : bottom) {
+      if ( net ) {
+        ++cyclical_nets;
+      }
+    }
+  }
+
 #ifdef DEBUG
   std::cout << std::endl << "Tracks used: " << tracks.size() << std::endl;
 #endif
@@ -475,4 +502,5 @@ void channel_router::print_net_stats() const
 {
   std::cout << "Stranded nets:   " << stranded_nets << std::endl;
   std::cout << "Unroutable nets: " << unroutable_nets << std::endl;
+  std::cout << "Vertically unroutable nets: " << cyclical_nets << std::endl;
 }
