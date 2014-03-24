@@ -46,7 +46,7 @@ int main(int argc, char* argv[])
             netcount = net_number;
 	    nets = new int*[netcount];
 	    for(int i = 0; i < netcount; i++){
-	      nets[i] = new int[4];
+	      nets[i] = new int[5];
 	    }
         } else {
             std::cin >> t_cell1;
@@ -58,6 +58,7 @@ int main(int argc, char* argv[])
 	    nets[net_number-1][1] = t_term1;
 	    nets[net_number-1][2] = t_cell2;
 	    nets[net_number-1][3] = t_term2;
+	    nets[net_number-1][4] = 0;
 	    
             cells[t_cell1]->connectTerminals(t_cell1, t_term1, t_cell2, t_term2, net_number);
             cells[t_cell2]->connectTerminals(t_cell2, t_term2, t_cell1, t_term1, net_number);
@@ -96,6 +97,9 @@ int main(int argc, char* argv[])
 #else
     std::cout << "Maze Routing." << std::endl;
     maze_router mazeRouter(placer->get_cells(), placer->topRowBounding*6+placer->topRowBounding, placer->rightColBounding*6+placer->rightColBounding, netcount, nets);
+    delete placer;
+    placer = NULL;
+    std::cout << mazeRouter.route() << " of " << netcount << " nets routed" << std::endl;
 
 #endif
 
