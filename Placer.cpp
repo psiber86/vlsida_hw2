@@ -515,154 +515,153 @@ void Placer::placeFeedThruCells()
             cellRow = cells[forceOrderMap[icell]]->getCellY();
             tarCol = cells[forceOrderMap[icell]]->getCellX();
             delta =  cellRow - cells[forceOrderMap[remCell]]->getCellY();
-            if (abs(delta) > 2 || remCell == curCell) {
-                int iFeed = 1;
-                int numFeedThrus = abs(delta/2)-1;
 
-                //place feed thru cell in each row until remote cell is reached
-                tarRow = cellRow;
-                //check terminal location with respect to cell
-                //if one terminal is on the outside of pair, add 1 feed thru cell
-                //if both terminals are on outside of pair, add 2 feed thru cells
-                //determine which way to iterate vertically
-                if (delta > 0) { //move down rows
-                    //if locTerm is at top and remTerm is bottom of cell
-                    if (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
-                        cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
-                    {
-                        numFeedThrus += 2;
-                    }
-                    //if locTerm is at top and remTerm is at top or
-                    //if locTerm is on top and remTerm is on top
-                    else if (  (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
-                                !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
-                            || (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
-                                cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) )
-                    {
-                        numFeedThrus += 1;
-                    }
-                    else {
-                        tarRow -= 2;
-                    }
-                } else if (delta < 0) {         //move up rows
-                    //if locTerm is at bottom of cell and remTerm is top of cell
-                    if (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
-                        !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
-                    {
-                        numFeedThrus += 2;
-                    }
-                    //if locTerm is at bottom and remTerm is at bottom or
-                    //if locTerm is on top and remTerm is on top
-                    else if (  (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
-                                cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
-                            || (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
-                                !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) )
-                    {
-                        numFeedThrus += 1;
-                    }
-                    else {
-                        tarRow += 2;
-                    }
+            int iFeed = 1;
+            int numFeedThrus = abs(delta/2)-1;
+
+            //place feed thru cell in each row until remote cell is reached
+            tarRow = cellRow;
+            //check terminal location with respect to cell
+            //if one terminal is on the outside of pair, add 1 feed thru cell
+            //if both terminals are on outside of pair, add 2 feed thru cells
+            //determine which way to iterate vertically
+            if (delta > 0) { //move down rows
+                //if locTerm is at top and remTerm is bottom of cell
+                if (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                    cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+                {
+                    numFeedThrus += 2;
+                }
+                //if locTerm is at top and remTerm is at top or
+                //if locTerm is on top and remTerm is on top
+                else if (  (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                            !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+                        || (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                            cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) )
+                {
+                    numFeedThrus += 1;
+                }
+                else {
+                    tarRow -= 2;
+                }
+            } else if (delta < 0) {         //move up rows
+                //if locTerm is at bottom of cell and remTerm is top of cell
+                if (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                    !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+                {
+                    numFeedThrus += 2;
+                }
+                //if locTerm is at bottom and remTerm is at bottom or
+                //if locTerm is on top and remTerm is on top
+                else if (  (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                            cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+                        || (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                            !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) )
+                {
+                    numFeedThrus += 1;
+                }
+                else {
+                    tarRow += 2;
+                }
+            } else {
+                if ( (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                      !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) ||
+                     (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                      cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) )
+                {
+                    numFeedThrus = 1;
                 } else {
-                    if ( (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
-                          !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) ||
-                         (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
-                          cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) )
-                    {
-                        numFeedThrus = 1;
+                    continue;
+                }
+            }
+
+            if(debug) printf("cell %i (bottom=%i) is separated from cell %i (bottom=%i) by %i rows\n",
+                    curCell, cells[forceOrderMap[icell]]->getTermLocInCell(iterm),
+                    remCell, cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm), numFeedThrus);
+
+            do {
+                //determine which way to shift currently placed cells
+                for (int icol = leftColBounding; icol <= rightColBounding; icol++) {
+                    if (cellGrid[tarRow][icol] > 0 && icol < tarCol) {
+                        leftOf++;
+                    } else if (cellGrid[tarRow][icol] > 0 && icol > tarCol) {
+                        rightOf++;
+                    }
+                }
+                if (leftOf <= rightOf) {
+                    shiftCellsLeft(tarRow, tarCol);
+                } else {
+                    shiftCellsRight(tarRow, tarCol);
+                }
+
+                //create place feed thru cell
+                Cell *feedThru = new Cell(++feedCellCount, FEEDTHRU, debug);
+                if(debug) printf("creating new feed thru cell %i\n", feedCellCount);
+            
+                //CONNECT TERMINALS
+                //connect to current cell
+                if (iFeed == 1) {
+                    if (debug) printf("connecting feed thru to local cell\n");
+                    if (delta > 0) { 
+                        cells[forceOrderMap[icell]]->connectTerminals(curCell, iterm, (-1)*feedCellCount, 1); 
+                        feedThru->connectTerminals((-1)*feedCellCount, 1, curCell, iterm,
+                                                   cells[forceOrderMap[icell]]->getNets()[iterm-1]);
                     } else {
-                        continue;
+                        cells[forceOrderMap[icell]]->connectTerminals(curCell, iterm, (-1)*feedCellCount, 2); 
+                        feedThru->connectTerminals((-1)*feedCellCount, 2, curCell, iterm,
+                                                   cells[forceOrderMap[icell]]->getNets()[iterm-1]);
                     }
                 }
 
-                printf("cell %i (bottom=%i) is separated from cell %i (bottom=%i) by %i rows\n",
-                        curCell, cells[forceOrderMap[icell]]->getTermLocInCell(iterm),
-                        remCell, cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm), numFeedThrus);
-
-                do {
-                    //determine which way to shift currently placed cells
-                    for (int icol = leftColBounding; icol <= rightColBounding; icol++) {
-                        if (cellGrid[tarRow][icol] > 0 && icol < tarCol) {
-                            leftOf++;
-                        } else if (cellGrid[tarRow][icol] > 0 && icol > tarCol) {
-                            rightOf++;
-                        }
-                    }
-                    if (leftOf <= rightOf) {
-                        shiftCellsLeft(tarRow, tarCol);
+                //connect to intermediate feed thru cells
+                if (numFeedThrus > 1 && iFeed > 1) {
+                    if(debug) printf("connecting feed thru to intermediate feed thru\n");
+                    int remFeedCell = feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->getCellNum();
+                    if (delta > 0) { 
+                        feedThru->connectTerminals((-1)*feedCellCount, 2, (-1)*(feedCellCount-1), 1,
+                                                   cells[forceOrderMap[icell]]->getNets()[iterm-1]);
+                        feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->
+                          connectTerminals((-1)*remFeedCell,1, (-1)*feedCellCount, 2,
+                                           cells[forceOrderMap[icell]]->getNets()[iterm-1]);
                     } else {
-                        shiftCellsRight(tarRow, tarCol);
+                        feedThru->connectTerminals((-1)*feedCellCount, 1, (-1)*(feedCellCount-1), 2,
+                                                   cells[forceOrderMap[icell]]->getNets()[iterm-1]);
+                        feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->
+                          connectTerminals((-1)*remFeedCell, 2, (-1)*feedCellCount, 1,
+                                           cells[forceOrderMap[icell]]->getNets()[iterm-1]);
                     }
+                }
 
-                    //create place feed thru cell
-                    Cell *feedThru = new Cell(++feedCellCount, FEEDTHRU, debug);
-                    if(debug) printf("creating new feed thru cell %i\n", feedCellCount);
-                
-                    //CONNECT TERMINALS
-                    //connect to current cell
-                    if (iFeed == 1) {
-                        if (debug) printf("connecting feed thru to local cell\n");
-                        if (delta > 0) { 
-                            cells[forceOrderMap[icell]]->connectTerminals(curCell, iterm, (-1)*feedCellCount, 1); 
-                            feedThru->connectTerminals((-1)*feedCellCount, 1, curCell, iterm,
-                                                       cells[forceOrderMap[icell]]->getNets()[iterm-1]);
-                        } else {
-                            cells[forceOrderMap[icell]]->connectTerminals(curCell, iterm, (-1)*feedCellCount, 2); 
-                            feedThru->connectTerminals((-1)*feedCellCount, 2, curCell, iterm,
-                                                       cells[forceOrderMap[icell]]->getNets()[iterm-1]);
-                        }
+                //connect to remote cell
+                if (iFeed == numFeedThrus) {    
+                    if(debug) printf("connecting feed thru to remote cell\n");
+                    if (delta > 0) { 
+                        feedThru->connectTerminals((-1)*feedCellCount, 2, remCell, remTerm);
+                        cells[forceOrderMap[remCell]]->connectTerminals(remCell, remTerm, (-1)*feedCellCount, 2,
+                                                                   cells[forceOrderMap[icell]]->getNets()[iterm-1]);
+                    } else {
+                        feedThru->connectTerminals((-1)*feedCellCount, 1, remCell, remTerm);
+                        cells[forceOrderMap[remCell]]->connectTerminals(remCell, remTerm, (-1)*feedCellCount, 1,
+                                                                   cells[forceOrderMap[icell]]->getNets()[iterm-1]);
                     }
+                } 
 
-                    //connect to intermediate feed thru cells
-                    if (numFeedThrus > 1 && iFeed > 1) {
-                        if(debug) printf("connecting feed thru to intermediate feed thru\n");
-                        int remFeedCell = feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->getCellNum();
-                        if (delta > 0) { 
-                            feedThru->connectTerminals((-1)*feedCellCount, 2, (-1)*(feedCellCount-1), 1,
-                                                       cells[forceOrderMap[icell]]->getNets()[iterm-1]);
-                            feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->
-                              connectTerminals((-1)*remFeedCell,1, (-1)*feedCellCount, 2,
-                                               cells[forceOrderMap[icell]]->getNets()[iterm-1]);
-                        } else {
-                            feedThru->connectTerminals((-1)*feedCellCount, 1, (-1)*(feedCellCount-1), 2,
-                                                       cells[forceOrderMap[icell]]->getNets()[iterm-1]);
-                            feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->
-                              connectTerminals((-1)*remFeedCell, 2, (-1)*feedCellCount, 1,
-                                               cells[forceOrderMap[icell]]->getNets()[iterm-1]);
-                        }
-                    }
+                feedThru->setCellCoordinates(tarRow, tarCol); 
+                feedCells.push_back(feedThru);
 
-                    //connect to remote cell
-                    if (iFeed == numFeedThrus) {    
-                        if(debug) printf("connecting feed thru to remote cell\n");
-                        if (delta > 0) { 
-                            feedThru->connectTerminals((-1)*feedCellCount, 2, remCell, remTerm);
-                            cells[forceOrderMap[remCell]]->connectTerminals(remCell, remTerm, (-1)*feedCellCount, 2,
-                                                                       cells[forceOrderMap[icell]]->getNets()[iterm-1]);
-                        } else {
-                            feedThru->connectTerminals((-1)*feedCellCount, 1, remCell, remTerm);
-                            cells[forceOrderMap[remCell]]->connectTerminals(remCell, remTerm, (-1)*feedCellCount, 1,
-                                                                       cells[forceOrderMap[icell]]->getNets()[iterm-1]);
-                        }
-                    } 
+                if(debug) printf("placing feed thru cell -%i in row %i,%i\n", feedCellCount, tarRow, tarCol);
 
-                    feedThru->setCellCoordinates(tarRow, tarCol); 
-                    feedCells.push_back(feedThru);
+                cellGrid[tarRow][tarCol] = feedCellCount * -1;
+                if (delta > 0) { //move down rows
+                    tarRow -= 2;
+                } else {         //move up rows 
+                    tarRow += 2;
+                }
 
-                    if(debug) printf("placing feed thru cell -%i in row %i,%i\n", feedCellCount, tarRow, tarCol);
+                iFeed++;
+            } while (iFeed <= numFeedThrus);  
 
-                    cellGrid[tarRow][tarCol] = feedCellCount * -1;
-                    if (delta > 0) { //move down rows
-                        tarRow -= 2;
-                    } else {         //move up rows 
-                        tarRow += 2;
-                    }
-
-                    iFeed++;
-                } while (iFeed <= numFeedThrus);  
-
-                placedFeedCells.push_back( std::make_pair(float(curCell)+iterm/10.0, float(remCell)+remTerm/10.0) );
-            }
+            placedFeedCells.push_back( std::make_pair(float(curCell)+iterm/10.0, float(remCell)+remTerm/10.0) );
         }
     }
 }
