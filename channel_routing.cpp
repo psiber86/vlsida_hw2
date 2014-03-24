@@ -55,22 +55,38 @@ int channel_router::route(const int top_index, const int bottom_index) {
   std::cout << "Routing rows at " << top_index << " and " << bottom_index << std::endl;
 #endif
 
+  int bottom_row;
+
   std::vector<int> top;
-  std::sort(rows[top_index].begin(), rows[top_index].end());
-  for (auto &node : rows[top_index]) {
-    // According to Josh, his coordinates are never negative
-    for (int i = top.size()-1; i < node.x; i++) {
-      top.push_back(0);
+  if ( !top_index ) {
+    // Need a fake top row
+    top.push_back(0);
+  }
+  else {
+    std::sort(rows[top_index].begin(), rows[top_index].end());
+    for (auto &node : rows[top_index]) {
+      // According to Josh, his coordinates are never negative
+      for (int i = top.size()-1; i < node.x; i++) {
+        top.push_back(0);
+      }
+      top[node.x] = node.net;
     }
-    top[node.x] = node.net;
   }
   std::vector<int> bottom;
-  std::sort(rows[bottom_index].begin(), rows[bottom_index].end());
-  for (auto &node : rows[bottom_index]) {
-    for (int i = bottom.size()-1; i < node.x; i++) {
-      bottom.push_back(0);
+  if ( !bottom_index ) {
+    // Need a fake bottom row
+    bottom.push_back(0);
+    bottom_row = top_index-2;
+  }
+  else {
+    std::sort(rows[bottom_index].begin(), rows[bottom_index].end());
+    for (auto &node : rows[bottom_index]) {
+      for (int i = bottom.size()-1; i < node.x; i++) {
+        bottom.push_back(0);
+      }
+      bottom[node.x] = node.net;
     }
-    bottom[node.x] = node.net;
+    bottom_row = bottom_index;
   }
 
   // Make the vectors the same length
@@ -81,7 +97,7 @@ int channel_router::route(const int top_index, const int bottom_index) {
     bottom.push_back(0);
   }
 
-  return this->route(top, bottom, bottom_index);
+  return this->route(top, bottom, bottom_row);
 }
 
 int find_rightmost(const std::vector<int>& terminals, int net) {
@@ -245,27 +261,24 @@ int channel_router::route_all() {
   int num_routed = 0;
   // Iterate starting with the second row
   std::map<int,std::vector<node> >::iterator iter = this->rows.begin();
-  // while ( std::next(iter)->first - row_spacing != iter->first ) {
-  //   ++iter;
-  // }
   for (; iter != this->rows.end(); ++iter) {
     int bottom_row = iter->first;
     if ( std::next(iter)->first - row_spacing != iter->first ) {
-      for (auto &net : iter->second) {
-        ++unroutable_nets;
-        ++num_nets;
+      // Make a fake row below the first row
+      if ( std::next(iter) == this->rows.end() ) {
+        num_routed += this->route(0, bottom_row);
+      }
+      else {
+        num_routed += this->route(bottom_row, 0);
       }
       continue;
     }
     if ( ++iter == this->rows.end() ) {
-      // Skip the last row too
+      num_routed += this->route(0, bottom_row);
       break;
     }
     if ( std::next(iter) == this->rows.end() ) {
-      for (auto &net : iter->second) {
-        ++unroutable_nets;
-        ++num_nets;
-      }
+      num_routed += this->route(0, bottom_row);
       break;
     }
     num_routed += this->route(iter->first, bottom_row);
@@ -420,6 +433,6 @@ void channel_router::write_mag_file(std::string magfile)
 
 void channel_router::print_net_stats() const
 {
-  std::cout << "Stranded nets:   " << stranded_nets << std::endl;
-  std::cout << "Unroutable nets: " << unroutable_nets << std::endl;
+  std::cout << "Stranded terminals:   " << stranded_nets << std::endl;
+  std::cout << "Unroutable terminals: " << unroutable_nets << std::endl;
 }
