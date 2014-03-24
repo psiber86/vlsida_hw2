@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
     if(debug) placer->printCellGrid();
     placer->placeByForceDirected();
     placer->calculateConnectivity();
-    if(debug) placer->printCellGrid();
+    placer->printCellGrid();
     placer->placeFeedThruCells();
     placer->compactAndMapLambda();
     if(debug) placer->printCellGrid();

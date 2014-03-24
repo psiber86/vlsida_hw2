@@ -64,6 +64,8 @@ public:
 
     std::pair<int, int> getTerminalCoordinates(int)  const;
 
+    int getTermLocInCell(int);
+
     void setForce(int);
 
     int getForce() const;

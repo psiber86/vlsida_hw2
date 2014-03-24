@@ -31,3 +31,8 @@ enum cellOrientation {
 
     ORIEN_COUNT
 };
+
+enum termLoc {
+    TOP,
+    BOTTOM
+};

@@ -227,6 +227,19 @@ std::pair<int, int> Cell::getTerminalCoordinates(int term) const
     return loc; 
 }
 
+int Cell::getTermLocInCell(int term)
+{
+    int loc = TOP;
+
+    if (termXY[term-1][1] == yLbot) {
+        loc = BOTTOM;
+    } else {
+        loc = TOP;
+    }
+
+    return loc;
+}
+
 void Cell::setForce(int force)
 {
     zeroForce = force;
