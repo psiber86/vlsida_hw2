@@ -206,8 +206,8 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
       else {
 #ifdef DEBUG
         std::cout << "(S)";
-        ++stranded_nets;
 #endif
+        ++stranded_nets;
       }
 #ifdef DEBUG
       std::cout << ' ';
