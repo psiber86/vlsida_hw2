@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
             }
         } else if (linenum == 1) {
             netcount = net_number;
-	    nets = new int[netcount];
+	    nets = new int*[netcount];
 	    for(int i = 0; i < netcount; i++){
 	      nets[i] = new int[4];
 	    }
