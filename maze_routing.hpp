@@ -51,7 +51,7 @@ private:
   bool lee_algorithm(int, int, int, int, int);
   bool check_neighbor(int, int, int);
   coord check_nvals(int, int, int, bool);
-  void write_mag_file(const std::string, std::vector<Cell>);
+  void write_mag_file(const std::string, std::vector<Cell>&);
   std::vector<Cell> cells;
   std::map<int,std::vector<int>> rows;
   std::vector<wire> metal1;

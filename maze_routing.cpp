@@ -305,7 +305,7 @@ coord maze_router::check_nvals(int x, int y, int val, bool vert){
 }
 
 // Portions of this method are adapted from Josh's and Eric's code
-void maze_router::write_mag_file(std::string magfile, std::vector<Cell> cells)
+void maze_router::write_mag_file(std::string magfile, std::vector<Cell> &cells)
 {
   std::ofstream fp;
   fp.open(magfile);
@@ -316,7 +316,7 @@ void maze_router::write_mag_file(std::string magfile, std::vector<Cell> cells)
   fp << "<< m1p >>\n";
 
   // write all cells (except feedthrough which aren't used
-  for (auto &cell : this->cells) {
+  for (auto &cell : cells) {
     if ( cell.getCellWidth() == 6 ) {
       fp << "use CELL  " << cell.getCellNum() << std::endl;
 
