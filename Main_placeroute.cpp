@@ -9,8 +9,11 @@
 #include "PR.h"
 #include "Cell.h"
 #include "Placer.h"
+#ifdef CHANNEL_ROUTING
 #include "channel_routing.hpp"
+#else
 #include "maze_routing.hpp"
+#endif
 
 int main(int argc, char* argv[])
 {
