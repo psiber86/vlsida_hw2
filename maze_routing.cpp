@@ -156,6 +156,16 @@ maze_router::maze_router(std::vector<Cell> cells, int crows, int ccols, int num_
 
   //this->print_grid(ccols, crows);
   std::cout << "Routed " << num_routed << " out of " << num_nets << std::endl;
+  //calculate wire length
+  int wirelength = 0;
+  for (int i = 0; i < ccols; i++){
+    for (int j = 0; j < crows; j++){
+      if (grid[i][j].m1 || grid[i][j].m2){
+	wirelength++;
+      }
+    }
+  }
+  std::cout << "Wire Length: " << wirelength << std::endl;
   //std::cout << "Writing Magic File." << std::endl;
   this->write_mag_file(filename, cells);
 }
