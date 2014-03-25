@@ -56,7 +56,7 @@ std::vector<std::set<int> > channel_router::construct_vcg(const std::vector<int>
                                                           const std::vector<int>& bottom) const
 {
   std::vector<std::set<int> > vcg;
-  vcg.resize(max_net_num);
+  vcg.resize(max_net_num+1);
   const int wire_spacing = 1;
   if ( top.size() != bottom.size() ) {
     throw "Attempt to construct VCG for a channel with undefined length";
