@@ -403,10 +403,10 @@ std::pair<std::map<int,int>,std::map<int,int> > channel_router::calc_row_offsets
   const int track_offset = 0;
   int offset = 1;
   std::map<int,int> row_offsets;
-  int first_offset = 0;
+  int first_offset = -1;
   for (auto &tracks : this->routed_tracks) {
     offset += tracks.second.size()*2 + cell_offset + track_offset;
-    if ( !first_offset ) {
+    if ( first_offset == -1 ) {
       first_offset = offset;
     }
     row_offsets[tracks.first] = offset;
@@ -424,7 +424,12 @@ std::pair<std::map<int,int>,std::map<int,int> > channel_router::calc_row_offsets
       }
     }
   }
-  ret[ret.begin()->first-6] = first_offset;
+  if ( ret.begin()->second == first_offset ) {
+    ret[ret.begin()->first-6] = 0;
+  }
+  else {
+    ret[ret.begin()->first-6] = first_offset;
+  }
   ret[std::prev(ret.end())->first+6] = offset;
   return make_pair(ret,row_offsets);
 }
