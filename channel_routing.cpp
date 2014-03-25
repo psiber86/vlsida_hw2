@@ -266,6 +266,7 @@ int channel_router::route_all() {
   int num_routed = 0;
   // Iterate starting with the second row
   std::map<int,std::vector<node> >::iterator iter = this->rows.begin();
+  bool near_bottom = true;
   for (; iter != this->rows.end(); ++iter) {
     int bottom_row = iter->first;
     if ( std::next(iter)->first - row_spacing != iter->first ) {
@@ -273,8 +274,12 @@ int channel_router::route_all() {
       if ( std::next(iter) == this->rows.end() ) {
         num_routed += this->route(0, bottom_row);
       }
-      else {
+      else if ( near_bottom ) {
+        near_bottom = false;
         num_routed += this->route(bottom_row, 0);
+      }
+      else {
+        num_routed += this->route(bottom_row + 2, bottom_row);
       }
       continue;
     }
@@ -310,8 +315,12 @@ std::pair<std::map<int,int>,std::map<int,int> > channel_router::calc_row_offsets
   const int track_offset = 0;
   int offset = 1;
   std::map<int,int> row_offsets;
+  int first_offset = 0;
   for (auto &tracks : this->routed_tracks) {
     offset += tracks.second.size()*2 + cell_offset + track_offset;
+    if ( !first_offset ) {
+      first_offset = offset;
+    }
     row_offsets[tracks.first] = offset;
   }
   row_offsets[std::prev(row_offsets.end())->first+6] = offset;
@@ -327,7 +336,7 @@ std::pair<std::map<int,int>,std::map<int,int> > channel_router::calc_row_offsets
       }
     }
   }
-  ret[ret.begin()->first-6] = 6;
+  ret[ret.begin()->first-6] = first_offset;
   ret[std::prev(ret.end())->first+6] = offset;
   return make_pair(ret,row_offsets);
 }
