@@ -551,11 +551,15 @@ void Placer::placeFeedThruCells()
                 }
                 //if locTerm is at top and remTerm is at top or
                 //if locTerm is on top and remTerm is on top
-                else if (  (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
-                            !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
-                        || (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
-                            cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) )
+                else if (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                         !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
                 {
+                    numFeedThrus += 1;
+                }
+                else if (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                         cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+                {
+                    tarRow -= 2;
                     numFeedThrus += 1;
                 }
                 else {
@@ -570,12 +574,16 @@ void Placer::placeFeedThruCells()
                 }
                 //if locTerm is at bottom and remTerm is at bottom or
                 //if locTerm is on top and remTerm is on top
-                else if (  (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
-                            cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
-                        || (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
-                            !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) )
+                else if (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                         cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
                 {
                     numFeedThrus += 1;
+                }
+                else if (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+                         !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+                {
+                    numFeedThrus += 1;
+                    tarRow += 2; 
                 }
                 else {
                     tarRow += 2;
