@@ -18,9 +18,10 @@ int main(int argc, char* argv[])
     bool debug = false;
     std::string filename;
     int linenum = 0;
-    int netcount, cellcount = 0;
+    int netcount = 0, cellcount = 0;
     Cell **cells = NULL;
     Placer *placer = NULL;
+    int **nets = NULL;
     
     if (argc < 2) {
         std::cerr << "Usage: " << argv[0] << " <filename.mag> [-d] < <BM#>" << std::endl;
@@ -43,17 +44,29 @@ int main(int argc, char* argv[])
             }
         } else if (linenum == 1) {
             netcount = net_number;
+	    nets = new int*[netcount];
+	    for(int i = 0; i < netcount; i++){
+	      nets[i] = new int[5];
+	    }
         } else {
             std::cin >> t_cell1;
             std::cin >> t_term1;
             std::cin >> t_cell2;
             std::cin >> t_term2;
-
+	    
+	    nets[net_number-1][0] = t_cell1;
+	    nets[net_number-1][1] = t_term1;
+	    nets[net_number-1][2] = t_cell2;
+	    nets[net_number-1][3] = t_term2;
+	    nets[net_number-1][4] = 0;
+	    
             cells[t_cell1]->connectTerminals(t_cell1, t_term1, t_cell2, t_term2, net_number);
             cells[t_cell2]->connectTerminals(t_cell2, t_term2, t_cell1, t_term1, net_number);
         } 
         linenum++;
     }
+
+    std::cout << "Placing..." << std::endl;
 
     placer = new Placer("placer.mag", cellcount, cells, debug);
 
@@ -62,7 +75,9 @@ int main(int argc, char* argv[])
     if(debug) placer->printCellGrid();
     placer->placeByForceDirected();
     placer->calculateConnectivity();
+#ifdef DEBUG
     placer->printCellGrid();
+#endif
     placer->placeFeedThruCells();
     placer->compactAndMapLambda();
     if(debug) placer->printCellGrid();
@@ -71,16 +86,19 @@ int main(int argc, char* argv[])
 
     //routing stuff
 #ifdef CHANNEL_ROUTING
+    std::cout << "Channel routing..." << std::endl;
     channel_router channelRouter(placer->get_cells(), netcount);
     delete placer;
     placer = NULL;
     std::cout << channelRouter.route_all();
-    std::cout << " of " << channelRouter.get_num_nets() << " nets routed" << std::endl;
+    std::cout << " of " << channelRouter.get_num_nets() << " terminals routed" << std::endl;
     channelRouter.print_net_stats();
     channelRouter.write_mag_file(filename);
 #else
     std::cout << "Maze Routing." << std::endl;
-    maze_router mazeRouter(placer->get_cells(), placer->topRowBounding*6, placer->rightColBounding*6, netcount);
+    maze_router mazeRouter(placer->get_cells(), placer->topRowBounding*6+placer->topRowBounding, placer->rightColBounding*6+placer->rightColBounding*3, netcount, nets);
+    delete placer;
+    placer = NULL;
 
 #endif
 

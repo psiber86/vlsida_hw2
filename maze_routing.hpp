@@ -22,9 +22,16 @@ struct gridcell {
   bool cell;
 };
 
+struct coord {
+  coord(int x, int y) : x(x), y(y) {};
+  int x;
+  int y;
+};
+
 class maze_router {
 public:
-  maze_router(std::vector<Cell>, int, int, int);
+  maze_router(std::vector<Cell>, int, int, int, int**);
+  int route();
   //void write_mag_file(const std::string);
 private:
   struct wires {
@@ -35,12 +42,18 @@ private:
       return ( left.horizontal.first < right.horizontal.first );
     }
   };
-  void create_grid(int, int) ;
+  void create_grid(int, int);
+  void print_grid(int, int);
+  void expand_grid(std::vector<Cell>&);
+  bool lee_algorithm(int, int, int, int, int);
+  bool check_neighbor(int, int, int);
   std::vector<Cell> cells;
+  std::map<int,std::vector<int>> rows;
   int num_nets;
   int crows;
   int ccols;
   gridcell** grid;
+  int** nets;
 };
 
 #endif

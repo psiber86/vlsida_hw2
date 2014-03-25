@@ -64,6 +64,7 @@ private:
   int stranded_nets;
   int unroutable_nets;
   int max_net_num;
+  int bumps;
 };
 
 #endif

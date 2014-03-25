@@ -11,6 +11,7 @@
 #include <string>
 #include <sstream>
 #include <cassert>
+#include <cmath>
 
 #include "Cell.h"
 #include "channel_routing.hpp"
@@ -19,7 +20,8 @@
 #define TERMINALS_PER_CELL 4
 
 channel_router::channel_router(std::vector<Cell> cells, int max_net_num)
-  : cells(cells), num_nets(0), stranded_nets(0), unroutable_nets(0), max_net_num(max_net_num) {
+  : cells(cells), num_nets(0), stranded_nets(0), unroutable_nets(0),
+    max_net_num(max_net_num), bumps(0) {
   for (auto &cell : cells) {
     if ( cell.getCellWidth() == 6 ) {
       switch (cell.getCellOrientation()) {
@@ -123,12 +125,15 @@ void channel_router::insert_net(std::vector<std::set<wires > >& tracks, const in
     tracks.back().insert(this_net);
   }
   else {
+    if ( abs(net_right - net_left) > 1 ) {
+      this->bumps += 2;
+    }
     this_net.horizontal = std::make_pair(net_left, net_right);
     bool need_new_track = true;
     for (auto &track : tracks) {
       bool found_track = true;
       for (auto &net : track) {
-        if ( !(net_right < net.horizontal.first || net_left > net.horizontal.second) ) {
+        if ( !(net_right < net.horizontal.first-1 || net_left > net.horizontal.second+1) ) {
           // The nets overlap
           found_track = false;
           break;
@@ -206,8 +211,8 @@ int channel_router::route(const std::vector<int>& top, const std::vector<int>& b
       else {
 #ifdef DEBUG
         std::cout << "(S)";
-        ++stranded_nets;
 #endif
+        ++stranded_nets;
       }
 #ifdef DEBUG
       std::cout << ' ';
@@ -381,8 +386,10 @@ void channel_router::write_mag_file(std::string magfile)
   // Write wires
   std::stringstream metal1;
   std::stringstream metal2;
+  std::stringstream via;
   metal1 << "<< metal1 >>" << std::endl;
   metal2 << "<< metal2 >>" << std::endl;
+  via << "<< via >>" << std::endl;
   for (auto channel = routed_tracks.begin(); channel != routed_tracks.end(); ++channel) {
     int tracknum = 0;
     int row_y = channel->first + row_offsets.second[channel->first-6] + 1 + 4;
@@ -390,10 +397,14 @@ void channel_router::write_mag_file(std::string magfile)
       tracknum += 2;
       for (auto &net : track) {
         //format is rect xbot ybot xtop ytop
-        // Skip metal1 for pure vertical net
-        if ( net.horizontal.first != net.horizontal.second ) {
+        // Skip metal1 for pure vertical net or net with no vias
+        if ( abs(net.horizontal.second - net.horizontal.first) > 1 ) {
           metal1 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.second + 1
                  << ' ' << row_y + tracknum + 1 << std::endl;
+          via << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' '
+              << net.horizontal.first + 1 << ' ' << row_y + tracknum + 1 << std::endl;
+          via << "rect " << net.horizontal.second << ' ' << row_y + tracknum << ' '
+              << net.horizontal.second + 1 << ' ' << row_y + tracknum + 1 << std::endl;
         }
         if ( net.left_up ) {
           int ytop;
@@ -428,7 +439,7 @@ void channel_router::write_mag_file(std::string magfile)
       }
     }
   }
-  fp << metal1.str() << metal2.str();
+  fp << metal1.str() << metal2.str() << via.str();
   fp << "<< end >>" << std::endl;
 
   fp.close();
@@ -438,4 +449,5 @@ void channel_router::print_net_stats() const
 {
   std::cout << "Stranded terminals:   " << stranded_nets << std::endl;
   std::cout << "Unroutable terminals: " << unroutable_nets << std::endl;
+  std::cout << "Bumps:                " << bumps << std::endl;
 }
