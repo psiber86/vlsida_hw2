@@ -364,7 +364,7 @@ void maze_router::write_mag_file(std::string magfile, std::vector<Cell> &cells)
       if (ytop < ybot){
 	int temp = ybot;
 	ybot = ytop;
-	ytop = temp;
+	ytop = temp+1;
       }
       xtop++;
     }
@@ -372,7 +372,7 @@ void maze_router::write_mag_file(std::string magfile, std::vector<Cell> &cells)
       if (xtop < xbot){
 	int temp = xbot;
 	xbot = xtop;
-	xtop = temp;
+	xtop = temp+1;
       }
       ytop++;
     }
