@@ -1,0 +1,2935 @@
+magic
+tech scmos
+timestamp 1395742220
+<< m1p >>
+use CELL  1
+transform -1 0 2397 0 1 1254
+box 0 0 6 6
+use CELL  2
+transform 1 0 2500 0 1 1317
+box 0 0 6 6
+use CELL  3
+transform 1 0 2533 0 1 1317
+box 0 0 6 6
+use CELL  4
+transform 1 0 2599 0 -1 1350
+box 0 0 6 6
+use CELL  5
+transform 1 0 2315 0 -1 1188
+box 0 0 6 6
+use CELL  6
+transform 1 0 2542 0 1 1317
+box 0 0 6 6
+use CELL  7
+transform -1 0 2785 0 -1 1278
+box 0 0 6 6
+use CELL  8
+transform 1 0 2551 0 1 1317
+box 0 0 6 6
+use CELL  9
+transform -1 0 2710 0 1 1272
+box 0 0 6 6
+use CELL  10
+transform 1 0 2728 0 1 1281
+box 0 0 6 6
+use CELL  11
+transform -1 0 2322 0 1 1281
+box 0 0 6 6
+use CELL  12
+transform -1 0 2425 0 1 1173
+box 0 0 6 6
+use CELL  13
+transform 1 0 2695 0 1 1200
+box 0 0 6 6
+use CELL  14
+transform 1 0 2413 0 1 1200
+box 0 0 6 6
+use CELL  15
+transform 1 0 2576 0 1 1317
+box 0 0 6 6
+use CELL  16
+transform 1 0 2656 0 1 1281
+box 0 0 6 6
+use CELL  17
+transform 1 0 2352 0 1 1164
+box 0 0 6 6
+use CELL  18
+transform -1 0 2701 0 1 1218
+box 0 0 6 6
+use CELL  19
+transform -1 0 2575 0 -1 1305
+box 0 0 6 6
+use CELL  20
+transform -1 0 2328 0 -1 1224
+box 0 0 6 6
+use CELL  21
+transform -1 0 2589 0 1 1146
+box 0 0 6 6
+use CELL  22
+transform 1 0 2373 0 1 1173
+box 0 0 6 6
+use CELL  23
+transform -1 0 2306 0 1 1209
+box 0 0 6 6
+use CELL  24
+transform -1 0 2389 0 -1 1206
+box 0 0 6 6
+use CELL  25
+transform 1 0 2331 0 1 1128
+box 0 0 6 6
+use CELL  26
+transform -1 0 2316 0 1 1254
+box 0 0 6 6
+use CELL  27
+transform 1 0 2710 0 -1 1269
+box 0 0 6 6
+use CELL  28
+transform 1 0 2470 0 -1 1224
+box 0 0 6 6
+use CELL  29
+transform -1 0 2530 0 1 1317
+box 0 0 6 6
+use CELL  30
+transform 1 0 2761 0 1 1281
+box 0 0 6 6
+use CELL  31
+transform 1 0 2346 0 1 1326
+box 0 0 6 6
+use CELL  32
+transform 1 0 2604 0 1 1335
+box 0 0 6 6
+use CELL  33
+transform 1 0 2585 0 1 1308
+box 0 0 6 6
+use CELL  34
+transform -1 0 2434 0 1 1344
+box 0 0 6 6
+use CELL  35
+transform 1 0 2745 0 -1 1215
+box 0 0 6 6
+use CELL  36
+transform -1 0 2399 0 1 1245
+box 0 0 6 6
+use CELL  37
+transform -1 0 2385 0 1 1353
+box 0 0 6 6
+use CELL  38
+transform -1 0 2375 0 -1 1278
+box 0 0 6 6
+use CELL  39
+transform -1 0 2392 0 1 1353
+box 0 0 6 6
+use CELL  40
+transform -1 0 2371 0 1 1236
+box 0 0 6 6
+use CELL  41
+transform -1 0 2580 0 -1 1350
+box 0 0 6 6
+use CELL  42
+transform 1 0 2329 0 1 1308
+box 0 0 6 6
+use CELL  43
+transform -1 0 2751 0 1 1218
+box 0 0 6 6
+use CELL  44
+transform 1 0 2671 0 1 1290
+box 0 0 6 6
+use CELL  45
+transform -1 0 2411 0 -1 1179
+box 0 0 6 6
+use CELL  46
+transform -1 0 2574 0 1 1335
+box 0 0 6 6
+use CELL  47
+transform 1 0 2329 0 1 1155
+box 0 0 6 6
+use CELL  48
+transform 1 0 2609 0 -1 1305
+box 0 0 6 6
+use CELL  49
+transform 1 0 2621 0 1 1317
+box 0 0 6 6
+use CELL  50
+transform -1 0 2429 0 1 1362
+box 0 0 6 6
+use CELL  51
+transform 1 0 2359 0 -1 1269
+box 0 0 6 6
+use CELL  52
+transform -1 0 2538 0 1 1218
+box 0 0 6 6
+use CELL  53
+transform -1 0 2322 0 -1 1143
+box 0 0 6 6
+use CELL  54
+transform 1 0 2325 0 1 1326
+box 0 0 6 6
+use CELL  55
+transform 1 0 2328 0 1 1335
+box 0 0 6 6
+use CELL  56
+transform -1 0 2408 0 1 1281
+box 0 0 6 6
+use CELL  57
+transform 1 0 2793 0 1 1263
+box 0 0 6 6
+use CELL  58
+transform -1 0 2498 0 1 1290
+box 0 0 6 6
+use CELL  59
+transform -1 0 2701 0 1 1272
+box 0 0 6 6
+use CELL  60
+transform 1 0 2309 0 1 1209
+box 0 0 6 6
+use CELL  61
+transform -1 0 2474 0 -1 1233
+box 0 0 6 6
+use CELL  62
+transform -1 0 2531 0 -1 1296
+box 0 0 6 6
+use CELL  63
+transform -1 0 2446 0 1 1326
+box 0 0 6 6
+use CELL  64
+transform -1 0 2813 0 -1 1260
+box 0 0 6 6
+use CELL  65
+transform 1 0 2550 0 1 1218
+box 0 0 6 6
+use CELL  66
+transform 1 0 2385 0 1 1182
+box 0 0 6 6
+use CELL  67
+transform 1 0 2386 0 -1 1377
+box 0 0 6 6
+use CELL  68
+transform 1 0 2328 0 1 1344
+box 0 0 6 6
+use CELL  69
+transform 1 0 2560 0 1 1344
+box 0 0 6 6
+use CELL  70
+transform -1 0 2549 0 -1 1134
+box 0 0 6 6
+use CELL  71
+transform -1 0 2524 0 1 1191
+box 0 0 6 6
+use CELL  72
+transform 1 0 2328 0 1 1353
+box 0 0 6 6
+use CELL  73
+transform 1 0 2335 0 1 1353
+box 0 0 6 6
+use CELL  74
+transform -1 0 2373 0 1 1290
+box 0 0 6 6
+use CELL  75
+transform 1 0 2342 0 1 1353
+box 0 0 6 6
+use CELL  76
+transform 1 0 2531 0 -1 1188
+box 0 0 6 6
+use CELL  77
+transform 1 0 2349 0 1 1353
+box 0 0 6 6
+use CELL  78
+transform 1 0 2356 0 1 1353
+box 0 0 6 6
+use CELL  79
+transform -1 0 2406 0 1 1344
+box 0 0 6 6
+use CELL  80
+transform -1 0 2680 0 1 1200
+box 0 0 6 6
+use CELL  81
+transform 1 0 2363 0 1 1353
+box 0 0 6 6
+use CELL  82
+transform -1 0 2773 0 -1 1278
+box 0 0 6 6
+use CELL  83
+transform 1 0 2356 0 1 1191
+box 0 0 6 6
+use CELL  84
+transform -1 0 2681 0 1 1227
+box 0 0 6 6
+use CELL  85
+transform 1 0 2322 0 1 1155
+box 0 0 6 6
+use CELL  86
+transform 1 0 2733 0 -1 1215
+box 0 0 6 6
+use CELL  87
+transform -1 0 2449 0 1 1317
+box 0 0 6 6
+use CELL  88
+transform 1 0 2377 0 1 1281
+box 0 0 6 6
+use CELL  89
+transform -1 0 2455 0 1 1191
+box 0 0 6 6
+use CELL  90
+transform -1 0 2575 0 1 1272
+box 0 0 6 6
+use CELL  91
+transform 1 0 2531 0 -1 1242
+box 0 0 6 6
+use CELL  92
+transform 1 0 2403 0 1 1164
+box 0 0 6 6
+use CELL  93
+transform 1 0 2410 0 1 1164
+box 0 0 6 6
+use CELL  94
+transform -1 0 2498 0 1 1128
+box 0 0 6 6
+use CELL  95
+transform -1 0 2378 0 1 1335
+box 0 0 6 6
+use CELL  96
+transform 1 0 2417 0 1 1164
+box 0 0 6 6
+use CELL  97
+transform 1 0 2447 0 1 1164
+box 0 0 6 6
+use CELL  98
+transform -1 0 2643 0 1 1308
+box 0 0 6 6
+use CELL  99
+transform -1 0 2355 0 1 1281
+box 0 0 6 6
+use CELL  100
+transform -1 0 2529 0 1 1227
+box 0 0 6 6
+use CELL  101
+transform -1 0 2774 0 1 1281
+box 0 0 6 6
+use CELL  102
+transform 1 0 2573 0 1 1326
+box 0 0 6 6
+use CELL  103
+transform 1 0 2643 0 1 1218
+box 0 0 6 6
+use CELL  104
+transform 1 0 2367 0 -1 1368
+box 0 0 6 6
+use CELL  105
+transform -1 0 2476 0 1 1317
+box 0 0 6 6
+use CELL  106
+transform -1 0 2346 0 1 1272
+box 0 0 6 6
+use CELL  107
+transform -1 0 2567 0 1 1128
+box 0 0 6 6
+use CELL  108
+transform 1 0 2347 0 1 1245
+box 0 0 6 6
+use CELL  109
+transform 1 0 2299 0 1 1263
+box 0 0 6 6
+use CELL  110
+transform -1 0 2336 0 1 1299
+box 0 0 6 6
+use CELL  111
+transform 1 0 2351 0 -1 1242
+box 0 0 6 6
+use CELL  112
+transform 1 0 2373 0 1 1263
+box 0 0 6 6
+use CELL  113
+transform -1 0 2537 0 1 1128
+box 0 0 6 6
+use CELL  114
+transform 1 0 2556 0 -1 1206
+box 0 0 6 6
+use CELL  115
+transform 1 0 2559 0 1 1182
+box 0 0 6 6
+use CELL  116
+transform 1 0 2496 0 1 1326
+box 0 0 6 6
+use CELL  117
+transform -1 0 2382 0 1 1272
+box 0 0 6 6
+use CELL  118
+transform 1 0 2551 0 1 1164
+box 0 0 6 6
+use CELL  119
+transform 1 0 2365 0 -1 1350
+box 0 0 6 6
+use CELL  120
+transform -1 0 2593 0 -1 1269
+box 0 0 6 6
+use CELL  121
+transform 1 0 2292 0 -1 1233
+box 0 0 6 6
+use CELL  122
+transform -1 0 2847 0 1 1245
+box 0 0 6 6
+use CELL  123
+transform 1 0 2426 0 -1 1377
+box 0 0 6 6
+use CELL  124
+transform -1 0 2688 0 1 1227
+box 0 0 6 6
+use CELL  125
+transform 1 0 2391 0 1 1164
+box 0 0 6 6
+use CELL  126
+transform 1 0 2389 0 -1 1215
+box 0 0 6 6
+use CELL  127
+transform 1 0 2367 0 1 1326
+box 0 0 6 6
+use CELL  128
+transform 1 0 2585 0 1 1164
+box 0 0 6 6
+use CELL  129
+transform 1 0 2744 0 1 1200
+box 0 0 6 6
+use CELL  130
+transform 1 0 2585 0 1 1173
+box 0 0 6 6
+use CELL  131
+transform 1 0 2360 0 1 1182
+box 0 0 6 6
+use CELL  132
+transform 1 0 2344 0 1 1182
+box 0 0 6 6
+use CELL  133
+transform 1 0 2712 0 1 1227
+box 0 0 6 6
+use CELL  134
+transform -1 0 2422 0 1 1362
+box 0 0 6 6
+use CELL  135
+transform 1 0 2502 0 1 1227
+box 0 0 6 6
+use CELL  136
+transform -1 0 2618 0 -1 1215
+box 0 0 6 6
+use CELL  137
+transform -1 0 2673 0 1 1200
+box 0 0 6 6
+use CELL  138
+transform 1 0 2721 0 1 1227
+box 0 0 6 6
+use CELL  139
+transform -1 0 2339 0 1 1245
+box 0 0 6 6
+use CELL  140
+transform 1 0 2597 0 1 1335
+box 0 0 6 6
+use CELL  141
+transform 1 0 2630 0 1 1308
+box 0 0 6 6
+use CELL  142
+transform -1 0 2337 0 1 1200
+box 0 0 6 6
+use CELL  143
+transform -1 0 2588 0 1 1128
+box 0 0 6 6
+use CELL  144
+transform 1 0 2491 0 1 1119
+box 0 0 6 6
+use CELL  145
+transform -1 0 2737 0 1 1191
+box 0 0 6 6
+use CELL  146
+transform 1 0 2340 0 1 1119
+box 0 0 6 6
+use CELL  147
+transform -1 0 2348 0 1 1281
+box 0 0 6 6
+use CELL  148
+transform 1 0 2864 0 1 1245
+box 0 0 6 6
+use CELL  149
+transform -1 0 2374 0 1 1245
+box 0 0 6 6
+use CELL  150
+transform 1 0 2521 0 1 1281
+box 0 0 6 6
+use CELL  151
+transform -1 0 2407 0 -1 1377
+box 0 0 6 6
+use CELL  152
+transform 1 0 2330 0 1 1236
+box 0 0 6 6
+use CELL  153
+transform 1 0 2609 0 1 1290
+box 0 0 6 6
+use CELL  154
+transform -1 0 2486 0 1 1236
+box 0 0 6 6
+use CELL  155
+transform -1 0 2747 0 -1 1260
+box 0 0 6 6
+use CELL  156
+transform 1 0 2710 0 1 1218
+box 0 0 6 6
+use CELL  157
+transform 1 0 2391 0 1 1119
+box 0 0 6 6
+use CELL  158
+transform 1 0 2465 0 1 1362
+box 0 0 6 6
+use CELL  159
+transform 1 0 2403 0 1 1317
+box 0 0 6 6
+use CELL  160
+transform 1 0 2696 0 1 1182
+box 0 0 6 6
+use CELL  161
+transform 1 0 2745 0 -1 1197
+box 0 0 6 6
+use CELL  162
+transform -1 0 2344 0 1 1263
+box 0 0 6 6
+use CELL  163
+transform -1 0 2481 0 1 1299
+box 0 0 6 6
+use CELL  164
+transform -1 0 2648 0 -1 1323
+box 0 0 6 6
+use CELL  165
+transform 1 0 2510 0 1 1128
+box 0 0 6 6
+use CELL  166
+transform 1 0 2611 0 -1 1269
+box 0 0 6 6
+use CELL  167
+transform 1 0 2781 0 -1 1260
+box 0 0 6 6
+use CELL  168
+transform 1 0 2763 0 1 1263
+box 0 0 6 6
+use CELL  169
+transform 1 0 2760 0 1 1272
+box 0 0 6 6
+use CELL  170
+transform 1 0 2635 0 1 1290
+box 0 0 6 6
+use CELL  171
+transform -1 0 2368 0 1 1272
+box 0 0 6 6
+use CELL  172
+transform 1 0 2359 0 1 1317
+box 0 0 6 6
+use CELL  173
+transform 1 0 2366 0 1 1317
+box 0 0 6 6
+use CELL  174
+transform 1 0 2393 0 1 1191
+box 0 0 6 6
+use CELL  175
+transform 1 0 2339 0 1 1137
+box 0 0 6 6
+use CELL  176
+transform 1 0 2345 0 1 1128
+box 0 0 6 6
+use CELL  177
+transform 1 0 2459 0 -1 1161
+box 0 0 6 6
+use CELL  178
+transform 1 0 2352 0 1 1128
+box 0 0 6 6
+use CELL  179
+transform -1 0 2322 0 1 1227
+box 0 0 6 6
+use CELL  180
+transform 1 0 2361 0 1 1128
+box 0 0 6 6
+use CELL  181
+transform 1 0 2368 0 1 1128
+box 0 0 6 6
+use CELL  182
+transform 1 0 2391 0 1 1173
+box 0 0 6 6
+use CELL  183
+transform 1 0 2322 0 1 1128
+box 0 0 6 6
+use CELL  184
+transform 1 0 2329 0 1 1146
+box 0 0 6 6
+use CELL  185
+transform -1 0 2582 0 1 1299
+box 0 0 6 6
+use CELL  186
+transform 1 0 2325 0 -1 1296
+box 0 0 6 6
+use CELL  187
+transform 1 0 2514 0 1 1281
+box 0 0 6 6
+use CELL  188
+transform -1 0 2360 0 1 1245
+box 0 0 6 6
+use CELL  189
+transform 1 0 2634 0 1 1182
+box 0 0 6 6
+use CELL  190
+transform 1 0 2596 0 -1 1188
+box 0 0 6 6
+use CELL  191
+transform 1 0 2590 0 1 1299
+box 0 0 6 6
+use CELL  192
+transform 1 0 2407 0 1 1353
+box 0 0 6 6
+use CELL  193
+transform 1 0 2583 0 1 1299
+box 0 0 6 6
+use CELL  194
+transform -1 0 2365 0 1 1254
+box 0 0 6 6
+use CELL  195
+transform 1 0 2548 0 1 1308
+box 0 0 6 6
+use CELL  196
+transform -1 0 2407 0 1 1200
+box 0 0 6 6
+use CELL  197
+transform 1 0 2437 0 1 1353
+box 0 0 6 6
+use CELL  198
+transform 1 0 2572 0 -1 1287
+box 0 0 6 6
+use CELL  199
+transform 1 0 2585 0 1 1245
+box 0 0 6 6
+use CELL  200
+transform -1 0 2365 0 -1 1125
+box 0 0 6 6
+use CELL  201
+transform 1 0 2487 0 1 1353
+box 0 0 6 6
+use CELL  202
+transform 1 0 2329 0 1 1317
+box 0 0 6 6
+use CELL  203
+transform -1 0 2330 0 -1 1251
+box 0 0 6 6
+use CELL  204
+transform 1 0 2524 0 1 1353
+box 0 0 6 6
+use CELL  205
+transform 1 0 2384 0 -1 1170
+box 0 0 6 6
+use CELL  206
+transform 1 0 2704 0 -1 1296
+box 0 0 6 6
+use CELL  207
+transform 1 0 2370 0 1 1353
+box 0 0 6 6
+use CELL  208
+transform 1 0 2533 0 1 1137
+box 0 0 6 6
+use CELL  209
+transform 1 0 2538 0 1 1353
+box 0 0 6 6
+use CELL  210
+transform -1 0 2428 0 1 1182
+box 0 0 6 6
+use CELL  211
+transform -1 0 2501 0 -1 1368
+box 0 0 6 6
+use CELL  212
+transform -1 0 2596 0 -1 1350
+box 0 0 6 6
+use CELL  213
+transform -1 0 2489 0 1 1182
+box 0 0 6 6
+use CELL  214
+transform -1 0 2359 0 1 1227
+box 0 0 6 6
+use CELL  215
+transform -1 0 2350 0 1 1236
+box 0 0 6 6
+use CELL  216
+transform -1 0 2667 0 1 1227
+box 0 0 6 6
+use CELL  217
+transform 1 0 2698 0 1 1191
+box 0 0 6 6
+use CELL  218
+transform 1 0 2545 0 1 1353
+box 0 0 6 6
+use CELL  219
+transform 1 0 2362 0 1 1227
+box 0 0 6 6
+use CELL  220
+transform 1 0 2538 0 1 1335
+box 0 0 6 6
+use CELL  221
+transform 1 0 2570 0 1 1353
+box 0 0 6 6
+use CELL  222
+transform 1 0 2577 0 1 1353
+box 0 0 6 6
+use CELL  223
+transform 1 0 2517 0 1 1353
+box 0 0 6 6
+use CELL  224
+transform 1 0 2584 0 1 1353
+box 0 0 6 6
+use CELL  225
+transform -1 0 2372 0 1 1119
+box 0 0 6 6
+use CELL  226
+transform -1 0 2696 0 -1 1188
+box 0 0 6 6
+use CELL  227
+transform 1 0 2785 0 -1 1215
+box 0 0 6 6
+use CELL  228
+transform 1 0 2551 0 -1 1215
+box 0 0 6 6
+use CELL  229
+transform 1 0 2677 0 1 1191
+box 0 0 6 6
+use CELL  230
+transform 1 0 2587 0 1 1209
+box 0 0 6 6
+use CELL  231
+transform -1 0 2551 0 1 1191
+box 0 0 6 6
+use CELL  232
+transform -1 0 2488 0 -1 1332
+box 0 0 6 6
+use CELL  233
+transform 1 0 2641 0 1 1191
+box 0 0 6 6
+use CELL  234
+transform 1 0 2567 0 -1 1296
+box 0 0 6 6
+use CELL  235
+transform 1 0 2594 0 1 1209
+box 0 0 6 6
+use CELL  236
+transform 1 0 2592 0 -1 1161
+box 0 0 6 6
+use CELL  237
+transform 1 0 2329 0 1 1164
+box 0 0 6 6
+use CELL  238
+transform -1 0 2332 0 1 1272
+box 0 0 6 6
+use CELL  239
+transform 1 0 2676 0 -1 1251
+box 0 0 6 6
+use CELL  240
+transform 1 0 2608 0 1 1164
+box 0 0 6 6
+use CELL  241
+transform 1 0 2608 0 1 1173
+box 0 0 6 6
+use CELL  242
+transform 1 0 2683 0 1 1182
+box 0 0 6 6
+use CELL  243
+transform 1 0 2322 0 -1 1170
+box 0 0 6 6
+use CELL  244
+transform 1 0 2364 0 -1 1305
+box 0 0 6 6
+use CELL  245
+transform -1 0 2658 0 1 1182
+box 0 0 6 6
+use CELL  246
+transform -1 0 2353 0 1 1272
+box 0 0 6 6
+use CELL  247
+transform 1 0 2323 0 -1 1143
+box 0 0 6 6
+use CELL  248
+transform 1 0 2726 0 1 1263
+box 0 0 6 6
+use CELL  249
+transform 1 0 2793 0 -1 1278
+box 0 0 6 6
+use CELL  250
+transform 1 0 2679 0 1 1281
+box 0 0 6 6
+use CELL  251
+transform -1 0 2806 0 -1 1269
+box 0 0 6 6
+use CELL  252
+transform 1 0 2328 0 1 1191
+box 0 0 6 6
+use CELL  253
+transform 1 0 2685 0 1 1290
+box 0 0 6 6
+use CELL  254
+transform 1 0 2337 0 1 1209
+box 0 0 6 6
+use CELL  255
+transform -1 0 2622 0 1 1290
+box 0 0 6 6
+use CELL  256
+transform 1 0 2415 0 1 1137
+box 0 0 6 6
+use CELL  257
+transform 1 0 2742 0 1 1227
+box 0 0 6 6
+use CELL  258
+transform -1 0 2780 0 -1 1287
+box 0 0 6 6
+use CELL  259
+transform 1 0 2461 0 -1 1350
+box 0 0 6 6
+use CELL  260
+transform 1 0 2478 0 1 1281
+box 0 0 6 6
+use CELL  261
+transform 1 0 2571 0 1 1227
+box 0 0 6 6
+use CELL  262
+transform -1 0 2784 0 1 1209
+box 0 0 6 6
+use CELL  263
+transform -1 0 2469 0 -1 1125
+box 0 0 6 6
+use CELL  264
+transform -1 0 2634 0 -1 1323
+box 0 0 6 6
+use CELL  265
+transform 1 0 2292 0 -1 1188
+box 0 0 6 6
+use CELL  266
+transform -1 0 2530 0 1 1209
+box 0 0 6 6
+use CELL  267
+transform 1 0 2383 0 -1 1332
+box 0 0 6 6
+use CELL  268
+transform 1 0 2471 0 1 1281
+box 0 0 6 6
+use CELL  269
+transform -1 0 2425 0 1 1128
+box 0 0 6 6
+use CELL  270
+transform -1 0 2322 0 1 1290
+box 0 0 6 6
+use CELL  271
+transform 1 0 2338 0 1 1128
+box 0 0 6 6
+use CELL  272
+transform 1 0 2701 0 1 1254
+box 0 0 6 6
+use CELL  273
+transform 1 0 2446 0 1 1182
+box 0 0 6 6
+use CELL  274
+transform -1 0 2373 0 1 1182
+box 0 0 6 6
+use CELL  275
+transform 1 0 2355 0 1 1137
+box 0 0 6 6
+use CELL  276
+transform 1 0 2371 0 1 1137
+box 0 0 6 6
+use CELL  277
+transform -1 0 2820 0 1 1254
+box 0 0 6 6
+use CELL  278
+transform 1 0 2617 0 -1 1278
+box 0 0 6 6
+use CELL  279
+transform 1 0 2385 0 1 1137
+box 0 0 6 6
+use CELL  280
+transform 1 0 2403 0 1 1137
+box 0 0 6 6
+use CELL  281
+transform -1 0 2741 0 1 1281
+box 0 0 6 6
+use CELL  282
+transform -1 0 2569 0 1 1353
+box 0 0 6 6
+use CELL  283
+transform -1 0 2358 0 1 1254
+box 0 0 6 6
+use CELL  284
+transform -1 0 2343 0 1 1227
+box 0 0 6 6
+use CELL  285
+transform 1 0 2442 0 1 1137
+box 0 0 6 6
+use CELL  286
+transform -1 0 2805 0 1 1209
+box 0 0 6 6
+use CELL  287
+transform -1 0 2357 0 1 1182
+box 0 0 6 6
+use CELL  288
+transform 1 0 2523 0 1 1155
+box 0 0 6 6
+use CELL  289
+transform -1 0 2379 0 1 1299
+box 0 0 6 6
+use CELL  290
+transform 1 0 2488 0 1 1137
+box 0 0 6 6
+use CELL  291
+transform 1 0 2792 0 1 1209
+box 0 0 6 6
+use CELL  292
+transform 1 0 2552 0 1 1137
+box 0 0 6 6
+use CELL  293
+transform -1 0 2666 0 -1 1305
+box 0 0 6 6
+use CELL  294
+transform 1 0 2568 0 1 1137
+box 0 0 6 6
+use CELL  295
+transform 1 0 2635 0 1 1263
+box 0 0 6 6
+use CELL  296
+transform -1 0 2579 0 1 1155
+box 0 0 6 6
+use CELL  297
+transform -1 0 2806 0 1 1272
+box 0 0 6 6
+use CELL  298
+transform 1 0 2370 0 -1 1287
+box 0 0 6 6
+use CELL  299
+transform -1 0 2663 0 -1 1314
+box 0 0 6 6
+use CELL  300
+transform -1 0 2550 0 -1 1170
+box 0 0 6 6
+use CELL  301
+transform 1 0 2582 0 1 1137
+box 0 0 6 6
+use CELL  302
+transform 1 0 2323 0 -1 1305
+box 0 0 6 6
+use CELL  303
+transform 1 0 2455 0 1 1128
+box 0 0 6 6
+use CELL  304
+transform 1 0 2268 0 -1 1278
+box 0 0 6 6
+use CELL  305
+transform -1 0 2384 0 1 1137
+box 0 0 6 6
+use CELL  306
+transform 1 0 2441 0 1 1362
+box 0 0 6 6
+use CELL  307
+transform 1 0 2575 0 1 1191
+box 0 0 6 6
+use CELL  308
+transform 1 0 2582 0 1 1335
+box 0 0 6 6
+use CELL  309
+transform -1 0 2436 0 1 1218
+box 0 0 6 6
+use CELL  310
+transform 1 0 2477 0 1 1290
+box 0 0 6 6
+use CELL  311
+transform -1 0 2367 0 -1 1368
+box 0 0 6 6
+use CELL  312
+transform 1 0 2733 0 1 1263
+box 0 0 6 6
+use CELL  313
+transform 1 0 2408 0 1 1308
+box 0 0 6 6
+use CELL  314
+transform -1 0 2327 0 1 1191
+box 0 0 6 6
+use CELL  315
+transform 1 0 2417 0 -1 1233
+box 0 0 6 6
+use CELL  316
+transform 1 0 2410 0 1 1326
+box 0 0 6 6
+use CELL  317
+transform 1 0 2470 0 1 1326
+box 0 0 6 6
+use CELL  318
+transform 1 0 2505 0 1 1326
+box 0 0 6 6
+use CELL  319
+transform -1 0 2582 0 1 1146
+box 0 0 6 6
+use CELL  320
+transform 1 0 2514 0 1 1326
+box 0 0 6 6
+use CELL  321
+transform -1 0 2684 0 -1 1296
+box 0 0 6 6
+use CELL  322
+transform 1 0 2523 0 1 1326
+box 0 0 6 6
+use CELL  323
+transform -1 0 2665 0 1 1218
+box 0 0 6 6
+use CELL  324
+transform 1 0 2399 0 1 1155
+box 0 0 6 6
+use CELL  325
+transform 1 0 2256 0 -1 1278
+box 0 0 6 6
+use CELL  326
+transform 1 0 2373 0 1 1308
+box 0 0 6 6
+use CELL  327
+transform -1 0 2446 0 -1 1350
+box 0 0 6 6
+use CELL  328
+transform 1 0 2339 0 1 1326
+box 0 0 6 6
+use CELL  329
+transform 1 0 2585 0 1 1290
+box 0 0 6 6
+use CELL  330
+transform 1 0 2566 0 1 1326
+box 0 0 6 6
+use CELL  331
+transform -1 0 2753 0 1 1281
+box 0 0 6 6
+use CELL  332
+transform 1 0 2718 0 1 1272
+box 0 0 6 6
+use CELL  333
+transform 1 0 2256 0 -1 1215
+box 0 0 6 6
+use CELL  334
+transform 1 0 2766 0 1 1254
+box 0 0 6 6
+use CELL  335
+transform 1 0 2427 0 1 1254
+box 0 0 6 6
+use CELL  336
+transform 1 0 2358 0 1 1335
+box 0 0 6 6
+use CELL  337
+transform -1 0 2322 0 1 1236
+box 0 0 6 6
+use CELL  338
+transform 1 0 2336 0 1 1155
+box 0 0 6 6
+use CELL  339
+transform 1 0 2365 0 1 1335
+box 0 0 6 6
+use CELL  340
+transform -1 0 2338 0 1 1326
+box 0 0 6 6
+use CELL  341
+transform 1 0 2412 0 1 1128
+box 0 0 6 6
+use CELL  342
+transform 1 0 2711 0 1 1209
+box 0 0 6 6
+use CELL  343
+transform 1 0 2607 0 1 1317
+box 0 0 6 6
+use CELL  344
+transform 1 0 2487 0 1 1335
+box 0 0 6 6
+use CELL  345
+transform -1 0 2406 0 1 1335
+box 0 0 6 6
+use CELL  346
+transform -1 0 2416 0 -1 1377
+box 0 0 6 6
+use CELL  347
+transform 1 0 2499 0 1 1335
+box 0 0 6 6
+use CELL  348
+transform 1 0 2506 0 1 1335
+box 0 0 6 6
+use CELL  349
+transform 1 0 2531 0 1 1335
+box 0 0 6 6
+use CELL  350
+transform 1 0 2391 0 1 1263
+box 0 0 6 6
+use CELL  351
+transform 1 0 2345 0 1 1308
+box 0 0 6 6
+use CELL  352
+transform -1 0 2775 0 1 1209
+box 0 0 6 6
+use CELL  353
+transform 1 0 2461 0 1 1146
+box 0 0 6 6
+use CELL  354
+transform -1 0 2744 0 -1 1197
+box 0 0 6 6
+use CELL  355
+transform 1 0 2343 0 1 1146
+box 0 0 6 6
+use CELL  356
+transform -1 0 2794 0 -1 1260
+box 0 0 6 6
+use CELL  357
+transform 1 0 2349 0 1 1335
+box 0 0 6 6
+use CELL  358
+transform 1 0 2359 0 1 1164
+box 0 0 6 6
+use CELL  359
+transform 1 0 2827 0 1 1209
+box 0 0 6 6
+use CELL  360
+transform 1 0 2436 0 1 1335
+box 0 0 6 6
+use CELL  361
+transform 1 0 2752 0 -1 1224
+box 0 0 6 6
+use CELL  362
+transform 1 0 2343 0 1 1155
+box 0 0 6 6
+use CELL  363
+transform -1 0 2406 0 -1 1278
+box 0 0 6 6
+use CELL  364
+transform 1 0 2350 0 1 1155
+box 0 0 6 6
+use CELL  365
+transform -1 0 2330 0 -1 1260
+box 0 0 6 6
+use CELL  366
+transform 1 0 2357 0 1 1155
+box 0 0 6 6
+use CELL  367
+transform -1 0 2492 0 -1 1368
+box 0 0 6 6
+use CELL  368
+transform -1 0 2810 0 1 1236
+box 0 0 6 6
+use CELL  369
+transform 1 0 2366 0 1 1155
+box 0 0 6 6
+use CELL  370
+transform -1 0 2287 0 1 1290
+box 0 0 6 6
+use CELL  371
+transform 1 0 2472 0 -1 1368
+box 0 0 6 6
+use CELL  372
+transform 1 0 2646 0 -1 1305
+box 0 0 6 6
+use CELL  373
+transform 1 0 2323 0 1 1281
+box 0 0 6 6
+use CELL  374
+transform 1 0 2373 0 1 1155
+box 0 0 6 6
+use CELL  375
+transform 1 0 2380 0 1 1155
+box 0 0 6 6
+use CELL  376
+transform -1 0 2506 0 -1 1197
+box 0 0 6 6
+use CELL  377
+transform -1 0 2514 0 1 1218
+box 0 0 6 6
+use CELL  378
+transform -1 0 2387 0 1 1191
+box 0 0 6 6
+use CELL  379
+transform 1 0 2387 0 1 1155
+box 0 0 6 6
+use CELL  380
+transform 1 0 2435 0 1 1245
+box 0 0 6 6
+use CELL  381
+transform 1 0 2530 0 1 1326
+box 0 0 6 6
+use CELL  382
+transform 1 0 2411 0 1 1155
+box 0 0 6 6
+use CELL  383
+transform -1 0 2665 0 1 1290
+box 0 0 6 6
+use CELL  384
+transform -1 0 2298 0 1 1263
+box 0 0 6 6
+use CELL  385
+transform 1 0 2441 0 1 1155
+box 0 0 6 6
+use CELL  386
+transform 1 0 2342 0 1 1335
+box 0 0 6 6
+use CELL  387
+transform -1 0 2385 0 1 1344
+box 0 0 6 6
+use CELL  388
+transform -1 0 2560 0 1 1272
+box 0 0 6 6
+use CELL  389
+transform 1 0 2484 0 1 1155
+box 0 0 6 6
+use CELL  390
+transform -1 0 2304 0 -1 1197
+box 0 0 6 6
+use CELL  391
+transform 1 0 2527 0 -1 1278
+box 0 0 6 6
+use CELL  392
+transform 1 0 2353 0 1 1326
+box 0 0 6 6
+use CELL  393
+transform -1 0 2644 0 1 1272
+box 0 0 6 6
+use CELL  394
+transform 1 0 2427 0 1 1317
+box 0 0 6 6
+use CELL  395
+transform 1 0 2530 0 1 1155
+box 0 0 6 6
+use CELL  396
+transform 1 0 2545 0 1 1155
+box 0 0 6 6
+use CELL  397
+transform 1 0 2552 0 1 1155
+box 0 0 6 6
+use CELL  398
+transform -1 0 2605 0 -1 1161
+box 0 0 6 6
+use CELL  399
+transform 1 0 2559 0 1 1155
+box 0 0 6 6
+use CELL  400
+transform 1 0 2384 0 -1 1260
+box 0 0 6 6
+use CELL  401
+transform 1 0 2360 0 1 1326
+box 0 0 6 6
+use CELL  402
+transform 1 0 2800 0 1 1254
+box 0 0 6 6
+use CELL  403
+transform -1 0 2355 0 1 1299
+box 0 0 6 6
+use CELL  404
+transform -1 0 2461 0 1 1209
+box 0 0 6 6
+use CELL  405
+transform 1 0 2772 0 1 1263
+box 0 0 6 6
+use CELL  406
+transform -1 0 2689 0 1 1245
+box 0 0 6 6
+use CELL  407
+transform 1 0 2388 0 1 1299
+box 0 0 6 6
+use CELL  408
+transform 1 0 2506 0 -1 1215
+box 0 0 6 6
+use CELL  409
+transform -1 0 2322 0 1 1299
+box 0 0 6 6
+use CELL  410
+transform 1 0 2345 0 1 1263
+box 0 0 6 6
+use CELL  411
+transform -1 0 2877 0 -1 1251
+box 0 0 6 6
+use CELL  412
+transform 1 0 2578 0 1 1173
+box 0 0 6 6
+use CELL  413
+transform -1 0 2392 0 1 1245
+box 0 0 6 6
+use CELL  414
+transform 1 0 2396 0 1 1308
+box 0 0 6 6
+use CELL  415
+transform 1 0 2352 0 1 1308
+box 0 0 6 6
+use CELL  416
+transform 1 0 2352 0 1 1317
+box 0 0 6 6
+use CELL  417
+transform -1 0 2336 0 -1 1215
+box 0 0 6 6
+use CELL  418
+transform 1 0 2583 0 1 1317
+box 0 0 6 6
+use CELL  419
+transform 1 0 2491 0 1 1344
+box 0 0 6 6
+use CELL  420
+transform -1 0 2785 0 1 1263
+box 0 0 6 6
+use CELL  421
+transform -1 0 2733 0 -1 1242
+box 0 0 6 6
+use CELL  422
+transform -1 0 2566 0 1 1209
+box 0 0 6 6
+use CELL  423
+transform 1 0 2412 0 1 1173
+box 0 0 6 6
+use CELL  424
+transform 1 0 2643 0 1 1182
+box 0 0 6 6
+use CELL  425
+transform 1 0 2329 0 -1 1188
+box 0 0 6 6
+use CELL  426
+transform -1 0 2573 0 1 1164
+box 0 0 6 6
+use CELL  427
+transform -1 0 2440 0 1 1182
+box 0 0 6 6
+use CELL  428
+transform 1 0 2363 0 1 1191
+box 0 0 6 6
+use CELL  429
+transform 1 0 2452 0 1 1344
+box 0 0 6 6
+use CELL  430
+transform -1 0 2328 0 1 1182
+box 0 0 6 6
+use CELL  431
+transform -1 0 2328 0 1 1263
+box 0 0 6 6
+use CELL  432
+transform -1 0 2579 0 1 1245
+box 0 0 6 6
+use CELL  433
+transform -1 0 2357 0 1 1290
+box 0 0 6 6
+use CELL  434
+transform -1 0 2658 0 1 1218
+box 0 0 6 6
+use CELL  435
+transform -1 0 2388 0 -1 1314
+box 0 0 6 6
+use CELL  436
+transform 1 0 2556 0 -1 1242
+box 0 0 6 6
+use CELL  437
+transform 1 0 2586 0 -1 1206
+box 0 0 6 6
+use CELL  438
+transform -1 0 2740 0 1 1236
+box 0 0 6 6
+use CELL  439
+transform -1 0 2372 0 1 1308
+box 0 0 6 6
+use CELL  440
+transform -1 0 2448 0 1 1299
+box 0 0 6 6
+use CELL  441
+transform 1 0 2885 0 1 1245
+box 0 0 6 6
+use CELL  442
+transform 1 0 2702 0 1 1200
+box 0 0 6 6
+use CELL  443
+transform -1 0 2367 0 -1 1251
+box 0 0 6 6
+use CELL  444
+transform 1 0 2348 0 -1 1179
+box 0 0 6 6
+use CELL  445
+transform 1 0 2717 0 1 1218
+box 0 0 6 6
+use CELL  446
+transform 1 0 2797 0 1 1245
+box 0 0 6 6
+use CELL  447
+transform 1 0 2391 0 1 1128
+box 0 0 6 6
+use CELL  448
+transform -1 0 2355 0 1 1344
+box 0 0 6 6
+use CELL  449
+transform -1 0 2526 0 1 1272
+box 0 0 6 6
+use CELL  450
+transform -1 0 2353 0 -1 1197
+box 0 0 6 6
+use CELL  451
+transform 1 0 2359 0 1 1308
+box 0 0 6 6
+use CELL  452
+transform 1 0 2398 0 1 1173
+box 0 0 6 6
+use CELL  453
+transform -1 0 2322 0 1 1209
+box 0 0 6 6
+use CELL  454
+transform -1 0 2634 0 -1 1296
+box 0 0 6 6
+use CELL  455
+transform -1 0 2730 0 1 1218
+box 0 0 6 6
+use CELL  456
+transform 1 0 2665 0 1 1281
+box 0 0 6 6
+use CELL  457
+transform -1 0 2643 0 1 1254
+box 0 0 6 6
+use CELL  458
+transform 1 0 2627 0 1 1182
+box 0 0 6 6
+use CELL  459
+transform 1 0 2603 0 1 1182
+box 0 0 6 6
+use CELL  460
+transform -1 0 2704 0 1 1290
+box 0 0 6 6
+use CELL  461
+transform -1 0 2543 0 1 1344
+box 0 0 6 6
+use CELL  462
+transform 1 0 2366 0 1 1263
+box 0 0 6 6
+use CELL  463
+transform 1 0 2392 0 1 1182
+box 0 0 6 6
+use CELL  464
+transform 1 0 2539 0 1 1263
+box 0 0 6 6
+use CELL  465
+transform -1 0 2435 0 -1 1314
+box 0 0 6 6
+use CELL  466
+transform -1 0 2370 0 1 1209
+box 0 0 6 6
+use CELL  467
+transform -1 0 2678 0 1 1281
+box 0 0 6 6
+use CELL  468
+transform 1 0 2317 0 -1 1206
+box 0 0 6 6
+use CELL  469
+transform 1 0 2466 0 1 1155
+box 0 0 6 6
+use CELL  470
+transform -1 0 2698 0 1 1290
+box 0 0 6 6
+use CELL  471
+transform 1 0 2648 0 -1 1197
+box 0 0 6 6
+use CELL  472
+transform 1 0 2352 0 1 1209
+box 0 0 6 6
+use CELL  473
+transform 1 0 2392 0 -1 1332
+box 0 0 6 6
+use CELL  474
+transform -1 0 2338 0 1 1290
+box 0 0 6 6
+use CELL  475
+transform -1 0 2295 0 1 1272
+box 0 0 6 6
+use CELL  476
+transform 1 0 2384 0 1 1128
+box 0 0 6 6
+use CELL  477
+transform -1 0 2405 0 1 1227
+box 0 0 6 6
+use CELL  478
+transform -1 0 2777 0 1 1236
+box 0 0 6 6
+use CELL  479
+transform 1 0 2328 0 -1 1368
+box 0 0 6 6
+use CELL  480
+transform 1 0 2670 0 1 1191
+box 0 0 6 6
+use CELL  481
+transform 1 0 2345 0 1 1317
+box 0 0 6 6
+use CELL  482
+transform 1 0 2274 0 -1 1296
+box 0 0 6 6
+use CELL  483
+transform 1 0 2730 0 1 1272
+box 0 0 6 6
+use CELL  484
+transform -1 0 2476 0 1 1173
+box 0 0 6 6
+use CELL  485
+transform 1 0 2344 0 1 1227
+box 0 0 6 6
+use CELL  486
+transform -1 0 2541 0 -1 1206
+box 0 0 6 6
+use CELL  487
+transform 1 0 2748 0 1 1254
+box 0 0 6 6
+use CELL  488
+transform -1 0 2292 0 -1 1215
+box 0 0 6 6
+use CELL  489
+transform 1 0 2459 0 1 1290
+box 0 0 6 6
+use CELL  490
+transform -1 0 2541 0 1 1164
+box 0 0 6 6
+use CELL  491
+transform -1 0 2424 0 1 1191
+box 0 0 6 6
+use CELL  492
+transform 1 0 2522 0 1 1335
+box 0 0 6 6
+use CELL  493
+transform 1 0 2274 0 -1 1305
+box 0 0 6 6
+use CELL  494
+transform -1 0 2771 0 1 1218
+box 0 0 6 6
+use CELL  495
+transform 1 0 2478 0 1 1308
+box 0 0 6 6
+use CELL  496
+transform -1 0 2413 0 -1 1215
+box 0 0 6 6
+use CELL  497
+transform 1 0 2532 0 1 1308
+box 0 0 6 6
+use CELL  498
+transform -1 0 2725 0 1 1263
+box 0 0 6 6
+use CELL  499
+transform -1 0 2827 0 1 1254
+box 0 0 6 6
+use CELL  500
+transform -1 0 2426 0 1 1299
+box 0 0 6 6
+use CELL  501
+transform 1 0 2539 0 1 1308
+box 0 0 6 6
+use CELL  502
+transform 1 0 2589 0 1 1128
+box 0 0 6 6
+use CELL  503
+transform -1 0 2313 0 1 1191
+box 0 0 6 6
+use CELL  504
+transform -1 0 2442 0 -1 1314
+box 0 0 6 6
+use CELL  505
+transform 1 0 2389 0 1 1308
+box 0 0 6 6
+use CELL  506
+transform -1 0 2565 0 1 1254
+box 0 0 6 6
+use CELL  507
+transform -1 0 2320 0 1 1191
+box 0 0 6 6
+use CELL  508
+transform 1 0 2513 0 1 1335
+box 0 0 6 6
+use CELL  509
+transform 1 0 2345 0 1 1164
+box 0 0 6 6
+use CELL  510
+transform 1 0 2594 0 1 1164
+box 0 0 6 6
+use CELL  511
+transform -1 0 2560 0 -1 1359
+box 0 0 6 6
+use CELL  512
+transform -1 0 2572 0 1 1263
+box 0 0 6 6
+use CELL  513
+transform -1 0 2323 0 1 1254
+box 0 0 6 6
+use CELL  514
+transform -1 0 2336 0 -1 1233
+box 0 0 6 6
+use CELL  515
+transform 1 0 2310 0 -1 1323
+box 0 0 6 6
+use CELL  516
+transform 1 0 2594 0 1 1173
+box 0 0 6 6
+use CELL  517
+transform 1 0 2332 0 1 1173
+box 0 0 6 6
+use CELL  518
+transform 1 0 2664 0 1 1182
+box 0 0 6 6
+use CELL  519
+transform 1 0 2686 0 1 1200
+box 0 0 6 6
+use CELL  520
+transform 1 0 2442 0 1 1191
+box 0 0 6 6
+use CELL  521
+transform -1 0 2442 0 -1 1323
+box 0 0 6 6
+use CELL  522
+transform 1 0 2511 0 1 1227
+box 0 0 6 6
+use CELL  523
+transform 1 0 2566 0 1 1155
+box 0 0 6 6
+use CELL  524
+transform 1 0 2336 0 1 1308
+box 0 0 6 6
+use CELL  525
+transform 1 0 2592 0 -1 1314
+box 0 0 6 6
+use CELL  526
+transform 1 0 2275 0 -1 1278
+box 0 0 6 6
+use CELL  527
+transform 1 0 2728 0 1 1227
+box 0 0 6 6
+use CELL  528
+transform 1 0 2558 0 1 1317
+box 0 0 6 6
+use CELL  529
+transform 1 0 2717 0 1 1191
+box 0 0 6 6
+use CELL  530
+transform 1 0 2564 0 1 1308
+box 0 0 6 6
+use CELL  531
+transform 1 0 2375 0 1 1317
+box 0 0 6 6
+use CELL  532
+transform 1 0 2419 0 1 1326
+box 0 0 6 6
+use CELL  533
+transform 1 0 2367 0 -1 1224
+box 0 0 6 6
+use CELL  534
+transform 1 0 2434 0 1 1290
+box 0 0 6 6
+use CELL  535
+transform 1 0 2310 0 1 1245
+box 0 0 6 6
+use CELL  536
+transform 1 0 2759 0 -1 1224
+box 0 0 6 6
+use CELL  537
+transform 1 0 2790 0 -1 1242
+box 0 0 6 6
+use CELL  538
+transform 1 0 2848 0 1 1245
+box 0 0 6 6
+use CELL  539
+transform 1 0 2397 0 1 1218
+box 0 0 6 6
+use CELL  540
+transform 1 0 2457 0 1 1335
+box 0 0 6 6
+use CELL  541
+transform -1 0 2478 0 1 1137
+box 0 0 6 6
+use CELL  542
+transform -1 0 2302 0 1 1272
+box 0 0 6 6
+use CELL  543
+transform -1 0 2752 0 -1 1251
+box 0 0 6 6
+use CELL  544
+transform -1 0 2450 0 1 1200
+box 0 0 6 6
+use CELL  545
+transform 1 0 2557 0 1 1308
+box 0 0 6 6
+use CELL  546
+transform 1 0 2738 0 1 1218
+box 0 0 6 6
+use CELL  547
+transform -1 0 2376 0 1 1371
+box 0 0 6 6
+use CELL  548
+transform 1 0 2434 0 1 1173
+box 0 0 6 6
+use CELL  549
+transform 1 0 2813 0 -1 1215
+box 0 0 6 6
+use CELL  550
+transform -1 0 2348 0 1 1299
+box 0 0 6 6
+use CELL  551
+transform 1 0 2547 0 1 1254
+box 0 0 6 6
+use CELL  552
+transform -1 0 2542 0 1 1299
+box 0 0 6 6
+use CELL  553
+transform 1 0 2737 0 1 1200
+box 0 0 6 6
+use CELL  554
+transform 1 0 2482 0 1 1173
+box 0 0 6 6
+use CELL  555
+transform 1 0 2811 0 1 1245
+box 0 0 6 6
+use CELL  556
+transform 1 0 2521 0 1 1173
+box 0 0 6 6
+use CELL  557
+transform 1 0 2331 0 1 1254
+box 0 0 6 6
+use CELL  558
+transform 1 0 2528 0 1 1200
+box 0 0 6 6
+use CELL  559
+transform -1 0 2591 0 1 1155
+box 0 0 6 6
+use CELL  560
+transform 1 0 2496 0 -1 1224
+box 0 0 6 6
+use CELL  561
+transform -1 0 2747 0 1 1236
+box 0 0 6 6
+use CELL  562
+transform -1 0 2803 0 1 1236
+box 0 0 6 6
+use CELL  563
+transform -1 0 2898 0 1 1245
+box 0 0 6 6
+use CELL  564
+transform -1 0 2581 0 1 1128
+box 0 0 6 6
+use CELL  565
+transform 1 0 2528 0 1 1173
+box 0 0 6 6
+use CELL  566
+transform 1 0 2339 0 1 1290
+box 0 0 6 6
+use CELL  567
+transform 1 0 2811 0 1 1236
+box 0 0 6 6
+use CELL  568
+transform -1 0 2469 0 1 1218
+box 0 0 6 6
+use CELL  569
+transform 1 0 2543 0 1 1173
+box 0 0 6 6
+use CELL  570
+transform -1 0 2485 0 1 1362
+box 0 0 6 6
+use CELL  571
+transform -1 0 2812 0 1 1209
+box 0 0 6 6
+use CELL  572
+transform 1 0 2730 0 1 1200
+box 0 0 6 6
+use CELL  573
+transform -1 0 2383 0 1 1254
+box 0 0 6 6
+use CELL  574
+transform 1 0 2823 0 1 1245
+box 0 0 6 6
+use CELL  575
+transform 1 0 2489 0 1 1326
+box 0 0 6 6
+use CELL  576
+transform 1 0 2328 0 1 1119
+box 0 0 6 6
+use CELL  577
+transform -1 0 2692 0 1 1281
+box 0 0 6 6
+use CELL  578
+transform -1 0 2397 0 1 1317
+box 0 0 6 6
+use CELL  579
+transform 1 0 2666 0 1 1299
+box 0 0 6 6
+use CELL  580
+transform -1 0 2621 0 1 1173
+box 0 0 6 6
+use CELL  581
+transform -1 0 2305 0 1 1182
+box 0 0 6 6
+use CELL  582
+transform -1 0 2810 0 1 1245
+box 0 0 6 6
+use CELL  583
+transform -1 0 2553 0 1 1227
+box 0 0 6 6
+use CELL  584
+transform 1 0 2401 0 1 1290
+box 0 0 6 6
+use CELL  585
+transform 1 0 2562 0 1 1146
+box 0 0 6 6
+use CELL  586
+transform -1 0 2328 0 1 1317
+box 0 0 6 6
+use CELL  587
+transform -1 0 2617 0 -1 1197
+box 0 0 6 6
+use CELL  588
+transform -1 0 2393 0 -1 1242
+box 0 0 6 6
+use CELL  589
+transform -1 0 2349 0 1 1200
+box 0 0 6 6
+use CELL  590
+transform 1 0 2751 0 -1 1206
+box 0 0 6 6
+use CELL  591
+transform 1 0 2448 0 1 1335
+box 0 0 6 6
+use CELL  592
+transform -1 0 2535 0 1 1299
+box 0 0 6 6
+use CELL  593
+transform -1 0 2459 0 1 1182
+box 0 0 6 6
+use CELL  594
+transform 1 0 2543 0 1 1146
+box 0 0 6 6
+use CELL  595
+transform 1 0 2323 0 -1 1215
+box 0 0 6 6
+use CELL  596
+transform -1 0 2566 0 1 1164
+box 0 0 6 6
+use CELL  597
+transform -1 0 2379 0 -1 1125
+box 0 0 6 6
+use CELL  598
+transform -1 0 2758 0 1 1191
+box 0 0 6 6
+use CELL  599
+transform -1 0 2622 0 1 1308
+box 0 0 6 6
+use CELL  600
+transform -1 0 2385 0 1 1371
+box 0 0 6 6
+use CELL  601
+transform -1 0 2629 0 1 1308
+box 0 0 6 6
+use CELL  602
+transform -1 0 2664 0 1 1200
+box 0 0 6 6
+use CELL  603
+transform 1 0 2413 0 1 1299
+box 0 0 6 6
+use CELL  604
+transform 1 0 2512 0 -1 1350
+box 0 0 6 6
+use CELL  605
+transform -1 0 2462 0 -1 1170
+box 0 0 6 6
+use CELL  606
+transform 1 0 2569 0 1 1146
+box 0 0 6 6
+use CELL  607
+transform -1 0 2346 0 1 1245
+box 0 0 6 6
+use CELL  608
+transform 1 0 2412 0 1 1119
+box 0 0 6 6
+use CELL  609
+transform 1 0 2525 0 1 1146
+box 0 0 6 6
+use CELL  610
+transform -1 0 2619 0 1 1236
+box 0 0 6 6
+use CELL  611
+transform -1 0 2755 0 -1 1233
+box 0 0 6 6
+use CELL  612
+transform 1 0 2491 0 1 1146
+box 0 0 6 6
+use CELL  613
+transform -1 0 2706 0 1 1227
+box 0 0 6 6
+use CELL  614
+transform 1 0 2333 0 -1 1278
+box 0 0 6 6
+use CELL  615
+transform -1 0 2329 0 -1 1242
+box 0 0 6 6
+use CELL  616
+transform 1 0 2639 0 -1 1305
+box 0 0 6 6
+use CELL  617
+transform 1 0 2379 0 1 1335
+box 0 0 6 6
+use CELL  618
+transform -1 0 2449 0 1 1173
+box 0 0 6 6
+use CELL  619
+transform -1 0 2611 0 -1 1278
+box 0 0 6 6
+use CELL  620
+transform -1 0 2595 0 -1 1332
+box 0 0 6 6
+use CELL  621
+transform 1 0 2372 0 1 1344
+box 0 0 6 6
+use CELL  622
+transform -1 0 2299 0 1 1209
+box 0 0 6 6
+use CELL  623
+transform -1 0 2730 0 1 1191
+box 0 0 6 6
+use CELL  624
+transform 1 0 2745 0 1 1263
+box 0 0 6 6
+use CELL  625
+transform 1 0 2347 0 -1 1125
+box 0 0 6 6
+use CELL  626
+transform -1 0 2516 0 1 1290
+box 0 0 6 6
+use CELL  627
+transform 1 0 2614 0 1 1317
+box 0 0 6 6
+use CELL  628
+transform -1 0 2495 0 1 1218
+box 0 0 6 6
+use CELL  629
+transform 1 0 2786 0 1 1263
+box 0 0 6 6
+use CELL  630
+transform -1 0 2740 0 1 1254
+box 0 0 6 6
+use CELL  631
+transform 1 0 2546 0 1 1344
+box 0 0 6 6
+use CELL  632
+transform -1 0 2737 0 1 1218
+box 0 0 6 6
+use CELL  633
+transform -1 0 2364 0 1 1290
+box 0 0 6 6
+use CELL  634
+transform 1 0 2482 0 1 1146
+box 0 0 6 6
+use CELL  635
+transform 1 0 2443 0 1 1146
+box 0 0 6 6
+use CELL  636
+transform -1 0 2482 0 1 1128
+box 0 0 6 6
+use CELL  637
+transform -1 0 2343 0 -1 1242
+box 0 0 6 6
+use CELL  638
+transform -1 0 2354 0 1 1218
+box 0 0 6 6
+use CELL  639
+transform 1 0 2371 0 -1 1215
+box 0 0 6 6
+use CELL  640
+transform -1 0 2598 0 1 1245
+box 0 0 6 6
+use CELL  641
+transform 1 0 2625 0 -1 1242
+box 0 0 6 6
+use CELL  642
+transform -1 0 2481 0 -1 1125
+box 0 0 6 6
+use CELL  643
+transform 1 0 2382 0 1 1146
+box 0 0 6 6
+use CELL  644
+transform -1 0 2863 0 -1 1251
+box 0 0 6 6
+use CELL  645
+transform -1 0 2641 0 1 1317
+box 0 0 6 6
+use CELL  646
+transform 1 0 2590 0 -1 1152
+box 0 0 6 6
+use CELL  647
+transform 1 0 2336 0 1 1146
+box 0 0 6 6
+use CELL  648
+transform 1 0 2528 0 1 1344
+box 0 0 6 6
+use CELL  649
+transform 1 0 2589 0 1 1137
+box 0 0 6 6
+use CELL  650
+transform -1 0 2407 0 1 1326
+box 0 0 6 6
+use CELL  651
+transform -1 0 2792 0 1 1272
+box 0 0 6 6
+use CELL  652
+transform -1 0 2553 0 1 1200
+box 0 0 6 6
+use CELL  653
+transform 1 0 2481 0 1 1137
+box 0 0 6 6
+use CELL  654
+transform 1 0 2532 0 1 1263
+box 0 0 6 6
+use CELL  655
+transform 1 0 2498 0 1 1146
+box 0 0 6 6
+use CELL  656
+transform -1 0 2380 0 1 1362
+box 0 0 6 6
+use CELL  657
+transform 1 0 2627 0 -1 1305
+box 0 0 6 6
+use CELL  658
+transform -1 0 2826 0 1 1209
+box 0 0 6 6
+use CELL  659
+transform 1 0 2362 0 1 1137
+box 0 0 6 6
+use CELL  660
+transform 1 0 2348 0 1 1137
+box 0 0 6 6
+use CELL  661
+transform -1 0 2574 0 1 1128
+box 0 0 6 6
+use CELL  662
+transform 1 0 2644 0 1 1308
+box 0 0 6 6
+use CELL  663
+transform 1 0 2322 0 1 1308
+box 0 0 6 6
+use CELL  664
+transform -1 0 2595 0 1 1182
+box 0 0 6 6
+use CELL  665
+transform -1 0 2717 0 1 1272
+box 0 0 6 6
+use CELL  666
+transform -1 0 2383 0 1 1164
+box 0 0 6 6
+use CELL  667
+transform 1 0 2460 0 1 1137
+box 0 0 6 6
+use CELL  668
+transform -1 0 2386 0 1 1236
+box 0 0 6 6
+use CELL  669
+transform 1 0 2335 0 1 1335
+box 0 0 6 6
+use CELL  670
+transform -1 0 2383 0 1 1128
+box 0 0 6 6
+use CELL  671
+transform -1 0 2760 0 1 1281
+box 0 0 6 6
+use CELL  672
+transform -1 0 2368 0 1 1200
+box 0 0 6 6
+use CELL  673
+transform 1 0 2735 0 1 1227
+box 0 0 6 6
+use CELL  674
+transform -1 0 2288 0 -1 1278
+box 0 0 6 6
+use CELL  675
+transform -1 0 2400 0 -1 1296
+box 0 0 6 6
+use CELL  676
+transform 1 0 2602 0 -1 1305
+box 0 0 6 6
+use CELL  677
+transform 1 0 2582 0 1 1326
+box 0 0 6 6
+use CELL  678
+transform 1 0 2532 0 -1 1260
+box 0 0 6 6
+use CELL  679
+transform 1 0 2434 0 1 1209
+box 0 0 6 6
+use CELL  680
+transform -1 0 2724 0 -1 1215
+box 0 0 6 6
+use CELL  681
+transform 1 0 2336 0 1 1218
+box 0 0 6 6
+use CELL  682
+transform -1 0 2287 0 1 1299
+box 0 0 6 6
+use CELL  683
+transform -1 0 2335 0 1 1218
+box 0 0 6 6
+use CELL  684
+transform 1 0 2663 0 1 1191
+box 0 0 6 6
+use CELL  685
+transform 1 0 2317 0 1 1245
+box 0 0 6 6
+use CELL  686
+transform 1 0 2483 0 1 1128
+box 0 0 6 6
+use CELL  687
+transform 1 0 2262 0 1 1146
+box 0 0 6 6
+use CELL  688
+transform -1 0 2443 0 1 1128
+box 0 0 6 6
+use CELL  689
+transform -1 0 2451 0 1 1308
+box 0 0 6 6
+use CELL  690
+transform -1 0 2502 0 1 1281
+box 0 0 6 6
+use CELL  691
+transform 1 0 2554 0 1 1263
+box 0 0 6 6
+use CELL  692
+transform 1 0 2878 0 1 1245
+box 0 0 6 6
+use CELL  693
+transform 1 0 2473 0 1 1353
+box 0 0 6 6
+use CELL  694
+transform -1 0 2493 0 1 1164
+box 0 0 6 6
+use CELL  695
+transform 1 0 2332 0 1 1137
+box 0 0 6 6
+use CELL  696
+transform -1 0 2614 0 -1 1161
+box 0 0 6 6
+use CELL  697
+transform -1 0 2488 0 1 1119
+box 0 0 6 6
+use CELL  698
+transform 1 0 2345 0 1 1254
+box 0 0 6 6
+use CELL  699
+transform 1 0 2424 0 -1 1125
+box 0 0 6 6
+use CELL  700
+transform 1 0 2394 0 1 1137
+box 0 0 6 6
+use CELL  701
+transform -1 0 2426 0 1 1200
+box 0 0 6 6
+use CELL  702
+transform 1 0 2335 0 -1 1287
+box 0 0 6 6
+use CELL  703
+transform 1 0 2899 0 1 1245
+box 0 0 6 6
+use CELL  704
+transform 1 0 2425 0 -1 1359
+box 0 0 6 6
+use CELL  705
+transform 1 0 2664 0 1 1308
+box 0 0 6 6
+use CELL  706
+transform 1 0 2515 0 1 1137
+box 0 0 6 6
+use CELL  707
+transform 1 0 2495 0 1 1227
+box 0 0 6 6
+use CELL  708
+transform 1 0 2540 0 1 1137
+box 0 0 6 6
+use CELL  709
+transform -1 0 2784 0 1 1236
+box 0 0 6 6
+use CELL  710
+transform 1 0 2561 0 1 1137
+box 0 0 6 6
+use CELL  711
+transform 1 0 2575 0 1 1137
+box 0 0 6 6
+use CELL  712
+transform 1 0 2352 0 1 1146
+box 0 0 6 6
+use CELL  713
+transform 1 0 2368 0 1 1146
+box 0 0 6 6
+use CELL  714
+transform 1 0 2310 0 -1 1206
+box 0 0 6 6
+use CELL  715
+transform 1 0 2323 0 -1 1233
+box 0 0 6 6
+use CELL  716
+transform -1 0 2335 0 1 1263
+box 0 0 6 6
+use CELL  717
+transform -1 0 2364 0 -1 1377
+box 0 0 6 6
+use CELL  718
+transform -1 0 2388 0 1 1290
+box 0 0 6 6
+use CELL  719
+transform -1 0 2356 0 1 1200
+box 0 0 6 6
+use CELL  720
+transform -1 0 2488 0 -1 1224
+box 0 0 6 6
+use CELL  721
+transform 1 0 2653 0 1 1299
+box 0 0 6 6
+use CELL  722
+transform 1 0 2553 0 1 1344
+box 0 0 6 6
+use CELL  723
+transform -1 0 2348 0 1 1344
+box 0 0 6 6
+use CELL  724
+transform 1 0 2401 0 1 1146
+box 0 0 6 6
+use CELL  725
+transform 1 0 2460 0 -1 1305
+box 0 0 6 6
+use CELL  726
+transform -1 0 2729 0 1 1200
+box 0 0 6 6
+use CELL  727
+transform 1 0 2409 0 1 1335
+box 0 0 6 6
+use CELL  728
+transform -1 0 2382 0 1 1326
+box 0 0 6 6
+use CELL  729
+transform -1 0 2433 0 1 1299
+box 0 0 6 6
+use CELL  730
+transform 1 0 2411 0 -1 1197
+box 0 0 6 6
+use CELL  731
+transform 1 0 2366 0 -1 1179
+box 0 0 6 6
+use CELL  732
+transform -1 0 2305 0 1 1227
+box 0 0 6 6
+use CELL  733
+transform 1 0 2268 0 -1 1161
+box 0 0 6 6
+use CELL  734
+transform -1 0 2473 0 -1 1134
+box 0 0 6 6
+use CELL  735
+transform 1 0 2554 0 1 1281
+box 0 0 6 6
+use CELL  736
+transform 1 0 2549 0 1 1236
+box 0 0 6 6
+use CELL  737
+transform -1 0 2469 0 1 1164
+box 0 0 6 6
+use CELL  738
+transform 1 0 2571 0 1 1173
+box 0 0 6 6
+use CELL  739
+transform -1 0 2447 0 -1 1296
+box 0 0 6 6
+use CELL  740
+transform -1 0 2269 0 1 1209
+box 0 0 6 6
+use CELL  741
+transform 1 0 2341 0 1 1173
+box 0 0 6 6
+use CELL  742
+transform 1 0 2361 0 -1 1287
+box 0 0 6 6
+use CELL  743
+transform -1 0 2778 0 1 1218
+box 0 0 6 6
+use CELL  744
+transform 1 0 2338 0 1 1254
+box 0 0 6 6
+use CELL  745
+transform 1 0 2604 0 1 1146
+box 0 0 6 6
+use CELL  746
+transform 1 0 2388 0 1 1335
+box 0 0 6 6
+use CELL  747
+transform 1 0 2575 0 1 1335
+box 0 0 6 6
+use CELL  748
+transform 1 0 2335 0 1 1344
+box 0 0 6 6
+use CELL  749
+transform 1 0 2531 0 -1 1359
+box 0 0 6 6
+use CELL  750
+transform -1 0 2325 0 -1 1278
+box 0 0 6 6
+use CELL  751
+transform 1 0 2325 0 1 1173
+box 0 0 6 6
+use CELL  752
+transform 1 0 2358 0 1 1344
+box 0 0 6 6
+use CELL  753
+transform -1 0 2366 0 -1 1224
+box 0 0 6 6
+use CELL  754
+transform 1 0 2340 0 1 1191
+box 0 0 6 6
+use CELL  755
+transform -1 0 2597 0 -1 1341
+box 0 0 6 6
+use CELL  756
+transform -1 0 2650 0 1 1254
+box 0 0 6 6
+use CELL  757
+transform -1 0 2656 0 1 1308
+box 0 0 6 6
+use CELL  758
+transform 1 0 2395 0 1 1299
+box 0 0 6 6
+use CELL  759
+transform 1 0 2601 0 1 1173
+box 0 0 6 6
+use CELL  760
+transform 1 0 2375 0 1 1146
+box 0 0 6 6
+use CELL  761
+transform -1 0 2330 0 1 1200
+box 0 0 6 6
+use CELL  762
+transform 1 0 2389 0 1 1146
+box 0 0 6 6
+use CELL  763
+transform 1 0 2413 0 1 1146
+box 0 0 6 6
+use CELL  764
+transform -1 0 2344 0 -1 1323
+box 0 0 6 6
+use CELL  765
+transform -1 0 2364 0 1 1236
+box 0 0 6 6
+use CELL  766
+transform -1 0 2716 0 1 1191
+box 0 0 6 6
+use CELL  767
+transform 1 0 2417 0 1 1371
+box 0 0 6 6
+use CELL  768
+transform 1 0 2550 0 1 1146
+box 0 0 6 6
+use CELL  769
+transform 1 0 2338 0 1 1164
+box 0 0 6 6
+use CELL  770
+transform 1 0 2480 0 -1 1359
+box 0 0 6 6
+use CELL  771
+transform 1 0 2601 0 1 1164
+box 0 0 6 6
+use CELL  772
+transform 1 0 2359 0 1 1146
+box 0 0 6 6
+use CELL  773
+transform -1 0 2358 0 -1 1368
+box 0 0 6 6
+use CELL  774
+transform 1 0 2676 0 1 1182
+box 0 0 6 6
+use CELL  775
+transform 1 0 2391 0 1 1344
+box 0 0 6 6
+use CELL  776
+transform 1 0 2352 0 1 1263
+box 0 0 6 6
+use CELL  777
+transform 1 0 2369 0 1 1227
+box 0 0 6 6
+use CELL  778
+transform 1 0 2304 0 -1 1287
+box 0 0 6 6
+use CELL  779
+transform 1 0 2424 0 1 1335
+box 0 0 6 6
+use CELL  780
+transform 1 0 2601 0 1 1236
+box 0 0 6 6
+use CELL  781
+transform -1 0 2573 0 1 1344
+box 0 0 6 6
+use CELL  782
+transform 1 0 2407 0 1 1344
+box 0 0 6 6
+use CELL  783
+transform -1 0 2314 0 1 1182
+box 0 0 6 6
+use CELL  784
+transform 1 0 2581 0 1 1344
+box 0 0 6 6
+use CELL  785
+transform -1 0 2603 0 -1 1152
+box 0 0 6 6
+use CELL  786
+transform 1 0 2505 0 1 1344
+box 0 0 6 6
+use CELL  787
+transform -1 0 2759 0 1 1236
+box 0 0 6 6
+use CELL  788
+transform -1 0 2328 0 1 1146
+box 0 0 6 6
+use CELL  789
+transform 1 0 2519 0 1 1344
+box 0 0 6 6
+use CELL  790
+transform 1 0 2519 0 1 1128
+box 0 0 6 6
+use CELL  791
+transform 1 0 2526 0 1 1164
+box 0 0 6 6
+use CELL  792
+transform 1 0 2382 0 1 1317
+box 0 0 6 6
+use CELL  793
+transform 1 0 2668 0 1 1227
+box 0 0 6 6
+use CELL  794
+transform 1 0 2498 0 1 1344
+box 0 0 6 6
+use CELL  795
+transform -1 0 2544 0 -1 1188
+box 0 0 6 6
+use CELL  796
+transform -1 0 2391 0 1 1119
+box 0 0 6 6
+use CELL  797
+transform -1 0 2602 0 1 1137
+box 0 0 6 6
+use CELL  798
+transform 1 0 2384 0 -1 1287
+box 0 0 6 6
+use CELL  799
+transform -1 0 2556 0 1 1173
+box 0 0 6 6
+use CELL  800
+transform 1 0 2456 0 1 1200
+box 0 0 6 6
+<< metal1 >>
+rect 2431 1297 2432 1300
+rect 2431 1297 2434 1298
+rect 2434 1297 2435 1306
+rect 2427 1306 2435 1307
+rect 2427 1306 2428 1315
+rect 2427 1315 2428 1316
+rect 2428 1315 2429 1317
+rect 2326 1180 2327 1183
+rect 2319 1180 2327 1181
+rect 2319 1180 2320 1182
+rect 2654 1306 2655 1309
+rect 2599 1306 2655 1307
+rect 2599 1306 2600 1333
+rect 2569 1333 2600 1334
+rect 2569 1333 2570 1335
+rect 2756 1189 2757 1192
+rect 2749 1189 2757 1190
+rect 2749 1189 2750 1191
+rect 2561 1207 2562 1210
+rect 2555 1207 2562 1208
+rect 2555 1207 2556 1209
+rect 2327 1270 2328 1273
+rect 2327 1270 2529 1271
+rect 2529 1234 2530 1271
+rect 2529 1234 2532 1235
+rect 2532 1234 2533 1236
+rect 2381 1126 2382 1129
+rect 2375 1126 2382 1127
+rect 2375 1126 2376 1135
+rect 2375 1135 2379 1136
+rect 2379 1135 2380 1137
+rect 2419 1180 2420 1192
+rect 2355 1180 2420 1181
+rect 2355 1180 2356 1182
+rect 2486 1279 2487 1327
+rect 2486 1279 2633 1280
+rect 2633 1189 2634 1280
+rect 2633 1189 2674 1190
+rect 2674 1180 2675 1190
+rect 2674 1180 2700 1181
+rect 2700 1180 2701 1182
+rect 2606 1297 2607 1300
+rect 2587 1297 2607 1298
+rect 2587 1297 2588 1299
+rect 2352 1216 2353 1219
+rect 2352 1216 2358 1217
+rect 2358 1216 2359 1225
+rect 2358 1225 2360 1226
+rect 2360 1225 2361 1234
+rect 2360 1234 2375 1235
+rect 2375 1234 2376 1252
+rect 2353 1252 2376 1253
+rect 2353 1252 2354 1254
+rect 2353 1207 2354 1210
+rect 2317 1207 2354 1208
+rect 2317 1207 2318 1209
+rect 2381 1162 2382 1165
+rect 2364 1162 2382 1163
+rect 2364 1153 2365 1163
+rect 2364 1153 2366 1154
+rect 2366 1144 2367 1154
+rect 2366 1144 2369 1145
+rect 2369 1135 2370 1145
+rect 2359 1135 2370 1136
+rect 2359 1126 2360 1136
+rect 2354 1126 2360 1127
+rect 2354 1117 2355 1127
+rect 2348 1117 2355 1118
+rect 2348 1117 2349 1119
+rect 2389 1117 2390 1120
+rect 2389 1117 2559 1118
+rect 2559 1117 2560 1153
+rect 2559 1153 2589 1154
+rect 2589 1153 2590 1155
+rect 2367 1306 2368 1309
+rect 2367 1306 2371 1307
+rect 2371 1297 2372 1307
+rect 2371 1297 2377 1298
+rect 2377 1297 2378 1299
+rect 2551 1243 2552 1255
+rect 2538 1243 2552 1244
+rect 2538 1225 2539 1244
+rect 2406 1225 2539 1226
+rect 2406 1225 2407 1261
+rect 2317 1261 2407 1262
+rect 2317 1261 2318 1279
+rect 2317 1279 2448 1280
+rect 2448 1279 2449 1297
+rect 2446 1297 2449 1298
+rect 2446 1297 2447 1299
+rect 2696 1270 2697 1273
+rect 2696 1270 2705 1271
+rect 2705 1270 2706 1272
+rect 2464 1297 2465 1300
+rect 2464 1297 2479 1298
+rect 2479 1297 2480 1299
+rect 2484 1180 2485 1183
+rect 2484 1180 2532 1181
+rect 2532 1180 2533 1182
+rect 2333 1216 2334 1219
+rect 2333 1216 2343 1217
+rect 2343 1216 2344 1225
+rect 2331 1225 2344 1226
+rect 2331 1225 2332 1227
+rect 2757 1234 2758 1237
+rect 2757 1234 2772 1235
+rect 2772 1234 2773 1236
+rect 2687 1252 2688 1282
+rect 2687 1252 2690 1253
+rect 2690 1243 2691 1253
+rect 2684 1243 2691 1244
+rect 2684 1243 2685 1245
+rect 2423 1331 2424 1333
+rect 2422 1333 2424 1334
+rect 2422 1333 2423 1342
+rect 2422 1342 2429 1343
+rect 2429 1342 2430 1344
+rect 2704 1207 2705 1228
+rect 2704 1207 2817 1208
+rect 2817 1207 2818 1209
+rect 2725 1189 2726 1192
+rect 2718 1189 2726 1190
+rect 2718 1189 2719 1191
+rect 2309 1180 2310 1183
+rect 2306 1180 2310 1181
+rect 2306 1180 2307 1189
+rect 2306 1189 2311 1190
+rect 2311 1189 2312 1191
+rect 2343 1295 2344 1297
+rect 2311 1297 2344 1298
+rect 2311 1261 2312 1298
+rect 2307 1261 2312 1262
+rect 2307 1198 2308 1262
+rect 2307 1198 2381 1199
+rect 2381 1198 2382 1234
+rect 2381 1234 2397 1235
+rect 2397 1234 2398 1245
+rect 2815 1234 2816 1237
+rect 2815 1234 2818 1235
+rect 2818 1234 2819 1254
+rect 2696 1288 2697 1291
+rect 2666 1288 2697 1289
+rect 2666 1288 2667 1297
+rect 2664 1297 2667 1298
+rect 2664 1297 2665 1299
+rect 2536 1162 2537 1165
+rect 2505 1162 2537 1163
+rect 2505 1126 2506 1163
+rect 2493 1126 2506 1127
+rect 2493 1126 2494 1128
+rect 2350 1297 2351 1300
+rect 2350 1297 2365 1298
+rect 2365 1297 2366 1299
+rect 2389 1340 2390 1342
+rect 2380 1342 2390 1343
+rect 2380 1342 2381 1344
+rect 2352 1180 2353 1183
+rect 2342 1180 2353 1181
+rect 2342 1180 2343 1189
+rect 2342 1189 2409 1190
+rect 2409 1189 2410 1198
+rect 2409 1198 2417 1199
+rect 2417 1198 2418 1200
+rect 2725 1216 2726 1219
+rect 2725 1216 2749 1217
+rect 2749 1216 2750 1218
+rect 2276 1270 2277 1273
+rect 2272 1270 2277 1271
+rect 2272 1270 2273 1272
+rect 2321 1243 2322 1246
+rect 2321 1243 2331 1244
+rect 2331 1243 2332 1252
+rect 2314 1252 2332 1253
+rect 2314 1252 2315 1254
+rect 2593 1243 2594 1246
+rect 2560 1243 2594 1244
+rect 2560 1243 2561 1254
+rect 2367 1117 2368 1120
+rect 2360 1117 2368 1118
+rect 2360 1117 2361 1119
+rect 2558 1351 2559 1354
+rect 2558 1351 2567 1352
+rect 2567 1351 2568 1353
+rect 2285 1279 2286 1291
+rect 2285 1279 2303 1280
+rect 2303 1270 2304 1280
+rect 2300 1270 2304 1271
+rect 2300 1268 2301 1271
+rect 2654 1297 2655 1300
+rect 2650 1297 2655 1298
+rect 2650 1297 2651 1299
+rect 2773 1216 2774 1219
+rect 2769 1216 2774 1217
+rect 2769 1216 2770 1218
+rect 2602 1241 2603 1243
+rect 2602 1243 2623 1244
+rect 2623 1178 2624 1244
+rect 2623 1178 2703 1179
+rect 2703 1178 2704 1189
+rect 2693 1189 2704 1190
+rect 2693 1189 2694 1241
+rect 2677 1241 2694 1242
+rect 2677 1241 2678 1245
+rect 2720 1261 2721 1264
+rect 2714 1261 2721 1262
+rect 2714 1261 2715 1263
+rect 2343 1342 2344 1345
+rect 2343 1342 2356 1343
+rect 2356 1333 2357 1343
+rect 2346 1333 2357 1334
+rect 2346 1333 2347 1335
+rect 2294 1207 2295 1210
+rect 2270 1207 2295 1208
+rect 2270 1207 2271 1270
+rect 2266 1270 2271 1271
+rect 2266 1270 2267 1315
+rect 2266 1315 2380 1316
+rect 2380 1288 2381 1316
+rect 2352 1288 2381 1289
+rect 2352 1288 2353 1290
+rect 2497 1189 2498 1219
+rect 2497 1189 2587 1190
+rect 2587 1180 2588 1190
+rect 2587 1180 2592 1181
+rect 2592 1171 2593 1181
+rect 2592 1171 2834 1172
+rect 2834 1171 2835 1232
+rect 2756 1232 2835 1233
+rect 2756 1232 2757 1234
+rect 2748 1234 2757 1235
+rect 2748 1234 2749 1243
+rect 2747 1243 2749 1244
+rect 2747 1243 2748 1245
+rect 2763 1216 2764 1219
+rect 2756 1216 2764 1217
+rect 2756 1216 2757 1218
+rect 2639 1315 2640 1318
+rect 2639 1315 2646 1316
+rect 2646 1315 2647 1317
+rect 2468 1126 2469 1129
+rect 2382 1126 2469 1127
+rect 2382 1115 2383 1127
+rect 2269 1115 2383 1116
+rect 2269 1115 2270 1155
+rect 2821 1207 2822 1210
+rect 2821 1207 2831 1208
+rect 2831 1207 2832 1209
+rect 2283 1270 2284 1273
+rect 2283 1270 2290 1271
+rect 2290 1270 2291 1272
+rect 2728 1189 2729 1192
+rect 2728 1189 2732 1190
+rect 2732 1189 2733 1191
+rect 2742 1234 2743 1237
+rect 2725 1234 2743 1235
+rect 2725 1234 2726 1261
+rect 2725 1261 2740 1262
+rect 2740 1261 2741 1279
+rect 2711 1279 2741 1280
+rect 2711 1279 2712 1342
+rect 2564 1342 2712 1343
+rect 2564 1324 2565 1343
+rect 2564 1324 2571 1325
+rect 2571 1306 2572 1325
+rect 2567 1306 2572 1307
+rect 2567 1297 2568 1307
+rect 2567 1297 2583 1298
+rect 2583 1281 2584 1298
+rect 2583 1281 2636 1282
+rect 2636 1270 2637 1282
+rect 2636 1270 2642 1271
+rect 2642 1261 2643 1271
+rect 2635 1261 2643 1262
+rect 2635 1252 2636 1262
+rect 2635 1252 2638 1253
+rect 2638 1252 2639 1254
+rect 2386 1306 2387 1309
+rect 2386 1306 2403 1307
+rect 2403 1306 2404 1315
+rect 2398 1315 2404 1316
+rect 2398 1315 2399 1324
+rect 2390 1324 2399 1325
+rect 2390 1324 2391 1333
+rect 2376 1333 2391 1334
+rect 2376 1333 2377 1335
+rect 2535 1126 2536 1129
+rect 2535 1126 2544 1127
+rect 2544 1126 2545 1128
+rect 2798 1234 2799 1237
+rect 2798 1234 2805 1235
+rect 2805 1234 2806 1236
+rect 2620 1288 2621 1291
+rect 2620 1288 2623 1289
+rect 2623 1288 2624 1297
+rect 2610 1297 2624 1298
+rect 2610 1297 2611 1299
+rect 2612 1126 2613 1156
+rect 2565 1126 2613 1127
+rect 2565 1126 2566 1128
+rect 2324 1234 2325 1237
+rect 2320 1234 2325 1235
+rect 2320 1234 2321 1236
+rect 2794 1270 2795 1273
+rect 2742 1270 2795 1271
+rect 2742 1270 2743 1360
+rect 2323 1360 2743 1361
+rect 2323 1324 2324 1361
+rect 2323 1324 2368 1325
+rect 2368 1324 2369 1326
+rect 2398 1288 2399 1291
+rect 2398 1288 2402 1289
+rect 2402 1288 2403 1290
+rect 2742 1189 2743 1192
+rect 2735 1189 2743 1190
+rect 2735 1189 2736 1191
+rect 2532 1205 2533 1207
+rect 2532 1207 2552 1208
+rect 2552 1207 2553 1209
+rect 2662 1198 2663 1201
+rect 2662 1198 2675 1199
+rect 2675 1198 2676 1200
+rect 2705 1252 2706 1255
+rect 2705 1252 2708 1253
+rect 2708 1252 2709 1261
+rect 2705 1261 2709 1262
+rect 2705 1259 2706 1262
+<< metal2 >>
+rect 2624 1306 2625 1309
+rect 2614 1306 2625 1307
+rect 2614 1306 2615 1315
+rect 2614 1315 2634 1316
+rect 2634 1313 2635 1316
+rect 2323 1270 2324 1273
+rect 2323 1270 2359 1271
+rect 2359 1270 2360 1290
+rect 2317 1234 2318 1237
+rect 2317 1234 2375 1235
+rect 2375 1234 2376 1261
+rect 2375 1261 2380 1262
+rect 2380 1261 2381 1270
+rect 2377 1270 2381 1271
+rect 2377 1270 2378 1272
+rect 2496 1225 2497 1228
+rect 2496 1225 2521 1226
+rect 2521 1225 2522 1252
+rect 2521 1252 2533 1253
+rect 2533 1252 2534 1254
+rect 2755 1198 2756 1201
+rect 2709 1198 2756 1199
+rect 2709 1198 2710 1216
+rect 2707 1216 2710 1217
+rect 2707 1216 2708 1252
+rect 2699 1252 2708 1253
+rect 2699 1252 2700 1272
+rect 2479 1117 2480 1120
+rect 2479 1117 2674 1118
+rect 2674 1117 2675 1189
+rect 2674 1189 2693 1190
+rect 2693 1189 2694 1279
+rect 2693 1279 2702 1280
+rect 2702 1261 2703 1280
+rect 2702 1261 2732 1262
+rect 2732 1252 2733 1262
+rect 2732 1252 2738 1253
+rect 2738 1252 2739 1254
+rect 2315 1189 2316 1192
+rect 2305 1189 2316 1190
+rect 2305 1189 2306 1207
+rect 2305 1207 2307 1208
+rect 2307 1207 2308 1243
+rect 2307 1243 2355 1244
+rect 2355 1243 2356 1245
+rect 2367 1171 2368 1174
+rect 2364 1171 2368 1172
+rect 2364 1171 2365 1180
+rect 2364 1180 2371 1181
+rect 2371 1180 2372 1182
+rect 2539 1162 2540 1165
+rect 2429 1162 2540 1163
+rect 2429 1162 2430 1216
+rect 2406 1216 2430 1217
+rect 2406 1216 2407 1270
+rect 2383 1270 2407 1271
+rect 2383 1270 2384 1279
+rect 2368 1279 2384 1280
+rect 2368 1279 2369 1288
+rect 2365 1288 2369 1289
+rect 2365 1288 2366 1297
+rect 2349 1297 2366 1298
+rect 2349 1288 2350 1298
+rect 2349 1288 2356 1289
+rect 2356 1279 2357 1289
+rect 2350 1279 2357 1280
+rect 2350 1279 2351 1281
+rect 2356 1261 2357 1264
+rect 2349 1261 2357 1262
+rect 2349 1261 2350 1263
+rect 2332 1252 2333 1255
+rect 2321 1252 2333 1253
+rect 2321 1252 2322 1254
+rect 2324 1207 2325 1210
+rect 2324 1207 2350 1208
+rect 2350 1207 2351 1216
+rect 2350 1216 2357 1217
+rect 2357 1216 2358 1227
+rect 2555 1270 2556 1273
+rect 2546 1270 2556 1271
+rect 2546 1261 2547 1271
+rect 2543 1261 2547 1262
+rect 2543 1189 2544 1262
+rect 2543 1189 2545 1190
+rect 2545 1180 2546 1190
+rect 2541 1180 2546 1181
+rect 2541 1171 2542 1181
+rect 2541 1171 2542 1172
+rect 2542 1153 2543 1172
+rect 2426 1153 2543 1154
+rect 2426 1153 2427 1180
+rect 2399 1180 2427 1181
+rect 2399 1180 2400 1189
+rect 2388 1189 2400 1190
+rect 2388 1189 2389 1198
+rect 2384 1198 2389 1199
+rect 2384 1198 2385 1200
+rect 2296 1261 2297 1264
+rect 2296 1261 2317 1262
+rect 2317 1261 2318 1281
+rect 2476 1297 2477 1300
+rect 2476 1297 2490 1298
+rect 2490 1288 2491 1298
+rect 2490 1288 2496 1289
+rect 2496 1288 2497 1290
+rect 2561 1162 2562 1165
+rect 2561 1162 2625 1163
+rect 2625 1162 2626 1234
+rect 2625 1234 2663 1235
+rect 2663 1234 2664 1288
+rect 2663 1288 2745 1289
+rect 2745 1270 2746 1289
+rect 2745 1270 2761 1271
+rect 2761 1225 2762 1271
+rect 2761 1225 2779 1226
+rect 2779 1216 2780 1226
+rect 2766 1216 2780 1217
+rect 2766 1216 2767 1218
+rect 2351 1198 2352 1201
+rect 2351 1198 2379 1199
+rect 2379 1180 2380 1199
+rect 2379 1180 2389 1181
+rect 2389 1171 2390 1181
+rect 2389 1171 2424 1172
+rect 2424 1135 2425 1172
+rect 2424 1135 2465 1136
+rect 2465 1126 2466 1136
+rect 2465 1126 2473 1127
+rect 2473 1117 2474 1127
+rect 2473 1117 2476 1118
+rect 2476 1117 2477 1119
+rect 2810 1207 2811 1210
+rect 2810 1207 2834 1208
+rect 2834 1207 2835 1297
+rect 2503 1297 2835 1298
+rect 2503 1234 2504 1298
+rect 2477 1234 2504 1235
+rect 2477 1180 2478 1235
+rect 2450 1180 2478 1181
+rect 2450 1180 2451 1182
+rect 2653 1126 2654 1183
+rect 2532 1126 2654 1127
+rect 2532 1126 2533 1128
+rect 2548 1198 2549 1201
+rect 2545 1198 2549 1199
+rect 2545 1198 2546 1252
+rect 2545 1252 2557 1253
+rect 2557 1252 2558 1261
+rect 2557 1261 2561 1262
+rect 2561 1261 2562 1279
+rect 2534 1279 2562 1280
+rect 2534 1270 2535 1280
+rect 2530 1270 2535 1271
+rect 2530 1261 2531 1271
+rect 2530 1261 2539 1262
+rect 2539 1207 2540 1262
+rect 2479 1207 2540 1208
+rect 2479 1171 2480 1208
+rect 2441 1171 2480 1172
+rect 2441 1171 2442 1189
+rect 2440 1189 2442 1190
+rect 2440 1189 2441 1207
+rect 2440 1207 2441 1208
+rect 2441 1207 2442 1243
+rect 2408 1243 2442 1244
+rect 2408 1243 2409 1279
+rect 2391 1279 2409 1280
+rect 2391 1279 2392 1297
+rect 2371 1297 2392 1298
+rect 2371 1297 2372 1306
+rect 2311 1306 2372 1307
+rect 2311 1270 2312 1307
+rect 2284 1270 2312 1271
+rect 2284 1117 2285 1271
+rect 2284 1117 2344 1118
+rect 2344 1117 2345 1119
+rect 2728 1207 2729 1219
+rect 2728 1207 2759 1208
+rect 2759 1180 2760 1208
+rect 2694 1180 2760 1181
+rect 2694 1180 2695 1182
+rect 2782 1207 2783 1210
+rect 2782 1207 2789 1208
+rect 2789 1207 2790 1209
+rect 2374 1117 2375 1120
+rect 2374 1117 2401 1118
+rect 2401 1117 2402 1144
+rect 2396 1144 2402 1145
+rect 2396 1144 2397 1162
+rect 2385 1162 2397 1163
+rect 2385 1162 2386 1164
+rect 2339 1315 2340 1318
+rect 2336 1315 2340 1316
+rect 2336 1315 2337 1324
+rect 2333 1324 2337 1325
+rect 2333 1324 2334 1326
+rect 2445 1279 2446 1291
+rect 2445 1279 2497 1280
+rect 2497 1279 2498 1281
+rect 2601 1340 2602 1342
+rect 2601 1342 2608 1343
+rect 2608 1340 2609 1343
+<< end >>

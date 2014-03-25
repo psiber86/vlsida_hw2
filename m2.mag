@@ -1,0 +1,365 @@
+magic
+tech scmos
+timestamp 1395738310
+<< m1p >>
+use CELL  1
+transform 1 0 319 0 1 156
+box 0 0 6 6
+use CELL  2
+transform -1 0 289 0 1 111
+box 0 0 6 6
+use CELL  3
+transform -1 0 277 0 1 156
+box 0 0 6 6
+use CELL  4
+transform -1 0 320 0 1 147
+box 0 0 6 6
+use CELL  5
+transform -1 0 344 0 1 165
+box 0 0 6 6
+use CELL  6
+transform 1 0 322 0 1 174
+box 0 0 6 6
+use CELL  7
+transform -1 0 281 0 1 147
+box 0 0 6 6
+use CELL  8
+transform -1 0 247 0 1 120
+box 0 0 6 6
+use CELL  9
+transform -1 0 348 0 1 156
+box 0 0 6 6
+use CELL  10
+transform -1 0 240 0 1 192
+box 0 0 6 6
+use CELL  11
+transform -1 0 355 0 1 147
+box 0 0 6 6
+use CELL  12
+transform 1 0 228 0 1 165
+box 0 0 6 6
+use CELL  13
+transform 1 0 240 0 1 111
+box 0 0 6 6
+use CELL  14
+transform -1 0 240 0 1 183
+box 0 0 6 6
+use CELL  15
+transform 1 0 241 0 1 192
+box 0 0 6 6
+use CELL  16
+transform -1 0 357 0 1 120
+box 0 0 6 6
+use CELL  17
+transform -1 0 309 0 1 183
+box 0 0 6 6
+use CELL  18
+transform 1 0 266 0 1 183
+box 0 0 6 6
+use CELL  19
+transform 1 0 252 0 1 183
+box 0 0 6 6
+use CELL  20
+transform 1 0 255 0 1 192
+box 0 0 6 6
+use CELL  21
+transform 1 0 401 0 -1 135
+box 0 0 6 6
+use CELL  22
+transform -1 0 258 0 -1 180
+box 0 0 6 6
+use CELL  23
+transform 1 0 385 0 -1 135
+box 0 0 6 6
+use CELL  24
+transform -1 0 341 0 1 156
+box 0 0 6 6
+use CELL  25
+transform -1 0 240 0 1 147
+box 0 0 6 6
+use CELL  26
+transform -1 0 331 0 1 138
+box 0 0 6 6
+use CELL  27
+transform 1 0 339 0 1 138
+box 0 0 6 6
+use CELL  28
+transform -1 0 234 0 1 129
+box 0 0 6 6
+use CELL  29
+transform -1 0 240 0 1 138
+box 0 0 6 6
+use CELL  30
+transform -1 0 240 0 1 156
+box 0 0 6 6
+use CELL  31
+transform -1 0 255 0 1 165
+box 0 0 6 6
+use CELL  32
+transform 1 0 349 0 1 156
+box 0 0 6 6
+use CELL  33
+transform -1 0 249 0 1 183
+box 0 0 6 6
+use CELL  34
+transform -1 0 351 0 1 165
+box 0 0 6 6
+use CELL  35
+transform 1 0 357 0 1 138
+box 0 0 6 6
+use CELL  36
+transform -1 0 345 0 1 120
+box 0 0 6 6
+use CELL  37
+transform -1 0 362 0 1 147
+box 0 0 6 6
+use CELL  38
+transform -1 0 307 0 1 174
+box 0 0 6 6
+use CELL  39
+transform -1 0 247 0 1 138
+box 0 0 6 6
+use CELL  40
+transform -1 0 240 0 1 174
+box 0 0 6 6
+use CELL  41
+transform 1 0 237 0 -1 171
+box 0 0 6 6
+use CELL  42
+transform -1 0 241 0 1 129
+box 0 0 6 6
+use CELL  43
+transform -1 0 348 0 1 147
+box 0 0 6 6
+use CELL  44
+transform -1 0 262 0 1 129
+box 0 0 6 6
+use CELL  45
+transform -1 0 365 0 1 165
+box 0 0 6 6
+use CELL  46
+transform -1 0 282 0 1 174
+box 0 0 6 6
+use CELL  47
+transform -1 0 247 0 1 156
+box 0 0 6 6
+use CELL  48
+transform -1 0 266 0 1 147
+box 0 0 6 6
+use CELL  49
+transform -1 0 284 0 1 183
+box 0 0 6 6
+use CELL  50
+transform -1 0 370 0 -1 144
+box 0 0 6 6
+use CELL  51
+transform 1 0 329 0 -1 180
+box 0 0 6 6
+use CELL  52
+transform -1 0 330 0 1 120
+box 0 0 6 6
+use CELL  53
+transform -1 0 292 0 1 156
+box 0 0 6 6
+use CELL  54
+transform -1 0 298 0 1 165
+box 0 0 6 6
+use CELL  55
+transform 1 0 310 0 1 183
+box 0 0 6 6
+use CELL  56
+transform -1 0 314 0 1 111
+box 0 0 6 6
+use CELL  57
+transform 1 0 285 0 1 183
+box 0 0 6 6
+use CELL  58
+transform -1 0 327 0 1 147
+box 0 0 6 6
+use CELL  59
+transform -1 0 352 0 1 129
+box 0 0 6 6
+use CELL  60
+transform -1 0 338 0 1 138
+box 0 0 6 6
+use CELL  61
+transform -1 0 268 0 1 192
+box 0 0 6 6
+use CELL  62
+transform -1 0 342 0 1 174
+box 0 0 6 6
+use CELL  63
+transform -1 0 286 0 1 192
+box 0 0 6 6
+use CELL  64
+transform -1 0 304 0 -1 144
+box 0 0 6 6
+use CELL  65
+transform -1 0 253 0 1 111
+box 0 0 6 6
+use CELL  66
+transform -1 0 234 0 -1 117
+box 0 0 6 6
+use CELL  67
+transform 1 0 259 0 1 183
+box 0 0 6 6
+use CELL  68
+transform -1 0 400 0 1 129
+box 0 0 6 6
+use CELL  69
+transform -1 0 255 0 1 129
+box 0 0 6 6
+use CELL  70
+transform -1 0 305 0 -1 171
+box 0 0 6 6
+use CELL  71
+transform 1 0 343 0 -1 180
+box 0 0 6 6
+use CELL  72
+transform 1 0 301 0 1 111
+box 0 0 6 6
+use CELL  73
+transform -1 0 358 0 1 165
+box 0 0 6 6
+use CELL  74
+transform 1 0 248 0 -1 198
+box 0 0 6 6
+use CELL  75
+transform -1 0 356 0 -1 180
+box 0 0 6 6
+use CELL  76
+transform -1 0 254 0 1 120
+box 0 0 6 6
+use CELL  77
+transform -1 0 364 0 1 120
+box 0 0 6 6
+use CELL  78
+transform -1 0 268 0 1 138
+box 0 0 6 6
+use CELL  79
+transform -1 0 379 0 1 129
+box 0 0 6 6
+use CELL  80
+transform -1 0 300 0 1 174
+box 0 0 6 6
+use CELL  81
+transform -1 0 332 0 -1 162
+box 0 0 6 6
+use CELL  82
+transform 1 0 271 0 -1 144
+box 0 0 6 6
+use CELL  83
+transform -1 0 261 0 1 120
+box 0 0 6 6
+use CELL  84
+transform -1 0 247 0 1 147
+box 0 0 6 6
+use CELL  85
+transform -1 0 291 0 1 165
+box 0 0 6 6
+use CELL  86
+transform -1 0 265 0 1 156
+box 0 0 6 6
+use CELL  87
+transform -1 0 248 0 1 129
+box 0 0 6 6
+use CELL  88
+transform 1 0 366 0 1 165
+box 0 0 6 6
+use CELL  89
+transform -1 0 254 0 1 147
+box 0 0 6 6
+use CELL  90
+transform -1 0 240 0 1 120
+box 0 0 6 6
+<< metal1 >>
+rect 365 136 366 139
+rect 343 136 366 137
+rect 343 136 344 138
+rect 249 118 250 121
+rect 245 118 250 119
+rect 245 118 246 120
+rect 322 145 323 148
+rect 322 145 358 146
+rect 358 143 359 146
+rect 349 163 350 166
+rect 247 163 350 164
+rect 247 163 248 183
+rect 290 145 291 157
+rect 290 145 318 146
+rect 318 145 319 147
+rect 333 127 334 139
+rect 333 127 347 128
+rect 347 127 348 129
+rect 309 109 310 112
+rect 309 109 343 110
+rect 343 109 344 120
+rect 252 190 253 193
+rect 252 190 292 191
+rect 292 172 293 191
+rect 292 172 305 173
+rect 305 172 306 174
+rect 359 118 360 121
+rect 355 118 360 119
+rect 355 118 356 120
+rect 229 127 230 130
+rect 229 127 269 128
+rect 269 127 270 154
+rect 269 154 272 155
+rect 272 154 273 156
+rect 353 163 354 166
+rect 353 163 373 164
+rect 373 163 374 172
+rect 337 172 374 173
+rect 337 172 338 174
+rect 374 116 375 130
+rect 352 116 375 117
+rect 352 116 353 120
+rect 280 172 281 175
+rect 250 172 281 173
+rect 250 172 251 190
+rect 241 190 251 191
+rect 241 181 242 191
+rect 238 181 242 182
+rect 238 181 239 183
+rect 238 154 239 157
+rect 232 154 239 155
+rect 232 154 233 163
+rect 232 163 235 164
+rect 235 163 236 172
+rect 232 172 236 173
+rect 232 170 233 173
+<< metal2 >>
+rect 303 145 304 166
+rect 303 145 357 146
+rect 357 145 358 147
+rect 263 190 264 193
+rect 263 190 301 191
+rect 301 181 302 191
+rect 301 181 307 182
+rect 307 181 308 183
+rect 253 163 254 166
+rect 253 163 256 164
+rect 256 163 257 174
+rect 351 172 352 175
+rect 340 172 352 173
+rect 340 172 341 174
+rect 293 163 294 166
+rect 283 163 294 164
+rect 283 163 284 172
+rect 283 172 302 173
+rect 302 172 303 174
+rect 296 136 297 166
+rect 242 136 297 137
+rect 242 136 243 138
+rect 370 170 371 172
+rect 370 172 373 173
+rect 373 163 374 173
+rect 363 163 374 164
+rect 363 163 364 165
+rect 302 109 303 112
+rect 262 109 303 110
+rect 262 109 263 127
+rect 257 127 263 128
+rect 257 127 258 129
+<< end >>
