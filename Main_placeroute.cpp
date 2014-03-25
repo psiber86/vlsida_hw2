@@ -96,7 +96,7 @@ int main(int argc, char* argv[])
     channelRouter.write_mag_file(filename);
 #else
     std::cout << "Maze Routing." << std::endl;
-    maze_router mazeRouter(placer->get_cells(), placer->topRowBounding*6+placer->topRowBounding, placer->rightColBounding*6+placer->rightColBounding*3, netcount, nets);
+    maze_router mazeRouter(placer->get_cells(), placer->topRowBounding*6+placer->topRowBounding, placer->rightColBounding*6+placer->rightColBounding*3, netcount, nets, filename);
     delete placer;
     placer = NULL;
 

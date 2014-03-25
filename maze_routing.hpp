@@ -35,17 +35,14 @@ struct coord {
 
 class maze_router {
 public:
-  maze_router(std::vector<Cell>, int, int, int, int**);
-  int route();
-  //void write_mag_file(const std::string);
+  maze_router(std::vector<Cell>, int, int, int, int**, const std::string);
 private:
-  struct wires {
-    bool left_up;
-    bool right_up;
-    std::pair<int,int> horizontal;
-    friend bool operator<(const wires& left, const wires& right) {
-      return ( left.horizontal.first < right.horizontal.first );
-    }
+  struct wire { 
+    wire(int xbot, int ybot, int xtop, int ytop) : xbot(xbot), ybot(ybot), xtop(xtop), ytop(ytop) {};
+    int xbot;
+    int ybot;
+    int xtop;
+    int ytop;
   };
   void create_grid(int, int);
   void print_grid(int, int);
@@ -54,8 +51,12 @@ private:
   bool lee_algorithm(int, int, int, int, int);
   bool check_neighbor(int, int, int);
   coord check_nvals(int, int, int, bool);
+  void write_mag_file(const std::string, std::vector<Cell>);
   std::vector<Cell> cells;
   std::map<int,std::vector<int>> rows;
+  std::vector<wire> metal1;
+  std::vector<wire> metal2;
+  std::string filename;
   int num_nets;
   int crows;
   int ccols;
