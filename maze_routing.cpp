@@ -28,10 +28,17 @@ void maze_router::print_grid(int cols, int rows){
     for (int j = 0; j < cols; j++){
       if (grid[j][i].cell){
 	std::cout << "C";
+      } else if (grid[j][i].m1 && grid[j][i].m2){
+	std::cout << "3";
       } else if (grid[j][i].m1){
 	std::cout << "1";
       } else if (grid[j][i].m2){
 	std::cout << "2";
+      } else if (grid[j][i].term){
+	//std::cout << "T";
+	std::cout << grid[j][i].val;
+      } else if (grid[j][i].buf){
+	std::cout << "B";
       } else {
 	std::cout << grid[j][i].val;
       }
@@ -40,7 +47,16 @@ void maze_router::print_grid(int cols, int rows){
   }
 }
 
-void maze_router::expand_grid(std::vector<Cell> &cells){
+void maze_router::reset_grid(int cols, int rows){
+  for (int i = 0; i < cols; i++){
+    for (int j = 0; j < rows; j++){
+      grid[i][j].val = 0;
+      grid[i][j].checked = 0;
+    }
+  }
+}
+
+int maze_router::expand_grid(std::vector<Cell> &cells){
   // generate rows of cells
   for (int i = 0; i < cells.size(); i++) {
     // only care about real cells
@@ -57,124 +73,231 @@ void maze_router::expand_grid(std::vector<Cell> &cells){
     //std::cout << "Key: " << iter->first << std::endl;
     for(int i = 0; i < iter->second.size(); i++){
       //std::cout << cells[iter->second[i]-1].getLambdaY() << " " << cells[iter->second[i]-1].getCellNum() << " " << iter->second[i] << std::endl;
-      //cells[iter->second[i]-1].setLambdaCoordinates(cells[iter->second[i]-1].getLambdaY()+(3*c), cells[iter->second[i]-1].getLambdaX());
-      cells[iter->second[i]-1].yLbot =  cells[iter->second[i]-1].getLambdaY()+(3*c);
-      cells[iter->second[i]-1].termXY[0][1] += (3*c);
-      cells[iter->second[i]-1].termXY[1][1] += (3*c);
-      cells[iter->second[i]-1].termXY[2][1] += (3*c);
-      cells[iter->second[i]-1].termXY[3][1] += (3*c);
-
+      cells[iter->second[i]-1].setLambdaCoordinates(cells[iter->second[i]-1].getLambdaY()+(3*c), cells[iter->second[i]-1].getLambdaX());
       //std::cout << cells[iter->second[i]-1].getLambdaY() << std::endl;
     }
     c++;
   }
 
   std::cout << "Grid Expanded." << std::endl;
-
+  
+  return rows.size()*3;
+  
 }
 
 maze_router::maze_router(std::vector<Cell> cells, int crows, int ccols, int num_nets, int** nets) : cells(cells), crows(crows), ccols(ccols), num_nets(num_nets), nets(nets) {
-  // initialize grid
-  this->create_grid(ccols, crows);
+  
   std::cout << ccols << "x" << crows << std::endl;
   // expand vertical cell spacing
-  this->expand_grid(cells);
+  crows += this->expand_grid(cells);
+  // initialize grid
+  std::cout << ccols << "x" << crows << std::endl;
+  this->create_grid(ccols, crows);
   // mark cells in grid
   for (int c = 0; c < cells.size(); c++) {
     int x = cells[c].getLambdaX();
     int y = cells[c].getLambdaY();   
-    std::cout << x << "," << y << std::endl;
     if (cells[c].getCellWidth() == 6){ //get rid of unneeded feedthrough cells
       for (int i = x; i < x+cells[c].getCellWidth(); i++){
 	for (int j = y; j < y+6; j++){
 	  grid[i][j].cell = 1;
+	  if (i+1 < ccols) {grid[i+1][j].buf = 1;}
+	  if (i-1 >= 0) {grid[i-1][j].buf = 1;}
+	  if (j+1 < crows) {grid[i][j+1].buf = 1;}
+	  if (j-1 >= 0) {grid[i][j-1].buf = 1;}
+	  if ((i+1 < ccols) && (j+1 < crows)) {grid[i+1][j+1].buf = 1;}
+	  if ((i+1 < ccols) && (j-1 >= 0)) {grid[i+1][j-1].buf = 1;}
+	  if ((i-1 >= 0) && (j+1 < crows)) {grid[i-1][j+1].buf = 1;}
+	  if ((i-1 >= 0) && (j-1 >= 0)) {grid[i-1][j-1].buf = 1;}
 	}
+      }
+      for (int i = 0; i < TERMINALS_PER_CELL; i++){
+	grid[cells[c].termXY[i][0]][cells[c].termXY[i][1]].cell = 0;
+	grid[cells[c].termXY[i][0]][cells[c].termXY[i][1]].buf = 0;
+	grid[cells[c].termXY[i][0]+1][cells[c].termXY[i][1]].buf = 0;
+	grid[cells[c].termXY[i][0]-1][cells[c].termXY[i][1]].buf = 0;
+	grid[cells[c].termXY[i][0]][cells[c].termXY[i][1]+1].buf = 0;
+	grid[cells[c].termXY[i][0]][cells[c].termXY[i][1]-1].buf = 0;
+	grid[cells[c].termXY[i][0]][cells[c].termXY[i][1]].term = 1;
       }
     }    
   }
-  //this->print_grid(ccols, crows);
 
-}
-
-int maze_router::route(){
- 
-  int num_routed = 0;
-
-  int i = 0;
-  int x1 = cells[nets[i][0]].termXY[nets[i][1]][0];
-  int y1 = cells[nets[i][0]].termXY[nets[i][1]][1];
-  int x2 = cells[nets[i][2]].termXY[nets[i][3]][0];
-  int y2 = cells[nets[i][2]].termXY[nets[i][3]][1];
-  
-  bool passed = this->lee_algorithm(x1, y1+1, x2, y2+1, 1);
-
-  if (passed)
-    num_routed = 45;
-
+  std::cout << "Grid Initialized" << std::endl;
   /*
+  int i = 0;
+  int x1 = cells[nets[i][0]-1].termXY[nets[i][1]-1][0];
+  int y1 = cells[nets[i][0]-1].termXY[nets[i][1]-1][1];
+  int x2 = cells[nets[i][2]-1].termXY[nets[i][3]-1][0];
+  int y2 = cells[nets[i][2]-1].termXY[nets[i][3]-1][1];
+  
+  this->lee_algorithm(x1, y1, x2, y2, 1);
+  */
+  int num_routed = 0;
   // try metal 1 for all nets
   for (int i = 0; i < num_nets; i++){
-    int x1 = cells[nets[i][0]].termXY[nets[i][1]][0];
-    int y1 = cells[nets[i][0]].termXY[nets[i][1]][1];
-    int x2 = cells[nets[i][2]].termXY[nets[i][3]][0];
-    int y2 = cells[nets[i][2]].termXY[nets[i][3]][1];
-    std::cout << x1 << std::endl;
-    if(this->lee_algorithm(x1, y1+1, x2, y2+1, 1)){
+    int x1 = cells[nets[i][0]-1].termXY[nets[i][1]-1][0];
+    int y1 = cells[nets[i][0]-1].termXY[nets[i][1]-1][1];
+    int x2 = cells[nets[i][2]-1].termXY[nets[i][3]-1][0];
+    int y2 = cells[nets[i][2]-1].termXY[nets[i][3]-1][1];
+    if(this->lee_algorithm(x1, y1, x2, y2, 1)){
       nets[i][4] = 1;
       num_routed++;
+      //std::cout << "ROUTED" << std::endl;
     }
   }
 
   // try metal 2 for remaining nets
   for (int i = 0; i < num_nets; i++){
     if(nets[i][4] == 0){
-      int x1 = cells[nets[i][0]].termXY[nets[i][1]][0];
-      int y1 = cells[nets[i][0]].termXY[nets[i][1]][1];
-      int x2 = cells[nets[i][2]].termXY[nets[i][3]][0];
-      int y2 = cells[nets[i][2]].termXY[nets[i][3]][1];
-      if(this->lee_algorithm(x1, y1+1, x2, y2+1, 2)){
+      int x1 = cells[nets[i][0]-1].termXY[nets[i][1]-1][0];
+      int y1 = cells[nets[i][0]-1].termXY[nets[i][1]-1][1];
+      int x2 = cells[nets[i][2]-1].termXY[nets[i][3]-1][0];
+      int y2 = cells[nets[i][2]-1].termXY[nets[i][3]-1][1];
+      if(this->lee_algorithm(x1, y1, x2, y2, 2)){
 	nets[i][4] = 1;
 	num_routed++;
+	//std::cout << "ROUTED" << std::endl;
       }
     }
   }
-  */
-  return num_routed;
+
+  this->print_grid(ccols, crows);
+  std::cout << "Routed " << num_routed << " out of " << num_nets << std::endl;
+  
 }
 
 bool maze_router::lee_algorithm(int x1, int y1, int x2, int y2, int m){
-  std::cout << x1 << "," << y1 << " -> " << x2 << "," << y2 << std::endl;
+  //std::cout << x1 << "," << y1 << " -> " << x2 << "," << y2 << std::endl;
   
   std::vector<coord> cset; //current set
   std::vector<coord> nset; //neighbor set
   int wave = 1;
+  bool targetFound = 0;
 
-  grid[x1][y1].cell = 0;
-  grid[x1][y1].val = 5;
+  //this->print_grid(ccols, crows);
 
-  this->print_grid(ccols, crows);
-
-  // init the sets
+  // init the current set
   cset.push_back(coord(x1, y1));
-  if (this->check_neighbor(x1+1, y1, m)) {nset.push_back(coord(x1+1, y1));}
-  if (this->check_neighbor(x1-1, y1, m)) {nset.push_back(coord(x1-1, y1));}
-  if (this->check_neighbor(x1, y1+1, m)) {nset.push_back(coord(x1, y1+1));}
-  if (this->check_neighbor(x1, y1-1, m)) {nset.push_back(coord(x1, y1-1));}
+  grid[x1][y1].val = wave;
+  
+  
+  while(!targetFound){
+  //for(int pass = 0; pass < 70; pass++){
+    //set wave
+    wave++;
+    if (wave == 10){wave = 1;}
 
-  std::cout << nset.size() << std::endl;
-  for ( int i = 0; i < nset.size(); i++){
-    std::cout << nset[i].x << "," << nset[i].y << std::endl; 
+    // find neighbors
+    //std::cout << "Checking Neighbors." << std::endl;
+    //std::cout << "Cset = " << cset.size() <<  "; Nset = " << nset.size() << std::endl;
+    for ( int i = 0; i < cset.size(); i++){
+      if (this->check_neighbor(cset[i].x+1, cset[i].y, m)) {nset.push_back(coord(cset[i].x+1, cset[i].y));}
+      if (this->check_neighbor(cset[i].x-1, cset[i].y, m)) {nset.push_back(coord(cset[i].x-1, cset[i].y));}
+      if (this->check_neighbor(cset[i].x, cset[i].y+1, m)) {nset.push_back(coord(cset[i].x, cset[i].y+1));}
+      if (this->check_neighbor(cset[i].x, cset[i].y-1, m)) {nset.push_back(coord(cset[i].x, cset[i].y-1));}
+    }
+    if (nset.size() == 0) {
+      // no neighbors, no route
+      this->reset_grid(ccols, crows);
+      return 0;
+    }
+    
+    // wave propagation
+    //std::cout << "Propagating Wave." << std::endl;
+    //std::cout << "Cset = " << cset.size() <<  "; Nset = " << nset.size() << std::endl;
+    for ( int i = 0; i < nset.size(); i++){
+      grid[nset[i].x][nset[i].y].val = wave;
+      // check if target was found
+      if((nset[i].x == x2) && (nset[i].y == y2)) {targetFound = 1;}
+    }
+    
+    
+    // reset sets
+    //std::cout << "Re-setting." << std::endl;
+    //cset.erase(cset.begin(), cset.end());
+    cset.clear();
+    for( int i = 0; i < nset.size(); i++){
+      cset.push_back(nset[i]);
+    }
+    //nset.erase(nset.begin(), nset.end());
+    nset.clear();
   }
 
+  //this->print_grid(ccols, crows);
+
+  // trace route back to source
+  bool routeFound = 0;
+  coord cur = coord(x2, y2);
+  bool vert = 1;
+  while (!routeFound){
+    coord next = this->check_nvals(cur.x, cur.y, grid[cur.x][cur.y].val, vert);
+    //track direction
+    if (cur.x == next.x) {vert = 1;}
+    if (cur.y == next.y) {vert = 0;}
+
+    if (m == 1) {
+      grid[cur.x][cur.y].m1 = 1;
+      if (vert){
+	grid[cur.x+1][cur.y].m1buf = 1;
+	grid[cur.x-1][cur.y].m1buf = 1;
+      } else {
+	grid[cur.x][cur.y+1].m1buf = 1;
+	grid[cur.x][cur.y-1].m1buf = 1;
+      }
+    }
+    if (m == 2) {
+      grid[cur.x][cur.y].m2 = 1;
+      if (vert){
+	grid[cur.x+1][cur.y].m2buf = 1;
+	grid[cur.x-1][cur.y].m2buf = 1;
+      } else {
+	grid[cur.x][cur.y+1].m2buf = 1;
+	grid[cur.x][cur.y-1].m2buf = 1;
+      }
+    }
+    
+    cur = next;
+    
+    if ((cur.x == x1) && (cur.y == y1)) {routeFound = 1;}
+  }
+    
+  //this->print_grid(ccols, crows);
+  this->reset_grid(ccols, crows);
+  //this->print_grid(ccols, crows);
   return 1;
 }
 
 bool maze_router::check_neighbor(int x, int y, int m){
+  //std::cout << "Checking Neighbor: " << x << "," << y << std::endl;
+  if ((x >= ccols) || (y >= crows) || (x < 0) || (y < 0)) {return 0;}
+  if (grid[x][y].val > 0) {return 0;}
   if (grid[x][y].cell) {return 0;}
   if ((m == 1) && (grid[x][y].m1)) {return 0;}
+  if ((m == 1) && (grid[x][y].m1buf)) {return 0;}
   if ((m == 2) && (grid[x][y].m2)) {return 0;}
+  if ((m == 2) && (grid[x][y].m2buf)) {return 0;}
+  if (grid[x][y].checked == 1) {return 0;}
+  if (grid[x][y].buf == 1) {return 0;}
 
+  grid[x][y].checked = 1;
   return 1;
+}
+
+coord maze_router::check_nvals(int x, int y, int val, bool vert){
+
+  int next = val-1;
+  if (val == 1) {next = 9;}
+  
+  if(vert){
+    if(grid[x][y+1].val == next){return coord(x, y+1);}
+    if(grid[x][y-1].val == next){return coord(x, y-1);}
+  }
+  if(grid[x+1][y].val == next){return coord(x+1, y);}
+  if(grid[x-1][y].val == next){return coord(x-1, y);}
+  if(grid[x][y+1].val == next){return coord(x, y+1);}
+  if(grid[x][y-1].val == next){return coord(x, y-1);}
+
 }
 
 /*

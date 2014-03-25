@@ -15,11 +15,16 @@
 #include "Cell.h"
 
 struct gridcell {
-  gridcell() : val(0), m1(0), m2(0), cell(0) {};
+  gridcell() : val(0), m1(0), m2(0), cell(0), term(0), checked(0), buf(0), m1buf(0), m2buf(0) {};
   int val;
   bool m1;
   bool m2;
   bool cell;
+  bool term;
+  bool buf;
+  bool m1buf;
+  bool m2buf;
+  bool checked;
 };
 
 struct coord {
@@ -44,9 +49,11 @@ private:
   };
   void create_grid(int, int);
   void print_grid(int, int);
-  void expand_grid(std::vector<Cell>&);
+  void reset_grid(int, int);
+  int expand_grid(std::vector<Cell>&);
   bool lee_algorithm(int, int, int, int, int);
   bool check_neighbor(int, int, int);
+  coord check_nvals(int, int, int, bool);
   std::vector<Cell> cells;
   std::map<int,std::vector<int>> rows;
   int num_nets;
