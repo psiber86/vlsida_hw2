@@ -331,11 +331,13 @@ int channel_router::route(std::vector<int>& top, std::vector<int>& bottom, const
     for (auto& net : top) {
       if ( net ) {
         ++cyclical_nets;
+        ++num_nets;
       }
     }
     for (auto& net : bottom) {
       if ( net ) {
         ++cyclical_nets;
+        ++num_nets;
       }
     }
   }
