@@ -552,5 +552,5 @@ void channel_router::print_net_stats() const
   std::cout << "Stranded terminals:         " << stranded_nets << std::endl;
   std::cout << "Unroutable terminals:       " << unroutable_nets << std::endl;
   std::cout << "Vertically unroutable nets: " << cyclical_nets << std::endl;
-  std::cout << "Bumps:                      " << bumps << std::endl;
+  std::cout << "Vias:                       " << bumps << std::endl;
 }
