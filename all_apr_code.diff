@@ -1,0 +1,2723 @@
+0a1,67
+> // Kyle Craig
+> 
+> #ifndef MAZE_ROUTING_HPP_DEFINED
+> #define MAZE_ROUTING_HPP_DEFINED
+> 
+> #include <vector>
+> #include <memory>
+> #include <map>
+> #include <cstddef>
+> #include <set>
+> #include <utility>
+> #include <cstdlib>
+> #include <string>
+> 
+> #include "Cell.h"
+> 
+> struct gridcell {
+>   gridcell() : val(0), m1(0), m2(0), cell(0), term(0), checked(0), buf(0), m1buf(0), m2buf(0) {};
+>   int val;
+>   bool m1;
+>   bool m2;
+>   bool cell;
+>   bool term;
+>   bool buf;
+>   bool m1buf;
+>   bool m2buf;
+>   bool checked;
+> };
+> 
+> struct coord {
+>   coord(int x, int y) : x(x), y(y) {};
+>   int x;
+>   int y;
+> };
+> 
+> class maze_router {
+> public:
+>   maze_router(std::vector<Cell>, int, int, int, int**, const std::string);
+> private:
+>   struct wire { 
+>     wire(int xbot, int ybot, int xtop, int ytop) : xbot(xbot), ybot(ybot), xtop(xtop), ytop(ytop) {};
+>     int xbot;
+>     int ybot;
+>     int xtop;
+>     int ytop;
+>   };
+>   void create_grid(int, int);
+>   void print_grid(int, int);
+>   void reset_grid(int, int);
+>   int expand_grid(std::vector<Cell>&);
+>   bool lee_algorithm(int, int, int, int, int);
+>   bool check_neighbor(int, int, int);
+>   coord check_nvals(int, int, int, bool);
+>   void write_mag_file(const std::string, std::vector<Cell>&);
+>   std::vector<Cell> cells;
+>   std::map<int,std::vector<int>> rows;
+>   std::vector<wire> metal1;
+>   std::vector<wire> metal2;
+>   std::string filename;
+>   int num_nets;
+>   int crows;
+>   int ccols;
+>   gridcell** grid;
+>   int** nets;
+> };
+> 
+> #endif
+0a1,75
+> #ifndef _HEADER_PLACER
+> #define _HEADER_PLACER
+> 
+> #include "Cell.h"
+> 
+> class Placer {
+> private:
+>     const char *magfile;
+> 
+>     signed short **cellGrid;  //layout matrix with granularity of cells
+>     unsigned char **lambdaGrid; //layout matric with granularity of lambdas
+> 
+>     int cellGridRows;
+>     int cellGridCols;
+>     int lambdaGridRows;
+>     int lambdaGridCols;
+> 
+>     int cellCount;
+>     int feedCellCount;
+> 
+>     Cell **cells;
+> 
+>     std::vector<Cell*> feedCells;
+> 
+>     int *forceOrderMap;
+> 
+>     int *lockStatus;
+> 
+>     bool bypassLock;
+> 
+>     bool debug;
+> 
+> public:
+>     Placer(const char*, int, Cell **, bool);
+> 
+>     //area of current placement
+>     int topRowBounding;
+>     int botRowBounding;
+>     int leftColBounding;
+>     int rightColBounding;
+> 
+>     void placeCellsInitial();
+> 
+>     void printCellGrid();
+> 
+>     void calculateConnectivity();
+>     
+>     void computeTargetLoc(int, int*, int*);
+> 
+>     void findNearestVacantCell(int, int *, int *);
+> 
+>     void placeByForceDirected();
+> 
+>     void verifyPlacement();
+> 
+>     void placeFeedThruCells();
+> 
+>     void shiftCellsLeft(int, int);
+> 
+>     void shiftCellsRight(int, int);
+> 
+>     void writeMagFile() const;
+> 
+>     void compactAndMapLambda();
+> 
+>     int findFeedThruAtLoc(int, int, int);
+> 
+>     int getFeedCellInd(int);
+> 
+>     void sortCellArrays();
+> 
+>     std::vector<Cell> get_cells() const;
+> };
+> 
+> #endif
+0a1,57
+> // Eric Carver
+> // Thu Mar 13 16:53:18 EDT 2014
+> 
+> #ifndef CHANNEL_ROUTING_HPP_DEFINED
+> #define CHANNEL_ROUTING_HPP_DEFINED
+> 
+> #include <vector>
+> #include <memory>
+> #include <map>
+> #include <cstddef>
+> #include <set>
+> #include <utility>
+> #include <cstdlib>
+> #include <string>
+> 
+> #include "Cell.h"
+> 
+> struct node {
+>   node(int x, int y, int net, Cell* cell) : x(x), y(y), net(net), cell(cell) {};
+>   int x;
+>   int y;
+>   int net;
+>   Cell* cell;
+>   friend bool operator<(const node& left, const node& right) {
+>     return ( left.x < right.x );
+>   }
+> };
+> 
+> template<typename T> class zero_allocator : public std::allocator<T> {
+> public:
+>   T* allocate(size_t size, const void* hint = 0) {
+>     T* mem = std::allocator<T>::allocate(size, hint);
+>     memset(mem, 0, sizeof(T));
+>     return mem;
+>   }
+> };
+> 
+> class channel_router {
+> public:
+>   channel_router(std::vector<Cell>, int);
+>   int route(const std::vector<int>&, const std::vector<int>&, const int);
+>   int route(const int, const int);
+>   int route_all();
+>   int get_num_nets() const;
+>   void write_mag_file(const std::string);
+> private:
+>   void insert_net(std::vector<std::set<std::pair<int,int> > >&, const int, const int);
+>   // enum region_fill { EMPTY = 0, HORIZONTAL_WIRE, VERTICAL_WIRE, HORIZONTAL_AND_VERTICAL_WIRE, BUFFER_SPACE };
+>   // std::vector<std::vector<int> > grid;
+>   std::map<int,std::vector<node> > rows;
+>   std::vector<Cell> cells;
+>   std::map<int,std::vector<std::set<std::pair<int,int> > > > routed_tracks;
+>   std::map<int,int> calc_row_offsets() const;
+>   int num_nets;
+> };
+> 
+> #endif
+0a1,74
+> // Eric Carver
+> // Thu Mar 13 16:53:18 EDT 2014
+> 
+> #ifndef CHANNEL_ROUTING_HPP_DEFINED
+> #define CHANNEL_ROUTING_HPP_DEFINED
+> 
+> #include <vector>
+> #include <memory>
+> #include <map>
+> #include <cstddef>
+> #include <set>
+> #include <utility>
+> #include <cstdlib>
+> #include <string>
+> 
+> #include "Cell.h"
+> 
+> struct node {
+>   node(int x, int y, int net) : x(x), y(y), net(net) {};
+>   int x;
+>   int y;
+>   int net;
+>   friend bool operator<(const node& left, const node& right) {
+>     return ( left.x < right.x );
+>   }
+> };
+> 
+> template<typename T> class zero_allocator : public std::allocator<T> {
+> public:
+>   T* allocate(size_t size, const void* hint = 0) {
+>     T* mem = std::allocator<T>::allocate(size, hint);
+>     memset(mem, 0, sizeof(T));
+>     return mem;
+>   }
+> };
+> 
+> class channel_router {
+> public:
+>   channel_router(std::vector<Cell>, int);
+>   int route(std::vector<int>&, std::vector<int>&, const int, std::vector<std::set<int> >&);
+>   int route(const int, const int);
+>   int route_all();
+>   int get_num_nets() const;
+>   void write_mag_file(const std::string);
+>   void print_net_stats() const;
+> private:
+>   struct wires {
+>     bool left_up;
+>     bool right_up;
+>     std::pair<int,int> horizontal;
+>     friend bool operator<(const wires& left, const wires& right) {
+>       return ( left.horizontal.first < right.horizontal.first );
+>     }
+>   };
+>   void insert_net(std::vector<std::set<wires> >&, const int, const int, const bool, const bool, int&);
+>   // enum region_fill { EMPTY = 0, HORIZONTAL_WIRE, VERTICAL_WIRE, HORIZONTAL_AND_VERTICAL_WIRE, BUFFER_SPACE };
+>   // std::vector<std::vector<int> > grid;
+>   std::map<int,std::vector<node> > rows;
+>   std::vector<Cell> cells;
+>   std::map<int,std::vector<std::set<wires > > > routed_tracks;
+>   std::pair<std::map<int,int>,std::map<int,int> > calc_row_offsets() const;
+>   std::vector<std::set<int> > construct_vcg(const std::vector<int>&, const std::vector<int>&) const;
+>   inline void delete_from_vcg(const int, std::vector<std::set<int> >&) const;
+> 
+>   int num_nets;
+>   int stranded_nets;
+>   int unroutable_nets;
+>   int max_net_num;
+>   int bumps;
+>   int cyclical_nets;
+>   int wire_length;
+> };
+> 
+> #endif
+0a1,92
+> #ifndef _HEADER_CELL
+> #define _HEADER_CELL
+> 
+> #define CELL_HEIGHT     6
+> #define T1T3_OFFSET     1
+> #define T2T4_OFFSET     4
+> 
+> class Cell {
+> private:
+>     int cellId;         //number of current cell
+>     
+> //    int terms[2][4];    //ind=terminal, val[ind0]=cell, val[ind1]=cellterminal, 0 otherwise 
+>     //key = terminal, pair0 = remote cell, pair1 = remote cell terminal
+>     std::map<int, std::pair<int, int> > termNets;
+>     
+>     int numNets;        //num of nets cell is involved in
+> 
+>     int xcell, ycell;   //coordinates of cell in cellgrid
+> 
+>     int xLbot, yLbot;   //lower left corner of cell in lambda grid
+>     int xRtop, yRtop;   //upper right corner of cell
+> 
+>     int cellWidth;      //different for feedthrough cells 
+> 
+>     int zeroForce;      //cost of cell in current location
+> 
+>     int orientation;
+> 
+>     bool debug;
+> 
+>     int nets[4];
+> 
+> public:
+>     Cell(int, int, bool);
+>  Cell(const Cell& other) : cellId(other.cellId), numNets(other.numNets), xcell(other.xcell), ycell(other.ycell),
+>       xLbot(other.xLbot), yLbot(other.yLbot), xRtop(other.xRtop), yRtop(other.yRtop), cellWidth(other.cellWidth),
+>       zeroForce(other.zeroForce), orientation(other.orientation), debug(other.debug)
+>     {
+>       for (int i = 0; i < 4; i++) {
+>         this->termXY[i][0] = other.termXY[i][0];
+>         this->termXY[i][1] = other.termXY[i][1];
+>         this->nets[i] = other.nets[i];
+>       }
+>     }
+> 
+>     int getCellNum() const;
+> 
+>     void connectTerminals(int, int, int, int);
+>     void connectTerminals(int, int, int, int, int);
+> 
+>     int getNetCount() const;
+> 
+>     std::map<int, std::pair<int, int> >  getTermNets() const;
+> 
+>     void setCellCoordinates(int, int);
+> 
+>     int getCellX() const;
+> 
+>     int getCellY() const;
+> 
+>     int getLambdaX() const;
+> 
+>     int getLambdaY() const;
+> 
+>     std::pair<int, int> getTerminalCoordinates(int)  const;
+> 
+>     int getTermLocInCell(int);
+> 
+>     void setForce(int);
+> 
+>     int getForce() const;
+> 
+>     void setLambdaCoordinates(int, int );
+> 
+>     void resetTermCoords();
+> 
+>     void rotateCell();
+> 
+>     void flipHorzCell();
+> 
+>     void flipVertCell();
+> 
+>     int getCellOrientation() const;
+> 
+>     int termXY[4][2];   //coordinates of terminals 
+> 
+>     const int* getNets() const { return nets; };
+> 
+>     int getCellWidth() const { return cellWidth; };
+> };
+> 
+> #endif
+0a1,38
+> #include <stdlib.h>
+> #include <stdio.h>
+> #include <iostream>
+> #include <fstream>
+> #include <string.h>
+> #include <assert.h>
+> #include <map>
+> #include <vector>
+> #include <utility>
+> #include <math.h>
+> #include <algorithm>
+> 
+> #define CELL        0x01
+> #define TERM1       0x02
+> #define TERM2       0x03
+> #define TERM3       0x04
+> #define TERM4       0x05
+> #define WIRE1       0x10
+> #define WIRE2       0x20
+> 
+> enum cellTypes {
+>     STDCELL = 1,
+>     FEEDTHRU
+> };
+> 
+> enum cellOrientation {
+>     NORM = 0,
+>     ROTATED,
+>     FLIPHORZ,
+>     FLIPVERT,
+> 
+>     ORIEN_COUNT
+> };
+> 
+> enum termLoc {
+>     TOP,
+>     BOTTOM
+> };
+0a1,935
+> #include "PR.h"
+> #include "Placer.h"
+> 
+> bool CmpForce(Cell *a, Cell *b)
+> {
+>     return a->getForce() > b->getForce();
+> }
+> bool CmpNets(Cell *a, Cell *b)
+> {
+>     return a->getNetCount() > b->getNetCount();
+> }
+> bool CmpCellNum(Cell *a, Cell *b)
+> {
+>     return a->getCellNum() < b->getCellNum();
+> }
+> 
+> Placer::Placer(const char *filename, int cellCountIn, Cell **cellList, bool debugIn)
+> {
+>     debug = debugIn;
+> 
+>     magfile = filename;
+> 
+>     cells = cellList;
+>     cellCount = cellCountIn;
+>     feedCellCount = 0;
+> 
+>     cellGridRows = cellCount < 24 ? 24 : cellCount;
+>     cellGridCols = cellGridRows;
+>     cellGrid = new signed short*[cellGridRows];
+>     for (int i1 = 0; i1 < cellGridRows; i1++) {
+>         cellGrid[i1] = new signed short[cellGridCols]; 
+>         for (int i2 = 0; i2 < cellGridCols; i2++) {
+>             cellGrid[i1][i2] = 0;
+>         }
+>     }
+>     if(debug) printf("allocated cellGrid of size %i X %i\n", cellGridRows, cellGridCols);
+> 
+>     //initialize boundings to opposite sides of grid for comparison update
+>     topRowBounding = 0;
+>     botRowBounding = cellGridRows;
+>     leftColBounding = cellGridCols;
+>     rightColBounding = 0;
+> 
+>     if ((forceOrderMap = (int*)malloc(sizeof(int)*(cellCount+1))) == NULL) {
+>         printf("MALLOC ERROR!\n");
+>         exit(1); 
+>     }
+> 
+>     if ((lockStatus = (int*)malloc(sizeof(int)*(cellCount+1))) == NULL) {
+>         printf("MALLOC ERROR!\n");
+>         exit(1); 
+>     }
+>     memset(lockStatus, 0, sizeof(int)*(cellCount+1));
+>     
+>     bypassLock = false;
+> }
+> 
+> void Placer::placeCellsInitial()
+> {
+>     const int midRow = 2*round(int(ceil(cellGridRows/2.0)-1)/2.0);
+>     const int midCol = int(ceil(cellGridCols/2.0)-1);
+>     int icell = 1;
+>     int offset = 2;
+> 
+>     std::sort(cells + 1, cells + (cellCount+1), CmpNets);
+> 
+>     //place first cell directly in the center of the grid
+>     cellGrid[midRow][midCol] = cells[icell]->getCellNum();
+>     cells[icell]->setCellCoordinates(midRow, midCol);
+>     if(debug) printf("placing cell %i at %i, %i\n", cells[icell]->getCellNum(), midRow, midCol);
+>     icell++;
+> 
+>     while (icell <= cellCount) {
+>         //start at bottom left corner
+>         int rowInd = midRow - offset;
+>         int colInd = midCol - offset;
+> 
+>         for ( ; rowInd < midRow + offset; rowInd += 2) {
+>             //adjust grid bounding 
+>             if (colInd < leftColBounding) {
+>                leftColBounding = colInd;
+>             }
+>             
+>             //return if all cells have been placed
+>             if (icell > cellCount) { return; }
+> 
+>             //place the cell
+>             cellGrid[rowInd][colInd] = cells[icell]->getCellNum();
+>             cells[icell]->setCellCoordinates(rowInd, colInd);
+>             if(debug) printf("placing cell %i at %i, %i\n", cells[icell]->getCellNum(), rowInd, colInd);
+>             icell++;
+>         }
+>         for ( ; colInd < midCol + offset; colInd += 2) {
+>             //adjust grid bounding 
+>             if (rowInd > topRowBounding) {
+>                 topRowBounding = rowInd;
+>             }
+> 
+>             //return if all cells have been placed
+>             if (icell > cellCount) { return; }
+> 
+>             cellGrid[rowInd][colInd] = cells[icell]->getCellNum();
+>             cells[icell]->setCellCoordinates(rowInd, colInd);
+>             if(debug) printf("placing cell %i at %i, %i\n", cells[icell]->getCellNum(), rowInd, colInd);
+>             icell++;
+>         } 
+>         for (; rowInd > midRow - offset; rowInd -= 2) {
+>             //adjust grid bounding
+>             if (colInd > rightColBounding) {
+>                 rightColBounding = colInd;
+>             }
+>             
+>             //return if all cells have been placed
+>             if (icell > cellCount) { return; }
+> 
+>             cellGrid[rowInd][colInd] = cells[icell]->getCellNum();
+>             cells[icell]->setCellCoordinates(rowInd, colInd);
+>             if(debug) printf("placing cell %i at %i, %i\n", cells[icell]->getCellNum(), rowInd, colInd);
+>             icell++;
+>         }
+>         for (; colInd > midCol - offset; colInd -= 2) { 
+>             //adjust grid bounding
+>             if (rowInd < botRowBounding) {
+>                 botRowBounding = rowInd;
+>             }
+>             
+>             //return if all cells have been placed
+>             if (icell > cellCount) { return; }
+> 
+>             cellGrid[rowInd][colInd] = cells[icell]->getCellNum();
+>             cells[icell]->setCellCoordinates(rowInd, colInd);
+>             if(debug) printf("placing cell %i at %i, %i\n", cells[icell]->getCellNum(), rowInd, colInd);
+>             icell++;
+>         }
+>         offset += 2;
+>     }
+> }
+> 
+> void Placer::printCellGrid()
+> {
+>     printf("cell|       ");
+>     for (int i = leftColBounding; i <= rightColBounding; i++) {
+>         printf("%3i ", i);
+>     }
+>     printf("\n     lambda|");
+>     for (int i = leftColBounding; i <= rightColBounding; i++) {
+>         printf("%3i ", i*6);
+>     }
+>     printf("\n");
+>     
+>     for (int i1 = topRowBounding; i1 >= botRowBounding; i1--) {
+>         printf("%4i|%6i|", i1, i1*6);
+>         
+>         for (int i2 = leftColBounding; i2 <= rightColBounding; i2++) {
+>             printf("%3i ", cellGrid[i1][i2]);
+>         }
+>         printf("\n");
+>     }
+>     printf("\n");
+> }
+> 
+> void Placer::calculateConnectivity()
+> {
+>     int wireLengthEst = 0;
+> 
+>     for (int i1 = 1; i1 <= cellCount; i1++) {
+>         int curCell = cells[i1]->getCellNum();
+>         int force = 0;
+> 
+>         if (cells[i1]->getNetCount() == 0) { continue; }
+> 
+>         std::map<int, std::pair<int, int> > remCells = cells[i1]->getTermNets();
+>         for (int i2 = 1; i2 <= 4; i2++) {
+>             int remCell = remCells[i2].first;
+>             int remTerm = remCells[i2].second;
+> 
+>             if (remCell == 0 || remCell == curCell) { continue; }
+> 
+>             if(debug) printf("calculating connectivity between local cell %i-%i and remote cell %i-%i\n",
+>                              curCell, i2, remCell, remTerm);
+> 
+>             std::pair<int, int> locTermXY = cells[i1]->getTerminalCoordinates(i2);
+>             std::pair<int, int> remTermXY = cells[remCell]->getTerminalCoordinates(remTerm);
+> 
+>             force += abs(locTermXY.first - remTermXY.first) + abs(locTermXY.second - remTermXY.second);
+>         }
+>         wireLengthEst += force;
+>         cells[i1]->setForce(force);
+>     }
+> 
+>     std::sort(cells + 1, cells + (cellCount+1), CmpForce);
+> 
+>     for (int i1 = 1; i1 <= cellCount; i1++) {
+>         forceOrderMap[cells[i1]->getCellNum()] = i1;
+>     }
+> 
+>     if(debug) printf("wire length estimate: %i\n", wireLengthEst/2);
+> }
+> 
+> void Placer::computeTargetLoc(int curCell, int *tarRow, int *tarCol)
+> {
+>     int finalOrien = 0;
+>     int weightXSum[ORIEN_COUNT] = {0, 0, 0, 0}, weightYSum[ORIEN_COUNT] = {0, 0, 0, 0};
+>     int weightSum[ORIEN_COUNT] = {0, 0, 0, 0};
+> 
+>     std::map<int, std::pair<int, int> > remCells = cells[forceOrderMap[curCell]]->getTermNets();
+> 
+>     assert(curCell == cells[forceOrderMap[curCell]]->getCellNum());
+>     
+>     for (int iOrien = 0; iOrien < ORIEN_COUNT; iOrien++) {
+>         switch (iOrien) {
+>         case NORM:
+>             cells[forceOrderMap[curCell]]->resetTermCoords();
+>             break;
+>         case ROTATED:
+>             cells[forceOrderMap[curCell]]->rotateCell();
+>             break;
+>         case FLIPHORZ:
+>             cells[forceOrderMap[curCell]]->flipHorzCell();
+>             break;
+>         case FLIPVERT:
+>             cells[forceOrderMap[curCell]]->flipVertCell();
+>             break;
+>         default:
+>             printf("INVALID ORIENTATION\n");
+>             exit(1);
+>         }
+> 
+>         for (int iterm = 1; iterm <= 4; iterm++) {
+>             int weight = 0;
+>             int remCell = remCells[iterm].first;
+>             int remTerm = remCells[iterm].second;
+> 
+>             if (remCell == 0 || (remCell == curCell)) { continue; }
+> 
+>             std::pair<int, int> locTermXY = cells[forceOrderMap[curCell]]->getTerminalCoordinates(iterm);
+>             std::pair<int, int> remTermXY = cells[forceOrderMap[remCell]]->getTerminalCoordinates(remTerm);
+> 
+>             if(debug) printf("[TARLOC-1] computing force between cell%i-%i @ %i, %i and cell %i-%i @ %i, %i\n",
+>                              curCell, iterm, locTermXY.first, locTermXY.second,
+>                              remCell, remTerm, remTermXY.first, remTermXY.second);
+> 
+>             weight = abs(locTermXY.first - remTermXY.first) + abs(locTermXY.second - remTermXY.second);
+>             if(debug) { 
+>                 printf("[ORIEN-%i] xdelta between cell %i-%i and cell %i-%i is %i\n", 
+>                        iOrien, curCell, iterm, remCell, remTerm, abs(locTermXY.first - remTermXY.first));
+>                 printf("[ORIEN-%i] ydelta between cell %i-%i and cell %i-%i is %i\n", 
+>                        iOrien, curCell, iterm, remCell, remTerm, abs(locTermXY.second - remTermXY.second));
+>                 printf("[ORIEN-%i] total weight between cell %i-%i and cell %i-%i is %i\n", 
+>                        iOrien, curCell, iterm, remCell, remTerm, weight);
+>             }
+> 
+>             weightSum[iOrien] += weight;
+>             weightXSum[iOrien] += weight * remTermXY.first;
+>             weightYSum[iOrien] += weight * remTermXY.second;
+> 
+>             if (weightSum[iOrien] < weightSum[finalOrien]) {
+>                 finalOrien = iOrien;
+>             }
+>         }
+>     }
+> 
+>     //switch back to preferred orientation
+>     switch (finalOrien) {
+>     case NORM:
+>         if(debug) printf("cell %i has minimal force in standard orientation\n", curCell);
+>         cells[forceOrderMap[curCell]]->resetTermCoords();
+>         break;
+>     case ROTATED:
+>         if(debug) printf("cell %i has minimal force in rotated orientation\n", curCell);
+>         cells[forceOrderMap[curCell]]->rotateCell();
+>         break;
+>     case FLIPHORZ:
+>         if(debug) printf("cell %i has minimal force in horizontal flipped orientation\n", curCell);
+>         cells[forceOrderMap[curCell]]->flipHorzCell();
+>         break;
+>     case FLIPVERT:
+>         if(debug) printf("cell %i has minimal force in vertical flipped orientation\n", curCell);
+>         cells[forceOrderMap[curCell]]->flipVertCell();
+>         break;
+>     }
+>     if (debug) {
+>         for (int iterm = 1; iterm <= 4; iterm++) { 
+>             std::pair<int, int> loc = cells[forceOrderMap[curCell]]->getTerminalCoordinates(iterm);
+>             printf("term%i @ %i,%i\n", iterm, loc.first, loc.second);
+>         }
+>     }
+>                
+> 
+>     if (weightSum[finalOrien] == 0) {
+>         *tarCol = int(ceil(cellGridCols/2.0));
+>         *tarRow = int(ceil(cellGridRows/2.0));
+>         findNearestVacantCell(curCell, tarRow, tarCol); 
+>         bypassLock = true;
+>     } else {
+>         *tarCol = round( (weightXSum[finalOrien]/weightSum[finalOrien]) * 1/6);
+>         *tarRow = round( (weightYSum[finalOrien]/weightSum[finalOrien]) * 1/6); 
+>         cells[forceOrderMap[curCell]]-> setForce(weightSum[finalOrien]);
+>     }
+>     if(debug) printf("[TARLOC-2] cell %i has total weight=%i, Xweight=%i, Yweight=%i\n", 
+>                      curCell, weightSum[finalOrien], weightXSum[finalOrien], weightYSum[finalOrien]);
+>     if(debug) printf("[TARLOC-3] cell %i target cell is %i, %i\n", curCell, *tarRow, *tarCol);
+> }
+> 
+> void Placer::findNearestVacantCell(int curCell, int *tarRow, int *tarCol)
+> {
+>     for (int offset = 1; offset <= cellGridRows; offset++) {
+>         //search for vacant cells in same row
+>         for (int offsetCol = *tarCol - offset; offsetCol <= *tarCol + offset; offsetCol++) {
+>             if (cellGrid[*tarRow][offsetCol] == 0) {
+>                 *tarCol = offsetCol;
+>                 return;
+>             }
+>         }
+> 
+>         //search for vacant cells in same col 
+>         for (int offsetRow = *tarRow - 2*offset; offsetRow <= *tarRow + 2*offset; offsetRow += 2) {
+>             if (cellGrid[offsetRow][*tarCol] == 0) {
+>                 *tarRow = offsetRow;
+>                 return;
+>             }
+>         }
+> 
+>         //search for vacant cells diagonal to target cell
+>         for (int offsetRow = *tarRow - 2*offset; offsetRow <= *tarRow + 2*offset; offsetRow += 2) {
+>             for (int offsetCol = *tarCol - offset; offsetCol <= *tarCol + offset; offsetCol++) {
+>                 if (cellGrid[offsetRow][offsetCol] == 0) {
+>                     *tarRow = offsetRow;
+>                     *tarCol = offsetCol;
+>                     return;
+>                 }
+>             }
+>         }
+>     }
+> }
+> 
+> void Placer::placeByForceDirected()
+> {
+>     int iterCount = 0;
+>     int abortCount = 0;
+>     while (iterCount < 15) {
+>         if(debug) printf("***** ITER %i *****\n", iterCount);
+> 
+>         //reset grid boundings
+>         topRowBounding = 0;
+>         botRowBounding = cellGridRows;
+>         leftColBounding = cellGridCols;
+>         rightColBounding = 0;
+> 
+>         //get next seed cell with next highest force 
+>         for (int icell = 1; icell <= cellCount; icell++) {
+>             bool endRipple = false;
+>             int curCell = cells[icell]->getCellNum();
+>             int tmpCell = -1;
+> 
+>             if (lockStatus[curCell]) { 
+>                 if(debug) printf("cell %i is locked, moving to next cell in list\n", curCell);    
+>                 continue; 
+>             }
+> 
+>             //mark current cell as vacant
+>             if(debug) printf("[WHILE] placing cell%i\n", curCell);
+>             cellGrid[cells[forceOrderMap[curCell]]->getCellY()][cells[forceOrderMap[curCell]]->getCellX()] = 0;
+> 
+>             while (!endRipple) {
+>                 int tarRow = 0, tarCol = 0;
+> 
+>                 computeTargetLoc(curCell, &tarRow, &tarCol);
+>                 //round tarRow to nearest multiple of 2
+>                 tarRow = 2 * int(round(tarRow/2.0));
+> 
+>                 //if target cell is vacant
+>                 if (cellGrid[tarRow][tarCol] == 0) {
+>                     if(debug) printf("[VACANT] moving cell %i to %i, %i\n", curCell, tarRow, tarCol);
+> 
+>                     //move seed to target point
+>                     cellGrid[tarRow][tarCol] = curCell;
+>                     cells[forceOrderMap[curCell]]->setCellCoordinates(tarRow, tarCol);
+> 
+>                     //lock cell
+>                     if (!bypassLock) {
+>                         if(debug) printf("[VACANT] locking cell%i\n", curCell);
+>                         lockStatus[curCell] = 1;
+>                     }
+>                     bypassLock = false;
+> 
+>                     endRipple = true;
+>                     abortCount = 0;
+>                 } 
+>                 //if target is same as present location 
+>                 else if ((tarRow == cells[forceOrderMap[curCell]]->getCellY() &&
+>                           tarCol == cells[forceOrderMap[curCell]]->getCellX()) &&
+>                          cellGrid[tarRow][tarCol] == 0)
+>                 {
+>                     if(debug) printf("[SAME] keeping cell %i at %i, %i\n", curCell, tarRow, tarCol);
+> 
+>                     endRipple = true;
+>                     abortCount = 0;
+>                 }
+>                 //cell is occupied 
+>                 else if (cellGrid[tarRow][tarCol]) {
+>                     tmpCell = cellGrid[tarRow][tarCol]; 
+>                    
+>                     if (lockStatus[tmpCell]) {      //cell is locked
+>                         //move selected cell to nearest vacant cell
+>                         findNearestVacantCell(curCell, &tarRow, &tarCol);
+>                         cellGrid[tarRow][tarCol] = curCell;
+>                         cells[forceOrderMap[curCell]]->setCellCoordinates(tarRow, tarCol);
+>                         if(debug) printf("[OCCUPIED-LOCKED] moving cell %i to nearby %i, %i\n", curCell, tarRow, tarCol);
+> 
+>                         endRipple = true;
+>                         abortCount++;
+>                         if (abortCount > 3) {
+>                             //unlock all cells
+>                             if(debug) printf("[ABORT] unlocking all cells\n");
+>                             memset(lockStatus, 0, sizeof(int)*(cellCount+1));
+>                             iterCount++; 
+>                         }
+>                     } else {        //cell is unlocked
+>                         //move seed cell to target point and lock target point
+>                         cellGrid[tarRow][tarCol] = curCell;
+>                         cells[forceOrderMap[curCell]]->setCellCoordinates(tarRow, tarCol);
+>                         if(debug) printf("[OCCUPIED-UNLOCKED] replacing cell %i with cell %i at %i, %i\n", 
+>                                          tmpCell, curCell, tarRow, tarCol);
+> 
+>                         //lock cell
+>                         if(debug) printf("[OCCUPIED-UNLOCKED] locking cell %i\n", curCell);
+>                         lockStatus[curCell] = 1;
+> 
+>                         curCell = tmpCell;
+> 
+>                         endRipple = false;
+>                         abortCount = 0;
+> 
+>                         if(debug) printf("[WHILE] placing cell%i\n", curCell);
+>                     }
+>                 } 
+>                 else {
+>                     printf("ERROR: INVALID CELL STATE!\n");
+>                     exit(1);
+>                 }
+> 
+>                 //update grid boundings
+>                 if (tarRow > topRowBounding) { 
+>                     topRowBounding = tarRow;
+>                 } else if (tarRow < botRowBounding) {
+>                     botRowBounding = tarRow;
+>                 }
+>                 if (tarCol > rightColBounding) {
+>                     rightColBounding = tarCol;
+>                 } else if (tarCol < leftColBounding) {
+>                     leftColBounding = tarCol;
+>                 }
+> 
+>             }
+>         }
+>         verifyPlacement();
+>         if(debug) printCellGrid();
+>         std::sort(cells + 1, cells + (cellCount+1), CmpForce);
+>         for (int i1 = 1; i1 <= cellCount; i1++) {
+>             forceOrderMap[cells[i1]->getCellNum()] = i1;
+>         }
+>     }
+> }
+> 
+> void Placer::verifyPlacement()
+> {
+>     int sumGrid = 0;
+>     int sumCells = 0;
+> 
+>     for (int icell = 1; icell <= cellCount; icell++) {
+>         sumCells += icell;
+>     }
+> 
+>     for (int irow = 0; irow < cellGridRows; irow++) {
+>         for (int icol = 0; icol < cellGridCols; icol++) {
+>             sumGrid += cellGrid[irow][icol];         
+>         }
+>     }
+> 
+>     if(debug) printf("sumGrid = %i, sumCell = %i\n", sumGrid, sumCells);
+>     assert(sumGrid == sumCells);
+> }
+> 
+> void Placer::placeFeedThruCells()
+> {
+>     //track what feed thru cells have already been placed to avoid duplicates
+>     std::vector<std::pair<float, float> > placedFeedCells;
+>     bool placed = false;
+>     
+>     for (int icell = 1; icell <= cellCount; icell++) {
+>         if (cells[forceOrderMap[icell]]->getNetCount() == 0) { continue; }
+> 
+>         int curCell = cells[forceOrderMap[icell]]->getCellNum();
+>         
+>         std::map<int, std::pair<int, int> > remCells = cells[forceOrderMap[icell]]->getTermNets();
+>         for (int iterm = 1; iterm <= 4; iterm++) {
+>             int remCell = remCells[iterm].first;
+>             int remTerm = remCells[iterm].second;
+>             int cellRow;
+>             int delta;
+>             int tarRow, tarCol;
+>             int leftOf = 0, rightOf = 0;
+> 
+>             if (remCell == 0 || remCell < 0)
+>             { 
+>                 continue; 
+>             }
+> 
+> 
+>             //check if net feed thru cells have already been placed
+>             for (int i1 = 0; i1 < int(placedFeedCells.size()); i1++) {
+>                 float cur = float(curCell) + iterm/10.0;
+>                 float rem = float(remCell) + remTerm/10.0;
+>                 if (placedFeedCells[i1].first == rem && placedFeedCells[i1].second == cur) {
+>                     placed = true;
+>                     if(debug) printf("feed thru for cell %i have already been placed\n", curCell);
+>                 }
+>             }
+> 
+>             if (placed) {
+>                 placed = false;
+>                 continue;
+>             }
+> 
+>             cellRow = cells[forceOrderMap[icell]]->getCellY();
+>             tarCol = cells[forceOrderMap[icell]]->getCellX();
+>             delta =  cellRow - cells[forceOrderMap[remCell]]->getCellY();
+> 
+>             int iFeed = 1;
+>             int numFeedThrus = abs(delta/2)-1;
+>             assert(remTerm != 0);
+> #ifdef DEBUG
+>                 printf("cell %i-%i (bottom=%i) is separated from cell %i-%i (bottom=%i) by %i rows\n",
+>                         curCell, iterm, cells[forceOrderMap[icell]]->getTermLocInCell(iterm),
+>                         remCell, remTerm, cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm), numFeedThrus);
+> #endif
+> 
+>             //place feed thru cell in each row until remote cell is reached
+>             tarRow = cellRow;
+>             //check terminal location with respect to cell
+>             //if one terminal is on the outside of pair, add 1 feed thru cell
+>             //if both terminals are on outside of pair, add 2 feed thru cells
+>             //determine which way to iterate vertically
+>             if (delta > 0) { //move down rows
+>                 //if locTerm is at top and remTerm is bottom of cell
+>                 if (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+>                     cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+>                 {
+>                     numFeedThrus += 2;
+>                 }
+>                 //if locTerm is at top and remTerm is at top or
+>                 //if locTerm is on top and remTerm is on top
+>                 else if (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+>                          !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+>                 {
+>                     numFeedThrus += 1;
+>                 }
+>                 else if (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+>                          cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+>                 {
+>                     tarRow -= 2;
+>                     numFeedThrus += 1;
+>                 }
+>                 else {
+>                     tarRow -= 2;
+>                 }
+>             } else if (delta < 0) {         //move up rows
+>                 //if locTerm is at bottom of cell and remTerm is top of cell
+>                 if (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+>                     !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+>                 {
+>                     numFeedThrus += 2;
+>                 }
+>                 //if locTerm is at bottom and remTerm is at bottom or
+>                 //if locTerm is on top and remTerm is on top
+>                 else if (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+>                          cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+>                 {
+>                     numFeedThrus += 1;
+>                 }
+>                 else if (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+>                          !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm))
+>                 {
+>                     numFeedThrus += 1;
+>                     tarRow += 2; 
+>                 }
+>                 else {
+>                     tarRow += 2;
+>                 }
+>             } else {
+>                 if ( (cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+>                       !cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) ||
+>                      (!cells[forceOrderMap[icell]]->getTermLocInCell(iterm) &&
+>                       cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm)) )
+>                 {
+>                     numFeedThrus = 1;
+>                 } else {
+>                     continue;
+>                 }
+>             }
+> 
+>             if (numFeedThrus == 0) { continue; }
+> 
+>             do {
+>                 //determine which way to shift currently placed cells
+>                 for (int icol = leftColBounding; icol <= rightColBounding; icol++) {
+>                     if (cellGrid[tarRow][icol] > 0 && icol < tarCol) {
+>                         leftOf++;
+>                     } else if (cellGrid[tarRow][icol] > 0 && icol > tarCol) {
+>                         rightOf++;
+>                     }
+> #ifdef DEBUG
+>                 printf("cell orientation is %i\n", cells[forceOrderMap[icell]]->getCellOrientation());
+>                 printf("cell %i (bottom=%i) to cell %i (bottom=%i) needs %i feed thru cells\n",
+>                         curCell, cells[forceOrderMap[icell]]->getTermLocInCell(iterm),
+>                         remCell, cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm), numFeedThrus);
+> #endif
+> 
+>                 }
+> 
+>                 if (leftOf <= rightOf) {
+>                     shiftCellsLeft(tarRow, tarCol);
+>                 } else {
+>                     shiftCellsRight(tarRow, tarCol);
+>                 }
+> 
+>                 //create place feed thru cell
+>                 Cell *feedThru = new Cell(++feedCellCount, FEEDTHRU, debug);
+>                 if(debug) printf("creating new feed thru cell %i\n", feedCellCount);
+>             
+>                 //CONNECT TERMINALS
+>                 //connect to current cell
+>                 if (iFeed == 1) {
+>                     if (debug) printf("connecting feed thru to local cell\n");
+>                     if (delta > 0) { 
+>                         cells[forceOrderMap[icell]]->connectTerminals(curCell, iterm, (-1)*feedCellCount, 1); 
+>                         feedThru->connectTerminals((-1)*feedCellCount, 1, curCell, iterm,
+>                                                    cells[forceOrderMap[icell]]->getNets()[iterm-1]);
+>                     } else {
+>                         cells[forceOrderMap[icell]]->connectTerminals(curCell, iterm, (-1)*feedCellCount, 2); 
+>                         feedThru->connectTerminals((-1)*feedCellCount, 2, curCell, iterm,
+>                                                    cells[forceOrderMap[icell]]->getNets()[iterm-1]);
+>                     }
+>                 }
+> 
+>                 //connect to intermediate feed thru cells
+>                 if (numFeedThrus > 1 && iFeed > 1) {
+>                     if(debug) printf("connecting feed thru to intermediate feed thru\n");
+>                     int remFeedCell = feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->getCellNum();
+>                     if (delta > 0) { 
+>                         feedThru->connectTerminals((-1)*feedCellCount, 2, (-1)*(feedCellCount-1), 1,
+>                                                    cells[forceOrderMap[icell]]->getNets()[iterm-1]);
+>                         feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->
+>                           connectTerminals((-1)*remFeedCell,1, (-1)*feedCellCount, 2,
+>                                            cells[forceOrderMap[icell]]->getNets()[iterm-1]);
+>                     } else {
+>                         feedThru->connectTerminals((-1)*feedCellCount, 1, (-1)*(feedCellCount-1), 2,
+>                                                    cells[forceOrderMap[icell]]->getNets()[iterm-1]);
+>                         feedCells[getFeedCellInd((-1)*(feedCellCount-1))]->
+>                           connectTerminals((-1)*remFeedCell, 2, (-1)*feedCellCount, 1,
+>                                            cells[forceOrderMap[icell]]->getNets()[iterm-1]);
+>                     }
+>                 }
+> 
+>                 //connect to remote cell
+>                 if (iFeed == numFeedThrus) {    
+>                     if(debug) printf("connecting feed thru to remote cell\n");
+>                     if (delta > 0) { 
+>                         feedThru->connectTerminals((-1)*feedCellCount, 2, remCell, remTerm);
+>                         cells[forceOrderMap[remCell]]->connectTerminals(remCell, remTerm, (-1)*feedCellCount, 2,
+>                                                                    cells[forceOrderMap[icell]]->getNets()[iterm-1]);
+>                     } else {
+>                         feedThru->connectTerminals((-1)*feedCellCount, 1, remCell, remTerm);
+>                         cells[forceOrderMap[remCell]]->connectTerminals(remCell, remTerm, (-1)*feedCellCount, 1,
+>                                                                    cells[forceOrderMap[icell]]->getNets()[iterm-1]);
+>                     }
+>                 } 
+> 
+>                 feedThru->setCellCoordinates(tarRow, tarCol); 
+>                 feedCells.push_back(feedThru);
+> 
+>                 if(debug) printf("placing feed thru cell -%i in row %i,%i\n", feedCellCount, tarRow, tarCol);
+> 
+>                 cellGrid[tarRow][tarCol] = feedCellCount * -1;
+>                 if (delta > 0) { //move down rows
+>                     tarRow -= 2;
+>                 } else {         //move up rows 
+>                     tarRow += 2;
+>                 }
+> 
+>                 iFeed++;
+>             } while (iFeed <= numFeedThrus);  
+> 
+>             placedFeedCells.push_back( std::make_pair(float(curCell)+iterm/10.0, float(remCell)+remTerm/10.0) );
+>         }
+>     }
+> }
+> 
+> void Placer::shiftCellsLeft(int tarRow, int tarCol)
+> {
+>     for (int icol = leftColBounding - 1; icol < tarCol; icol++) {
+>         //TODO: don't shift feed thru cells
+> //        if (cellGrid[tarRow][icol+1] < 0) { 
+> //            cellGrid[tarRow][icol] = cellGrid[tarRow][icol + 2]; 
+> //            icol++;
+> //        } else {
+> //            cellGrid[tarRow][icol] = cellGrid[tarRow][icol + 1]; 
+> //        }
+> 
+>             //update hidden feed thru cell locations
+>         int nextCell = cellGrid[tarRow][icol + 1];
+>         int tmpCell = 0; 
+>         if (nextCell < 0) {
+>             tmpCell = findFeedThruAtLoc((-1)*nextCell, tarRow, icol); 
+>         }
+>         if (tmpCell != 0) {
+>             if(debug) printf("found feed thru cell %i at loc %i,%i\n", tmpCell, tarRow, icol);
+>             feedCells[getFeedCellInd(tmpCell)]->setCellCoordinates(tarRow, icol);
+>         }
+>         cellGrid[tarRow][icol] = nextCell; 
+>     }
+>     
+>     if (cellGrid[tarRow][leftColBounding - 1] > 0) {
+>         leftColBounding -= 1;
+>     }
+> }
+> void Placer::shiftCellsRight(int tarRow, int tarCol)
+> {
+>     for (int icol = rightColBounding + 1; icol > tarCol; icol--) {
+>         //TODO: don't shift feed thru cells if possible
+> //        if (cellGrid[tarRow][icol-1] < 0) {
+> //            cellGrid[tarRow][icol] = cellGrid[tarRow][icol - 2]; 
+> //            icol--;
+> //        } else {
+> //            cellGrid[tarRow][icol] = cellGrid[tarRow][icol - 1]; 
+> //        }
+> //    }
+>         int prevCell = cellGrid[tarRow][icol - 1];
+>         int tmpCell = 0; 
+>         if (prevCell < 0) {
+>             tmpCell = findFeedThruAtLoc((-1)*prevCell, tarRow, icol); 
+>         }
+>         if (tmpCell != 0) {
+>             if(debug) printf("found feed thru cell %i at loc %i,%i\n", tmpCell, tarRow, icol);
+>             feedCells[getFeedCellInd(tmpCell)]->setCellCoordinates(tarRow, icol);
+>         }
+>         cellGrid[tarRow][icol] = prevCell; 
+>     }
+> 
+>     if (cellGrid[tarRow][rightColBounding + 1] > 0) {
+>         rightColBounding += 1;
+>     }
+> }
+> 
+> void Placer::compactAndMapLambda() 
+> {
+>     bool firstCell = true;
+>     int curColPos  = 0;
+> 
+>     for (int iRow = topRowBounding; iRow >= botRowBounding; iRow--) {
+>         for (int iCol = leftColBounding; iCol <= rightColBounding; iCol++) {
+>             int curCell = cellGrid[iRow][iCol];
+>             int tarCol = 0;
+> 
+>             if (firstCell && curCell != 0) {
+>                 firstCell = false;
+>                 curColPos = iCol*6; 
+>             }
+> 
+>             if (curCell > 0) {
+>                 tarCol = cells[forceOrderMap[curCell]]->getCellX()*6;
+>                 if (tarCol - curColPos >= 6) {
+>                     curColPos = tarCol; 
+>                 }
+> 
+>                 if(debug) printf("placing cell %i at lambda %i\n", curCell, curColPos);
+>                 cells[forceOrderMap[curCell]]->setLambdaCoordinates(iRow*3, curColPos);
+>                 curColPos += 6;
+>             } else if (curCell < 0) {
+>                 int tmpCell;
+>                 int ind = getFeedCellInd(curCell);
+>                 if(debug) printf("ind of feed cell %i is %i\n", curCell, ind);
+>                 tarCol = feedCells[ind]->getCellX()*6;
+>                 if (tarCol - curColPos >= 6) {
+>                     curColPos = tarCol; 
+>                 }
+>                 if(debug) printf("placing feed cell %i at lambda %i\n", curCell, curColPos);
+>                 feedCells[getFeedCellInd(curCell)]->setLambdaCoordinates(iRow*3, curColPos);
+>                 curColPos += 3;
+> 
+>                 //find and place other feedthru cell that is assigned to this location
+>                 tmpCell = findFeedThruAtLoc((-1)*curCell, iRow, tarCol/6); 
+>                 if (tmpCell != 0) {
+>                     if(debug) printf("found feed thru cell %i at loc %i,%i\n", tmpCell, iRow, tarCol/6);
+>                     feedCells[getFeedCellInd(tmpCell)]->setLambdaCoordinates(iRow*3, curColPos);
+>                     curColPos += 3; 
+>                 }
+>             }
+> 
+>             if (cellGrid[iRow][iCol+1] > 0 && curCell > 0) {
+>                 //leave a space between cells
+>                 curColPos += 1;
+>             } 
+>         }
+>         firstCell = true;
+>         curColPos = 0;
+>     }
+> }
+> 
+> int Placer::getFeedCellInd(int curCell)
+> {
+>     for (int i1 = 0; i1 < feedCellCount; i1++) {
+>         if (feedCells[i1]->getCellNum() == (curCell*(-1))) {
+>             return i1;
+>         }
+>     }
+> 
+>     return -1;
+> }
+> 
+> int Placer::findFeedThruAtLoc(int curCell, int row, int col)
+> {
+>     for (int i1 = 0; i1 < feedCellCount; i1++) {
+>         if (feedCells[i1]->getCellNum() == curCell) {
+>             continue;
+>         } else if (feedCells[i1]->getCellX() == col &&
+>             feedCells[i1]->getCellY() == row)
+>         {
+>             return (-1)*feedCells[i1]->getCellNum();
+>         }
+>     }
+>     return 0;
+> }
+> 
+> void Placer::sortCellArrays() 
+> {
+>     std::sort(cells + 1, cells + (cellCount+1), CmpCellNum);
+>     for (int i1 = 1; i1 <= cellCount; i1++) {
+>         if(debug) printf("%i: CellNum = %i\n", i1, cells[i1]->getCellNum());
+>     }
+> 
+>     std::sort(feedCells.begin(), feedCells.end(), CmpCellNum);
+>     for (int i1 = 0; i1 <= feedCellCount; i1++) {
+>         if(debug) printf("%i: CellNum = %i\n", i1, feedCells[i1]->getCellNum());
+>     }
+> } 
+> 
+> void Placer::writeMagFile() const
+> {
+>     std::ofstream fp;
+>     fp.open(magfile);
+> 
+>     fp << "magic\n";
+>     fp << "tech scmos\n";
+>     fp << "timestamp " << time(NULL) << "\n";
+>     fp << "<< m1p >>\n";
+>     //place std cells
+>     for (int icell = 1; icell <= cellCount; icell++) {
+>         fp << "use CELL  " << cells[forceOrderMap[icell]]->getCellNum() << "\n";
+>         switch (cells[forceOrderMap[icell]]->getCellOrientation()) {
+>         case NORM:
+>             fp << "transform 1 0 " << cells[forceOrderMap[icell]]->getLambdaX()
+>                << " 0 1 " << cells[forceOrderMap[icell]]->getLambdaY() << "\n";
+>             break;
+>         case ROTATED:
+>             fp << "transform -1 0 " << cells[forceOrderMap[icell]]->getLambdaX() + 6
+>                << " 0 -1 " << cells[forceOrderMap[icell]]->getLambdaY() + 6 << "\n";
+>             break;
+>         case FLIPHORZ:
+>             fp << "transform 1 0 " << cells[forceOrderMap[icell]]->getLambdaX()
+>                << " 0 -1 " << cells[forceOrderMap[icell]]->getLambdaY() + 6 << "\n";
+>             break;
+>         case FLIPVERT:
+>             fp << "transform -1 0 " << cells[forceOrderMap[icell]]->getLambdaX() + 6
+>                << " 0 1 " << cells[forceOrderMap[icell]]->getLambdaY() << "\n";
+>             break;
+>         default:
+>             printf("INVALID ORIENTATION\n");
+>             exit(1);
+>         }
+>         fp << "box 0 0 6 6\n";
+>     }
+>     //place feed thru cells
+>     for (int ifeed = 0; ifeed < feedCellCount; ifeed++) {
+>         fp << "use FEEDTHRU  F" << feedCells[ifeed]->getCellNum()*(-1) << "\n";
+>         fp << "transform 1 0 " << feedCells[ifeed]->getLambdaX()
+>            << " 0 1 " << feedCells[ifeed]->getLambdaY() << "\n";
+>         fp << "box 0 0 3 6\n";
+>     }
+>     fp << "<< end >>\n";
+> 
+>     fp.close();
+> /*
+>     //write cell template file
+>     std::ofstream cellfp; 
+>     cellfp.open("Cell.mag");
+>     cellfp << "magic\n";
+>     cellfp << "tech scmos\n";
+>     cellfp << "timestamp " << time(NULL) << "\n";
+>     cellfp << "<< metal1 >>\n";
+>     cellfp << "rect 1 5 2 6\n";
+>     cellfp << "rect 4 5 5 6\n";
+>     cellfp << "rect 1 0 2 1\n";
+>     cellfp << "rect 4 0 5 1\n";
+>     cellfp << "<< metal2 >>\n";
+>     cellfp << "rect 1 5 2 6\n";
+>     cellfp << "rect 4 5 5 6\n";
+>     cellfp << "rect 1 0 2 1\n";
+>     cellfp << "rect 4 0 5 1\n";
+>     cellfp << "<< comment >>\n";
+>     cellfp << "rect 0 0 6 6\n";
+>     cellfp << "<< labels >>\n";
+>     cellfp << "rlabel metal1 1 5 2 6 0 1\n";
+>     cellfp << "rlabel metal1 4 5 5 6 0 2\n";
+>     cellfp << "rlabel metal1 1 0 2 1 0 3\n";
+>     cellfp << "rlabel metal1 4 0 5 1 0 4\n";
+>     cellfp << "<< end >>\n";
+>     cellfp.close();
+> */
+> } 
+> 
+> std::vector<Cell> Placer::get_cells() const
+> {
+>   std::vector<Cell> all_cells;
+>   std::sort(cells + 1, cells + (cellCount+1), CmpCellNum);
+>   for (int i = 1; i < this->cellCount+1; i++) {
+>     all_cells.push_back(*cells[i]);
+>   }
+>   for (auto &cell : this->feedCells) {
+>     all_cells.push_back(*cell);
+>   }
+> 
+>   return all_cells;
+> }
+0a1,419
+> // Kyle Craig
+> 
+> #include <vector>
+> #include <map>
+> #include <algorithm>
+> #include <utility>
+> #include <iostream>
+> #include <set>
+> #include <fstream>
+> #include <string>
+> #include <sstream>
+> 
+> #include "Cell.h"
+> #include "maze_routing.hpp"
+> #include "PR.h"
+> 
+> #define TERMINALS_PER_CELL 4
+> 
+> void maze_router::create_grid(int cols, int rows){
+>   grid = new gridcell*[cols];
+>   for (int i = 0; i < cols; i++){
+>     grid[i] = new gridcell[rows];
+>   }
+> }
+> 
+> void maze_router::print_grid(int cols, int rows){
+>   for (int i = rows-1; i >= 0; i--){
+>     for (int j = 0; j < cols; j++){
+>       if (grid[j][i].cell){
+> 	std::cout << "C";
+>       } else if (grid[j][i].m1 && grid[j][i].m2){
+> 	std::cout << "3";
+>       } else if (grid[j][i].m1){
+> 	std::cout << "1";
+>       } else if (grid[j][i].m2){
+> 	std::cout << "2";
+>       } else if (grid[j][i].term){
+> 	//std::cout << "T";
+> 	std::cout << grid[j][i].val;
+>       } else if (grid[j][i].buf){
+> 	std::cout << "B";
+>       } else {
+> 	std::cout << grid[j][i].val;
+>       }
+>     }
+>     std::cout << std::endl;
+>   }
+> }
+> 
+> void maze_router::reset_grid(int cols, int rows){
+>   for (int i = 0; i < cols; i++){
+>     for (int j = 0; j < rows; j++){
+>       grid[i][j].val = 0;
+>       grid[i][j].checked = 0;
+>     }
+>   }
+> }
+> 
+> int maze_router::expand_grid(std::vector<Cell> &cells){
+>   // generate rows of cells
+>   for (int i = 0; i < cells.size(); i++) {
+>     // only care about real cells
+>     if (cells[i].getCellWidth() == 6){
+>       int key = cells[i].getLambdaY();
+>       rows[key].push_back(cells[i].getCellNum());
+>     }
+>   }
+>   
+>   // expand rows
+>   int c = 1;
+>   std::map<int,std::vector<int> >::iterator iter = this->rows.begin();
+>   for (; iter != this->rows.end(); iter++){
+>     //std::cout << "Key: " << iter->first << std::endl;
+>     for(int i = 0; i < iter->second.size(); i++){
+>       //std::cout << cells[iter->second[i]-1].getLambdaY() << " " << cells[iter->second[i]-1].getCellNum() << " " << iter->second[i] << std::endl;
+>       cells[iter->second[i]-1].setLambdaCoordinates(cells[iter->second[i]-1].getLambdaY()+(3*c), cells[iter->second[i]-1].getLambdaX());
+>       //std::cout << cells[iter->second[i]-1].getLambdaY() << std::endl;
+>     }
+>     c++;
+>   }
+> 
+>   //std::cout << "Grid Expanded." << std::endl;
+>   
+>   return rows.size()*3;
+>   
+> }
+> 
+> maze_router::maze_router(std::vector<Cell> cells, int crows, int ccols, int num_nets, int** nets, std::string filename) : cells(cells), crows(crows), ccols(ccols), num_nets(num_nets), nets(nets), filename(filename) {
+>   
+>   //std::cout << ccols << "x" << crows << std::endl;
+>   // expand vertical cell spacing
+>   crows += this->expand_grid(cells);
+>   // initialize grid
+>   //std::cout << ccols << "x" << crows << std::endl;
+>   this->create_grid(ccols, crows);
+>   // mark cells in grid
+>   for (int c = 0; c < cells.size(); c++) {
+>     int x = cells[c].getLambdaX();
+>     int y = cells[c].getLambdaY();   
+>     if (cells[c].getCellWidth() == 6){ //get rid of unneeded feedthrough cells
+>       for (int i = x; i < x+cells[c].getCellWidth(); i++){
+> 	for (int j = y; j < y+6; j++){
+> 	  grid[i][j].cell = 1;
+> 	  if (i+1 < ccols) {grid[i+1][j].buf = 1;}
+> 	  if (i-1 >= 0) {grid[i-1][j].buf = 1;}
+> 	  if (j+1 < crows) {grid[i][j+1].buf = 1;}
+> 	  if (j-1 >= 0) {grid[i][j-1].buf = 1;}
+> 	  if ((i+1 < ccols) && (j+1 < crows)) {grid[i+1][j+1].buf = 1;}
+> 	  if ((i+1 < ccols) && (j-1 >= 0)) {grid[i+1][j-1].buf = 1;}
+> 	  if ((i-1 >= 0) && (j+1 < crows)) {grid[i-1][j+1].buf = 1;}
+> 	  if ((i-1 >= 0) && (j-1 >= 0)) {grid[i-1][j-1].buf = 1;}
+> 	}
+>       }
+>       for (int i = 0; i < TERMINALS_PER_CELL; i++){
+> 	grid[cells[c].termXY[i][0]][cells[c].termXY[i][1]].cell = 0;
+> 	grid[cells[c].termXY[i][0]][cells[c].termXY[i][1]].buf = 0;
+> 	grid[cells[c].termXY[i][0]+1][cells[c].termXY[i][1]].buf = 0;
+> 	grid[cells[c].termXY[i][0]-1][cells[c].termXY[i][1]].buf = 0;
+> 	grid[cells[c].termXY[i][0]][cells[c].termXY[i][1]+1].buf = 0;
+> 	grid[cells[c].termXY[i][0]][cells[c].termXY[i][1]-1].buf = 0;
+> 	grid[cells[c].termXY[i][0]][cells[c].termXY[i][1]].term = 1;
+>       }
+>     }    
+>   }
+> 
+>   //std::cout << "Grid Initialized" << std::endl;
+>   
+>   int num_routed = 0;
+>   // try metal 1 for all nets
+>   for (int i = 0; i < num_nets; i++){
+>     int x1 = cells[nets[i][0]-1].termXY[nets[i][1]-1][0];
+>     int y1 = cells[nets[i][0]-1].termXY[nets[i][1]-1][1];
+>     int x2 = cells[nets[i][2]-1].termXY[nets[i][3]-1][0];
+>     int y2 = cells[nets[i][2]-1].termXY[nets[i][3]-1][1];
+>     if(this->lee_algorithm(x1, y1, x2, y2, 1)){
+>       nets[i][4] = 1;
+>       num_routed++;
+>       //std::cout << "ROUTED" << std::endl;
+>     }
+>   }
+> 
+>   // try metal 2 for remaining nets
+>   for (int i = 0; i < num_nets; i++){
+>     if(nets[i][4] == 0){
+>       int x1 = cells[nets[i][0]-1].termXY[nets[i][1]-1][0];
+>       int y1 = cells[nets[i][0]-1].termXY[nets[i][1]-1][1];
+>       int x2 = cells[nets[i][2]-1].termXY[nets[i][3]-1][0];
+>       int y2 = cells[nets[i][2]-1].termXY[nets[i][3]-1][1];
+>       if(this->lee_algorithm(x1, y1, x2, y2, 2)){
+> 	nets[i][4] = 1;
+> 	num_routed++;
+> 	//std::cout << "ROUTED" << std::endl;
+>       }
+>     }
+>   }
+> 
+>   //this->print_grid(ccols, crows);
+>   std::cout << "Routed " << num_routed << " out of " << num_nets << std::endl;
+>   //calculate wire length
+>   int wirelength = 0;
+>   for (int i = 0; i < ccols; i++){
+>     for (int j = 0; j < crows; j++){
+>       if (grid[i][j].m1 || grid[i][j].m2){
+> 	wirelength++;
+>       }
+>     }
+>   }
+>   std::cout << "Wire Length: " << wirelength << std::endl;
+>   //std::cout << "Writing Magic File." << std::endl;
+>   this->write_mag_file(filename, cells);
+> }
+> 
+> bool maze_router::lee_algorithm(int x1, int y1, int x2, int y2, int m){
+>   //std::cout << x1 << "," << y1 << " -> " << x2 << "," << y2 << std::endl;
+>   
+>   std::vector<coord> cset; //current set
+>   std::vector<coord> nset; //neighbor set
+>   int wave = 1;
+>   bool targetFound = 0;
+> 
+>   //this->print_grid(ccols, crows);
+> 
+>   // init the current set
+>   cset.push_back(coord(x1, y1));
+>   grid[x1][y1].val = wave;
+>   
+>   
+>   while(!targetFound){
+>   //for(int pass = 0; pass < 70; pass++){
+>     //set wave
+>     wave++;
+>     if (wave == 10){wave = 1;}
+> 
+>     // find neighbors
+>     //std::cout << "Checking Neighbors." << std::endl;
+>     //std::cout << "Cset = " << cset.size() <<  "; Nset = " << nset.size() << std::endl;
+>     for ( int i = 0; i < cset.size(); i++){
+>       if (this->check_neighbor(cset[i].x+1, cset[i].y, m)) {nset.push_back(coord(cset[i].x+1, cset[i].y));}
+>       if (this->check_neighbor(cset[i].x-1, cset[i].y, m)) {nset.push_back(coord(cset[i].x-1, cset[i].y));}
+>       if (this->check_neighbor(cset[i].x, cset[i].y+1, m)) {nset.push_back(coord(cset[i].x, cset[i].y+1));}
+>       if (this->check_neighbor(cset[i].x, cset[i].y-1, m)) {nset.push_back(coord(cset[i].x, cset[i].y-1));}
+>     }
+>     if (nset.size() == 0) {
+>       // no neighbors, no route
+>       this->reset_grid(ccols, crows);
+>       return 0;
+>     }
+>     
+>     // wave propagation
+>     //std::cout << "Propagating Wave." << std::endl;
+>     //std::cout << "Cset = " << cset.size() <<  "; Nset = " << nset.size() << std::endl;
+>     for ( int i = 0; i < nset.size(); i++){
+>       grid[nset[i].x][nset[i].y].val = wave;
+>       // check if target was found
+>       if((nset[i].x == x2) && (nset[i].y == y2)) {targetFound = 1;}
+>     }
+>     
+>     
+>     // reset sets
+>     //std::cout << "Re-setting." << std::endl;
+>     //cset.erase(cset.begin(), cset.end());
+>     cset.clear();
+>     for( int i = 0; i < nset.size(); i++){
+>       cset.push_back(nset[i]);
+>     }
+>     //nset.erase(nset.begin(), nset.end());
+>     nset.clear();
+>   }
+> 
+>   //this->print_grid(ccols, crows);
+> 
+>   // trace route back to source
+>   bool routeFound = 0;
+>   coord cur = coord(x2, y2);
+>   coord wstart = cur;
+>   bool vert = 1;
+>   while (!routeFound){
+>     coord next = this->check_nvals(cur.x, cur.y, grid[cur.x][cur.y].val, vert);
+>     //check if wire ends (change in direction)
+>     if (((cur.x == next.x) && (vert == 0)) || ((cur.y == next.y) && (vert == 1))){
+>       if (m == 1){
+> 	metal1.push_back(wire(wstart.x, wstart.y, cur.x, cur.y));
+>       } else {
+> 	metal2.push_back(wire(wstart.x, wstart.y, cur.x, cur.y));
+>       }
+>       wstart = cur;
+>     }
+> 
+>     //track direction
+>     if (cur.x == next.x) {vert = 1;}
+>     if (cur.y == next.y) {vert = 0;}
+> 
+>     if (m == 1) {
+>       grid[cur.x][cur.y].m1 = 1;
+>       if (vert){
+> 	grid[cur.x+1][cur.y].m1buf = 1;
+> 	grid[cur.x-1][cur.y].m1buf = 1;
+>       } else {
+> 	grid[cur.x][cur.y+1].m1buf = 1;
+> 	grid[cur.x][cur.y-1].m1buf = 1;
+>       }
+>     }
+>     if (m == 2) {
+>       grid[cur.x][cur.y].m2 = 1;
+>       if (vert){
+> 	grid[cur.x+1][cur.y].m2buf = 1;
+> 	grid[cur.x-1][cur.y].m2buf = 1;
+>       } else {
+> 	grid[cur.x][cur.y+1].m2buf = 1;
+> 	grid[cur.x][cur.y-1].m2buf = 1;
+>       }
+>     }
+>     
+>     cur = next;
+>     
+>     if ((cur.x == x1) && (cur.y == y1)) {
+>       //add final wire
+>       if (m == 1){
+> 	metal1.push_back(wire(wstart.x, wstart.y, cur.x, cur.y));
+>       } else {
+> 	metal2.push_back(wire(wstart.x, wstart.y, cur.x, cur.y));
+>       }
+>       routeFound = 1;
+>     }
+>   }
+>     
+>   //this->print_grid(ccols, crows);
+>   this->reset_grid(ccols, crows);
+>   //this->print_grid(ccols, crows);
+>   return 1;
+> }
+> 
+> bool maze_router::check_neighbor(int x, int y, int m){
+>   //std::cout << "Checking Neighbor: " << x << "," << y << std::endl;
+>   if ((x >= ccols) || (y >= crows) || (x < 0) || (y < 0)) {return 0;}
+>   if (grid[x][y].val > 0) {return 0;}
+>   if (grid[x][y].cell) {return 0;}
+>   if ((m == 1) && (grid[x][y].m1)) {return 0;}
+>   if ((m == 1) && (grid[x][y].m1buf)) {return 0;}
+>   if ((m == 2) && (grid[x][y].m2)) {return 0;}
+>   if ((m == 2) && (grid[x][y].m2buf)) {return 0;}
+>   if (grid[x][y].checked == 1) {return 0;}
+>   if (grid[x][y].buf == 1) {return 0;}
+> 
+>   grid[x][y].checked = 1;
+>   return 1;
+> }
+> 
+> coord maze_router::check_nvals(int x, int y, int val, bool vert){
+> 
+>   int next = val-1;
+>   if (val == 1) {next = 9;}
+>   
+>   if(vert){
+>     if(grid[x][y+1].val == next){return coord(x, y+1);}
+>     if(grid[x][y-1].val == next){return coord(x, y-1);}
+>   }
+>   if(grid[x+1][y].val == next){return coord(x+1, y);}
+>   if(grid[x-1][y].val == next){return coord(x-1, y);}
+>   if(grid[x][y+1].val == next){return coord(x, y+1);}
+>   if(grid[x][y-1].val == next){return coord(x, y-1);}
+> 
+> }
+> 
+> // Portions of this method are adapted from Josh's and Eric's code
+> void maze_router::write_mag_file(std::string magfile, std::vector<Cell> &cells)
+> {
+>   std::ofstream fp;
+>   fp.open(magfile);
+> 
+>   fp << "magic\n";
+>   fp << "tech scmos\n";
+>   fp << "timestamp " << time(NULL) << "\n";
+>   fp << "<< m1p >>\n";
+> 
+>   // write all cells (except feedthrough which aren't used
+>   for (auto &cell : cells) {
+>     if ( cell.getCellWidth() == 6 ) {
+>       fp << "use CELL  " << cell.getCellNum() << std::endl;
+> 
+>       switch ( cell.getCellOrientation() ) {
+>       case NORM:
+> 	fp << "transform 1 0 " << cell.getLambdaX() << " 0 1 " << cell.getLambdaY() << std::endl;
+> 	break;
+>       case ROTATED:
+> 	fp << "transform -1 0 " << cell.getLambdaX() + 6 << " 0 -1 " << cell.getLambdaY() + 6 << std::endl;
+> 	break;
+>       case FLIPHORZ:
+> 	fp << "transform 1 0 " << cell.getLambdaX() << " 0 -1 " << cell.getLambdaY() + 6 << std::endl;
+> 	break;
+>       case FLIPVERT:
+> 	fp << "transform -1 0 " << cell.getLambdaX() + 6 << " 0 1 " << cell.getLambdaY() << std::endl;
+> 	break;
+>       default:
+> 	throw "Invalid cell orientation";
+> 	break;
+>       }
+>       fp << "box 0 0 " << cell.getCellWidth() << " 6" << std::endl;
+>     }
+>   }
+>   
+>   // Write wires
+>   std::stringstream met1;
+>   std::stringstream met2;
+>   met1 << "<< metal1 >>" << std::endl;
+>   met2 << "<< metal2 >>" << std::endl;
+>   //format is rect xbot ybot xtop ytop
+>   for (int i = 0; i < metal1.size(); i++){
+>     int xbot = metal1[i].xbot;
+>     int ybot = metal1[i].ybot;
+>     int xtop = metal1[i].xtop;
+>     int ytop = metal1[i].ytop;
+>     if (xbot == xtop) {
+>       if (ytop < ybot){
+> 	int temp = ybot;
+> 	ybot = ytop;
+> 	ytop = temp+1;
+>       }
+>       xtop++;
+>     }
+>     if (ybot == ytop) {
+>       if (xtop < xbot){
+> 	int temp = xbot;
+> 	xbot = xtop;
+> 	xtop = temp+1;
+>       }
+>       ytop++;
+>     }
+>     met1 << "rect " << xbot << " " << ybot << " " << xtop << " " << ytop << std::endl;
+>   }
+>   for (int i = 0; i < metal2.size(); i++){
+>     int xbot = metal2[i].xbot;
+>     int ybot = metal2[i].ybot;
+>     int xtop = metal2[i].xtop;
+>     int ytop = metal2[i].ytop;
+>     if (xbot == xtop) {
+>       if (ytop < ybot){
+> 	int temp = ybot;
+> 	ybot = ytop;
+> 	ytop = temp+1;
+>       }
+>       xtop++;
+>     }
+>     if (ybot == ytop) {
+>       if (xtop < xbot){
+> 	int temp = xbot;
+> 	xbot = xtop;
+> 	xtop = temp+1;
+>       }
+>       ytop++;
+>     }
+>     met2 << "rect " << xbot << " " << ybot << " " << xtop << " " << ytop << std::endl;
+>   }
+>     
+>   fp << met1.str() << met2.str();
+>   fp << "<< end >>" << std::endl;
+>   
+>   fp.close();
+> }
+0a1,273
+> #include <cstdlib>
+> 
+> #include "PR.h"
+> #include "Cell.h"
+> 
+> Cell::Cell(int cellNum, int type, bool glob_debug) : orientation(NORM)
+> {
+>     debug = glob_debug; 
+> 
+>     cellId = cellNum;
+> 
+>     if (type == FEEDTHRU) {
+>         cellWidth = 3; 
+>     } else {
+>         cellWidth = 6;
+>     }
+> 
+>     numNets = 0;
+> 
+>     memset(termXY, 0, sizeof(int)*2*4);
+> 
+>     for (int i=0; i < 4; i++) {
+>       nets[i] = 0;
+>     }
+> 
+>     zeroForce = -1;
+> }
+> 
+> int Cell::getCellNum() const 
+> {
+>     return cellId;
+> }
+> 
+> void Cell::connectTerminals(int locCell, int locTerm, int remCell, int remTerm)
+> {
+>     int numTerms = 4;
+>     std::pair<int, int> rcellTerm (remCell, remTerm);
+>     termNets[locTerm] = rcellTerm;
+> 
+>     if (cellWidth == 3) {
+>         numTerms = 2;
+>     }
+> 
+>     numNets++;
+>     if(debug) printf("connecting %i-%i to %i-%i\n", locCell, locTerm, remCell, remTerm);
+>     if(debug) printf("cell %i has %i links\n", locCell, numNets);
+>     if(debug) {
+>         printf("Cell %i:\n", locCell);
+>         printf("\tTerminal: ");
+>         for (int i = 0; i < numTerms; i++) {
+>             printf("\t%i", i+1);
+>         }
+>         printf("\n\tCell:     ");
+>         for (int i = 1; i <= numTerms; i++) {
+>             printf("\t%i", termNets[i].first);
+>         }
+>         printf("\n");
+>     }
+> }
+> 
+> void Cell::connectTerminals(int locCell, int locTerm, int remCell, int remTerm, int netNum)
+> {
+>   this->connectTerminals(locCell, locTerm, remCell, remTerm);
+>   if ( this->cellWidth == 3 ) {
+>     this->nets[0] = netNum;
+>     this->nets[1] = netNum;
+>     this->nets[2] = 0;
+>     this->nets[3] = 0;
+>   }
+>   else {
+>     this->nets[locTerm-1] = netNum;
+>   }
+> }
+> 
+> int Cell::getNetCount() const
+> {
+>     return numNets;
+> }
+> 
+> std::map<int, std::pair<int, int> > Cell::getTermNets() const
+> {
+>     return termNets; 
+> }
+> 
+> void Cell::setCellCoordinates(int y, int x)
+> {
+>     xcell = x;
+>     ycell = y;
+> 
+>     setLambdaCoordinates(y*6, x*6);
+> }
+> 
+> //x and y are the bottom left corner coordinates of the cell
+> void Cell::setLambdaCoordinates(int y, int x)
+> {
+> //temp fix
+> #ifdef CHANNEL_ROUTING
+>     int termOffset = 4;
+> #else 
+>     int termOffset = 5;
+> #endif
+> 
+>     //set coordinates of lower left corner
+>     xLbot = x;
+>     yLbot = y;
+> 
+>     //set coordinates of upper right cor
+>     xRtop = x + cellWidth + 1;
+>     yRtop = y + CELL_HEIGHT + 1; 
+> 
+>     if (cellWidth == 3) {
+>         //terminal 1
+>         termXY[0][0] = xLbot + T1T3_OFFSET;
+>         termXY[0][1] = yLbot;
+>         //terminal 2
+>         termXY[1][0] = xLbot + T1T3_OFFSET;
+>         termXY[1][1] = yLbot + termOffset;
+>     } else {
+>         switch(orientation) {
+>         case ROTATED:
+>             rotateCell();
+>             break;
+>         case FLIPHORZ:
+>             flipHorzCell();
+>             break;
+>         case FLIPVERT:
+>             flipVertCell();
+>             break;
+>         case NORM:
+>         default:
+>             //terminal 1
+>             termXY[0][0] = xLbot + T1T3_OFFSET;
+>             termXY[0][1] = yLbot + termOffset;
+>             //terminal52
+>             termXY[1][0] = xLbot + T2T4_OFFSET;
+>             termXY[1][1] = yLbot + termOffset;
+>             //terminal 3
+>             termXY[2][0] = xLbot + T1T3_OFFSET;
+>             termXY[2][1] = yLbot;
+>             //terminal 4
+>             termXY[3][0] = xLbot + T2T4_OFFSET;
+>             termXY[3][1] = yLbot;
+>             break;
+>         }      
+>     } 
+> }
+> 
+> void Cell::resetTermCoords()
+> {
+>     orientation = NORM;
+> 
+>     //terminal 1
+>     termXY[0][0] = xLbot + T1T3_OFFSET;
+>     termXY[0][1] = yLbot + 4;
+>     //terminal 2
+>     termXY[1][0] = xLbot + T2T4_OFFSET;
+>     termXY[1][1] = yLbot + 4;
+>     //terminal 3
+>     termXY[2][0] = xLbot + T1T3_OFFSET;
+>     termXY[2][1] = yLbot;
+>     //terminal 4
+>     termXY[3][0] = xLbot + T2T4_OFFSET;
+>     termXY[3][1] = yLbot;
+> }
+> 
+> void Cell::rotateCell() 
+> {
+>     orientation = ROTATED;
+> 
+>     //terminal 4
+>     termXY[3][0] = xLbot + T1T3_OFFSET;
+>     termXY[3][1] = yLbot + 4;
+>     //terminal 3
+>     termXY[2][0] = xLbot + T2T4_OFFSET;
+>     termXY[2][1] = yLbot + 4;
+>     //terminal 2
+>     termXY[1][0] = xLbot + T1T3_OFFSET;
+>     termXY[1][1] = yLbot;
+>     //terminal 1
+>     termXY[0][0] = xLbot + T2T4_OFFSET;
+>     termXY[0][1] = yLbot;
+> }
+> 
+> void Cell::flipHorzCell()
+> {
+>     orientation = FLIPHORZ;
+> 
+>     //terminal 3
+>     termXY[2][0] = xLbot + T1T3_OFFSET;
+>     termXY[2][1] = yLbot + 4;
+>     //terminal 4
+>     termXY[3][0] = xLbot + T2T4_OFFSET;
+>     termXY[3][1] = yLbot + 4;
+>     //terminal 1
+>     termXY[0][0] = xLbot + T1T3_OFFSET;
+>     termXY[0][1] = yLbot;
+>     //terminal 2
+>     termXY[1][0] = xLbot + T2T4_OFFSET;
+>     termXY[1][1] = yLbot;
+> }
+> 
+> void Cell::flipVertCell()
+> {
+>     orientation = FLIPVERT;
+> 
+>     //terminal 2
+>     termXY[1][0] = xLbot + T1T3_OFFSET;
+>     termXY[1][1] = yLbot + 4;
+>     //terminal 1
+>     termXY[0][0] = xLbot + T2T4_OFFSET;
+>     termXY[0][1] = yLbot + 4;
+>     //terminal 4
+>     termXY[3][0] = xLbot + T1T3_OFFSET;
+>     termXY[3][1] = yLbot;
+>     //terminal 3
+>     termXY[2][0] = xLbot + T2T4_OFFSET;
+>     termXY[2][1] = yLbot;
+> }
+> 
+> int Cell::getCellOrientation() const
+> {
+>     return orientation;
+> }
+> 
+> int Cell::getCellX() const
+> {
+>     return xcell;
+> }
+> 
+> int Cell::getCellY() const
+> {
+>     return ycell;
+> }
+> 
+> int Cell::getLambdaX() const
+> {
+>     return xLbot;
+> }
+> 
+> int Cell::getLambdaY() const
+> {
+>     return yLbot;
+> }
+> 
+> std::pair<int, int> Cell::getTerminalCoordinates(int term) const
+> {
+>     std::pair<int, int> loc (termXY[term-1][0], termXY[term-1][1]);
+>     return loc; 
+> }
+> 
+> int Cell::getTermLocInCell(int term)
+> {
+>     int loc = TOP;
+> 
+>     if (termXY[term-1][1] == yLbot || termXY[term-1][1] == yLbot) {
+>         loc = BOTTOM;
+>     } else {
+>         loc = TOP;
+>     }
+> 
+>     return loc;
+> }
+> 
+> void Cell::setForce(int force)
+> {
+>     zeroForce = force;
+> }
+> 
+> int Cell::getForce() const
+> {
+>     return zeroForce;
+> }
+> 
+0a1,113
+> 
+> 
+> #include <ctime>
+> #include <cmath>
+> #include <string>
+> #include <cstddef>
+> #include <cstdlib>
+> 
+> #include "PR.h"
+> #include "Cell.h"
+> #include "Placer.h"
+> #ifdef CHANNEL_ROUTING
+> #include "channel_routing.hpp"
+> #else
+> #include "maze_routing.hpp"
+> #endif
+> 
+> int main(int argc, char* argv[])
+> {
+>     time_t t0 = time(NULL);
+>     bool debug = false;
+>     std::string filename;
+>     int linenum = 0;
+>     int netcount = 0, cellcount = 0;
+>     Cell **cells = NULL;
+>     Placer *placer = NULL;
+>     int **nets = NULL;
+>     
+>     if (argc < 2) {
+>         std::cerr << "Usage: " << argv[0] << " <filename.mag> [-d] < <BM#>" << std::endl;
+>         exit(1);
+>     } else if (argc == 3 && std::string(argv[2]) == "-d") {
+>         debug = true;
+>     }
+>     filename = argv[1];
+> 
+>     //parse file and populate cell objects
+>     int net_number;
+>     while (std::cin >> net_number) {
+>         int t_cell1, t_term1, t_cell2, t_term2;
+>         if (linenum == 0) {
+>             cellcount = net_number;
+> 
+>             cells = new Cell*[cellcount+1];
+>             for (int i = 1; i < cellcount+1; i++) {
+>                 cells[i] = new Cell(i, STDCELL, debug);
+>             }
+>         } else if (linenum == 1) {
+>             netcount = net_number;
+> 	    nets = new int*[netcount];
+> 	    for(int i = 0; i < netcount; i++){
+> 	      nets[i] = new int[5];
+> 	    }
+>         } else {
+>             std::cin >> t_cell1;
+>             std::cin >> t_term1;
+>             std::cin >> t_cell2;
+>             std::cin >> t_term2;
+> 	    
+> 	    nets[net_number-1][0] = t_cell1;
+> 	    nets[net_number-1][1] = t_term1;
+> 	    nets[net_number-1][2] = t_cell2;
+> 	    nets[net_number-1][3] = t_term2;
+> 	    nets[net_number-1][4] = 0;
+> 	    
+>             cells[t_cell1]->connectTerminals(t_cell1, t_term1, t_cell2, t_term2, net_number);
+>             cells[t_cell2]->connectTerminals(t_cell2, t_term2, t_cell1, t_term1, net_number);
+>         } 
+>         linenum++;
+>     }
+> 
+>     std::cout << "Placing..." << std::endl;
+> 
+>     placer = new Placer("placer.mag", cellcount, cells, debug);
+> 
+>     placer->placeCellsInitial();
+>     placer->calculateConnectivity();
+>     if(debug) placer->printCellGrid();
+>     placer->placeByForceDirected();
+>     placer->calculateConnectivity();
+> #ifdef DEBUG
+>     placer->printCellGrid();
+> #endif
+>     placer->placeFeedThruCells();
+>     placer->compactAndMapLambda();
+>     if(debug) placer->printCellGrid();
+>     placer->writeMagFile();
+>     //    placer->sortCellArrays();
+> 
+>     //routing stuff
+> #ifdef CHANNEL_ROUTING
+>     std::cout << "Channel routing..." << std::endl;
+>     channel_router channelRouter(placer->get_cells(), netcount);
+>     delete placer;
+>     placer = NULL;
+>     std::cout << channelRouter.route_all();
+>     std::cout << " of " << channelRouter.get_num_nets() << " terminals routed" << std::endl;
+>     channelRouter.write_mag_file(filename);
+>     channelRouter.print_net_stats();
+> #else
+>     std::cout << "Maze Routing." << std::endl;
+>     maze_router mazeRouter(placer->get_cells(), placer->topRowBounding*6+placer->topRowBounding, placer->rightColBounding*6+placer->rightColBounding*3, netcount, nets, filename);
+>     delete placer;
+>     placer = NULL;
+> 
+> #endif
+> 
+>     time_t tf = time(NULL);
+>     printf("Run time: %i hour(s), %i min(s), %i (secs)\n",
+>             int((tf - t0)/3600), int(((tf - t0)%3600)/60), int((tf - t0)%60));
+> 
+>     return 0;
+> }
+0a1,569
+> // Eric Carver
+> // Thu Mar 13 14:13:38 EDT 2014
+> 
+> #include <vector>
+> #include <map>
+> #include <algorithm>
+> #include <utility>
+> #include <iostream>
+> #include <set>
+> #include <fstream>
+> #include <string>
+> #include <sstream>
+> #include <cassert>
+> #include <cmath>
+> 
+> #include "Cell.h"
+> #include "channel_routing.hpp"
+> #include "PR.h"
+> 
+> #define TERMINALS_PER_CELL 4
+> 
+> channel_router::channel_router(std::vector<Cell> cells, int max_net_num)
+>   : cells(cells), num_nets(0), stranded_nets(0), unroutable_nets(0),
+>     max_net_num(max_net_num), bumps(0), cyclical_nets(0), wire_length(0) {
+>   for (auto &cell : cells) {
+>     if ( cell.getCellWidth() == 6 ) {
+>       switch (cell.getCellOrientation()) {
+>       case NORM:
+> 	cell.resetTermCoords();
+> 	break;
+>       case FLIPVERT:
+> 	cell.flipVertCell();
+> 	break;
+>       case FLIPHORZ:
+> 	cell.flipHorzCell();
+> 	break;
+>       case ROTATED:
+> 	cell.rotateCell();
+> 	break;
+>       default:
+> 	throw "Invalid cell orientation";
+> 	break;
+>       }
+>     }
+>     const int* nets = cell.getNets();
+>     for (int i=0; i < TERMINALS_PER_CELL; i++) {
+>       if ( nets[i] ) {
+>         rows[cell.termXY[i][1]].push_back(node(cell.termXY[i][0], cell.termXY[i][1], nets[i]));
+>         // row_mapping[cell.termXY[i][1]] = cell.getLambdaY();
+>       }
+>     }
+>   }
+> }
+> 
+> std::vector<std::set<int> > channel_router::construct_vcg(const std::vector<int>& top,
+>                                                           const std::vector<int>& bottom) const
+> {
+>   std::vector<std::set<int> > vcg;
+>   vcg.resize(max_net_num+1);
+>   const int wire_spacing = 1;
+>   if ( top.size() != bottom.size() ) {
+>     throw "Attempt to construct VCG for a channel with undefined length";
+>   }
+>   for (unsigned int i = 0; i < top.size(); i++) {
+>     if ( top[i] ) {
+>       for (unsigned int j = i-wire_spacing; j <= i+wire_spacing && j < bottom.size(); j++) {
+>         if ( bottom[j] && (bottom[j] != top[i]) ) {
+>           vcg[top[i]].insert(bottom[j]);
+>         }
+>       }
+>     }
+>   }
+>   return vcg;
+> }
+> 
+> inline void channel_router::delete_from_vcg(const int net_num, std::vector<std::set<int > >& vcg) const
+> {
+>   vcg[net_num].clear();
+>   for (auto &top_net : vcg) {
+>     top_net.erase(net_num);
+>   } 
+> }
+> 
+> int channel_router::route(const int top_index, const int bottom_index) {
+> #ifdef DEBUG
+>   std::cout << "Routing rows at " << top_index << " and " << bottom_index << std::endl;
+> #endif
+> 
+>   int bottom_row;
+> 
+>   std::vector<int> top;
+>   if ( !top_index ) {
+>     // Need a fake top row
+>     top.push_back(0);
+>   }
+>   else {
+>     std::sort(rows[top_index].begin(), rows[top_index].end());
+>     for (auto &node : rows[top_index]) {
+>       // According to Josh, his coordinates are never negative
+>       for (int i = top.size()-1; i < node.x; i++) {
+>         top.push_back(0);
+>       }
+>       top[node.x] = node.net;
+>     }
+>   }
+>   std::vector<int> bottom;
+>   if ( !bottom_index ) {
+>     // Need a fake bottom row
+>     bottom.push_back(0);
+>     bottom_row = top_index-2;
+>   }
+>   else {
+>     std::sort(rows[bottom_index].begin(), rows[bottom_index].end());
+>     for (auto &node : rows[bottom_index]) {
+>       for (int i = bottom.size()-1; i < node.x; i++) {
+>         bottom.push_back(0);
+>       }
+>       bottom[node.x] = node.net;
+>     }
+>     bottom_row = bottom_index;
+>   }
+> 
+>   // Make the vectors the same length
+>   for (unsigned int i = top.size(); i < bottom.size(); i++) {
+>     top.push_back(0);
+>   }
+>   for (unsigned int i = bottom.size(); i < top.size(); i++) {
+>     bottom.push_back(0);
+>   }
+> 
+>   std::vector<std::set<int> > vcg = this->construct_vcg(top, bottom);
+>   return this->route(top, bottom, bottom_row, vcg);
+> }
+> 
+> int find_rightmost(const std::vector<int>& terminals, int net) {
+>   for (int i = terminals.size()-1; i >= 0; i--) {
+>     if ( terminals[i] == net ) {
+>       return i;
+>     }
+>   }
+>   return 0;
+> }
+> 
+> void channel_router::insert_net(std::vector<std::set<wires > >& tracks, const int net_left, const int net_right,
+>                                 const bool left_up, const bool right_up, int &min_track)
+> {
+>   // This is messy; is there a better way?
+>   // Search all the tracks for one that can hold the net
+>   wires this_net;
+>   this_net.left_up = left_up;
+>   this_net.right_up = right_up;
+>   // Handle a special case: a purely vertical net. This does not require us to find a track
+>   if ( net_left == net_right ) {
+>     this_net.horizontal = std::make_pair(net_left, net_right);
+>     tracks.back().insert(this_net);
+>   }
+>   else {
+>     if ( abs(net_right - net_left) > 1 ) {
+>       this->bumps += 2;
+>     }
+>     this_net.horizontal = std::make_pair(net_left, net_right);
+>     bool need_new_track = true;
+>     auto track = tracks.begin();
+>     std::advance(track, min_track);
+>     for (; track != tracks.end(); ++track) {
+>       bool found_track = true;
+>       for (auto &net : *track) {
+>         if ( !(net_right < net.horizontal.first-1 || net_left > net.horizontal.second+1) ) {
+>           // The nets overlap
+>           found_track = false;
+>           break;
+>         }
+>       }
+>       // if ( !found_track ) {
+>       //   // We didn't find a track; we ran out of tracks
+>       //   need_new_track = true;
+>       //   break;
+>       // }
+>       // else {
+>       //   track.insert(this_net);
+>       // }
+>       if ( found_track ) {
+>         track->insert(this_net);
+>         need_new_track = false;
+>         break;
+>       }
+>     }
+>     if ( need_new_track ) {
+>       tracks.push_back(std::set<wires>());
+>       tracks.back().insert(this_net);
+>       ++min_track;
+>     }
+>   }
+> }
+> 
+> inline int greater(const int a, const int b) {
+>   if ( a > b ) return a;
+>   else return b;
+> }
+> 
+> bool vector_is_all_zeros(const std::vector<int>& vec) {
+>   for (auto& elem : vec) {
+>     if ( elem ) {
+>       return false;
+>     }
+>   }
+>   return true;
+> }
+> 
+> int channel_router::route(std::vector<int>& top, std::vector<int>& bottom, const int row_num,
+>                           std::vector<std::set<int > >& vcg)
+> {
+>   std::vector<std::set<wires> > tracks;
+>   tracks.resize(1); // Need at least one track to start
+> 
+>   int width = greater(top.size(), bottom.size());
+> 
+>   int terminals_routed = 0;
+> 
+>   // Implement the constrained left edge algorithm
+> #ifdef DEBUG
+>   std::cout << "Routing nets: ";
+> #endif
+>   bool routed_something = true;
+>   for (int min_track = 0; (!vector_is_all_zeros(top) || !vector_is_all_zeros(bottom)) && routed_something;
+>        ++min_track ) {
+>     routed_something = false;
+>     for (int i=0; i < width; i++) {
+>       assert( bottom[i] <= this->max_net_num && top[i] <= this->max_net_num );
+>       if ( bottom[i] && vcg[bottom[i]].empty() ) {
+>         routed_something = true;
+>         int routed_net_num = bottom[i];
+> #ifdef DEBUG
+>         std::cout << bottom[i];
+> #endif
+>         ++num_nets;
+>         int net_left = i;
+>         int rightmost_bottom = find_rightmost(bottom, bottom[i]);
+>         int rightmost_top = find_rightmost(top, bottom[i]);
+>         int net_right = greater(rightmost_bottom, rightmost_top);
+>         if ( net_right > net_left ) {
+>           this->insert_net(tracks, net_left, net_right, false, ( net_right == rightmost_top ), min_track);
+> #ifdef DEBUG
+>           std::cout << "(R)";
+> #endif
+>           ++terminals_routed;
+>           delete_from_vcg(bottom[i], vcg);
+>           i = -1;
+>         }
+>         else if ( net_right == net_left && rightmost_top != 0 ) {
+>           // A purely vertical net
+>           int garbage = 0;
+>           this->insert_net(tracks, net_left, net_right, true, false, garbage);
+> #ifdef DEBUG
+>           std::cout << "(R)";
+> #endif
+>           ++terminals_routed;
+>           delete_from_vcg(bottom[i], vcg);
+>           i = -1;
+>         }
+>         else {
+> #ifdef DEBUG
+>         std::cout << "(S)";
+> #endif
+>         ++stranded_nets;
+>       }
+> #ifdef DEBUG
+>         std::cout << ' ';
+> #endif
+>         for (int j=0; j < width; j++) {
+>           if ( bottom[j] == routed_net_num ) {
+>             bottom[j] = 0;
+>           }
+>           if ( top[j] == routed_net_num ) {
+>             top[j] = 0;
+>           }
+>         }
+>       }
+>       if ( top[i] && vcg[top[i]].empty() ) {
+>         routed_something = true;
+>         int routed_net_num = top[i];
+> #ifdef DEBUG
+>         std::cout << top[i];
+> #endif
+>         ++num_nets;
+>         int net_left = i;
+>         int rightmost_bottom = find_rightmost(bottom, top[i]);
+>         int rightmost_top = find_rightmost(top, top[i]);
+>         int net_right = greater(rightmost_bottom, rightmost_top);
+>         if ( net_right > net_left ) {
+>           this->insert_net(tracks, net_left, net_right, true, ( net_right == rightmost_top ), min_track);
+> #ifdef DEBUG
+>           std::cout << "(R)";
+> #endif
+>           ++terminals_routed;
+>           delete_from_vcg(top[i], vcg);
+>           i = -1;
+>         }
+>         else if ( net_right == net_left && rightmost_bottom != 0) {
+>           // A purely vertical net
+>           int garbage = 0;
+>           this->insert_net(tracks, net_left, net_right, true, false, garbage);
+> #ifdef DEBUG
+>           std::cout << "(R)";
+> #endif
+>           ++terminals_routed;
+>           delete_from_vcg(top[i], vcg);
+>           i = -1;
+>         }
+>         else {
+> #ifdef DEBUG
+>           std::cout << "(S)";
+> #endif
+>           ++stranded_nets;
+>         }
+> #ifdef DEBUG
+>         std::cout << ' ';
+> #endif
+>         for (int j=0; j < width; j++) {
+>           if ( bottom[j] == routed_net_num ) {
+>             bottom[j] = 0;
+>           }
+>           if ( top[j] == routed_net_num ) {
+>             top[j] = 0;
+>           }
+>         }
+>       }
+>     }
+>   }
+>   if (!routed_something) {
+>     for (auto& net : top) {
+>       if ( net ) {
+>         ++cyclical_nets;
+>         ++num_nets;
+>       }
+>     }
+>     for (auto& net : bottom) {
+>       if ( net ) {
+>         ++cyclical_nets;
+>         ++num_nets;
+>       }
+>     }
+>   }
+> 
+> #ifdef DEBUG
+>   std::cout << std::endl << "Tracks used: " << tracks.size() << std::endl;
+> #endif
+>   this->routed_tracks[row_num] = tracks;
+>   return terminals_routed;
+> }
+> 
+> int channel_router::route_all() {
+>   const int row_spacing = 2;
+>   int num_routed = 0;
+>   // Iterate starting with the second row
+>   std::map<int,std::vector<node> >::iterator iter = this->rows.begin();
+>   bool near_bottom = true;
+>   for (; iter != this->rows.end(); ++iter) {
+>     int bottom_row = iter->first;
+>     if ( std::next(iter)->first - row_spacing != iter->first ) {
+>       // Make a fake row below the first row
+>       if ( std::next(iter) == this->rows.end() ) {
+>         num_routed += this->route(0, bottom_row);
+>       }
+>       else if ( near_bottom ) {
+>         near_bottom = false;
+>         num_routed += this->route(bottom_row, 0);
+>       }
+>       else {
+>         num_routed += this->route(bottom_row + row_spacing, bottom_row);
+>       }
+>       continue;
+>     }
+>     if ( ++iter == this->rows.end() ) {
+>       num_routed += this->route(0, bottom_row);
+>       break;
+>     }
+>     if ( std::next(iter) == this->rows.end() ) {
+>       num_routed += this->route(0, bottom_row);
+>       break;
+>     }
+>     num_routed += this->route(iter->first, bottom_row);
+>   }
+>   return num_routed;
+> }
+> 
+> int channel_router::get_num_nets() const
+> {
+>   // int nets = this->num_nets;
+>   // for (auto &cell : this->cells) {
+>   //   if ( cell.getCellWidth() == 3 ) {
+>   //     nets++;
+>   //   }
+>   // }
+>   // return nets;
+>   return this->num_nets;
+> }
+> 
+> std::pair<std::map<int,int>,std::map<int,int> > channel_router::calc_row_offsets() const
+> {
+>   // Need to know how far to space each row of cells
+>   const int cell_offset = 1;
+>   const int track_offset = 0;
+>   int offset = 1;
+>   std::map<int,int> row_offsets;
+>   int first_offset = -1;
+>   for (auto &tracks : this->routed_tracks) {
+>     offset += tracks.second.size()*2 + cell_offset + track_offset;
+>     if ( first_offset == -1 ) {
+>       first_offset = offset;
+>     }
+>     row_offsets[tracks.first] = offset;
+>   }
+>   row_offsets[std::prev(row_offsets.end())->first+6] = offset;
+>   //row_offsets[row_offsets.begin()->first-6] = row_offsets.begin()->second;
+>   // Translate from terminal location to cell location
+>   std::map<int,int> ret;
+>   for (auto &cell : this->cells) {
+>     for (auto &entry : row_offsets) {
+>       for (int i = 0; i < TERMINALS_PER_CELL; i++) {
+>         if ( entry.first == cell.termXY[i][1] ) {
+>           ret[cell.getLambdaY()] = entry.second;
+>         }
+>       }
+>     }
+>   }
+>   if ( ret.begin()->second == first_offset ) {
+>     ret[ret.begin()->first-6] = 0;
+>   }
+>   else {
+>     ret[ret.begin()->first-6] = first_offset;
+>   }
+>   ret[std::prev(ret.end())->first+6] = offset;
+>   return make_pair(ret,row_offsets);
+> }
+> 
+> // Portions of this method are adapted from Josh's code
+> void channel_router::write_mag_file(std::string magfile)
+> {
+>   // Find out how much we need to space out each row
+>   auto row_offsets = this->calc_row_offsets();
+> 
+>   std::ofstream fp;
+>   fp.open(magfile);
+> 
+>   fp << "magic\n";
+>   fp << "tech scmos\n";
+>   fp << "timestamp " << time(NULL) << "\n";
+>   fp << "<< m1p >>\n";
+> 
+>   for (auto &cell : this->cells) {
+>     int shift = 0;
+>     int extra_offset = 0;
+>     // if ( !row_offsets.first[cell.getLambdaY()] ) {
+>     //   shift = -6;
+>     //   extra_offset = 3;
+>     // }
+>     cell.setLambdaCoordinates(cell.getLambdaY() + row_offsets.first[cell.getLambdaY() + shift - 6] + 4 + extra_offset,
+>                               cell.getLambdaX());
+>     if ( cell.getCellWidth() == 6 ) {
+>       fp << "use CELL  " << cell.getCellNum() << std::endl;
+>     }
+>     else if ( cell.getCellWidth() == 3 ) {
+>       fp << "use FEEDTHRU  F" << -1*cell.getCellNum() << std::endl;
+>     }
+>     else {
+>       throw "Invalid cell type";
+>     }
+>     switch ( cell.getCellOrientation() ) {
+>     case NORM:
+>       fp << "transform 1 0 " << cell.getLambdaX() << " 0 1 " << cell.getLambdaY() << std::endl;
+>       break;
+>     case ROTATED:
+>       fp << "transform -1 0 " << cell.getLambdaX() + 6 << " 0 -1 " << cell.getLambdaY() + 6 << std::endl;
+>       break;
+>     case FLIPHORZ:
+>       fp << "transform 1 0 " << cell.getLambdaX() << " 0 -1 " << cell.getLambdaY() + 6 << std::endl;
+>       break;
+>     case FLIPVERT:
+>       fp << "transform -1 0 " << cell.getLambdaX() + 6 << " 0 1 " << cell.getLambdaY() << std::endl;
+>       break;
+>     default:
+>       throw "Invalid cell orientation";
+>       break;
+>     }
+>     fp << "box 0 0 " << cell.getCellWidth() << " 6" << std::endl;
+>   }
+>   // Write wires
+>   std::stringstream metal1;
+>   std::stringstream metal2;
+>   std::stringstream via;
+>   metal1 << "<< metal1 >>" << std::endl;
+>   metal2 << "<< metal2 >>" << std::endl;
+>   via << "<< via >>" << std::endl;
+>   for (auto channel = routed_tracks.begin(); channel != routed_tracks.end(); ++channel) {
+>     int tracknum = 0;
+>     int row_y = channel->first + row_offsets.second[channel->first-6] + 1 + 4;
+>     for (auto &track : channel->second) {
+>       tracknum += 2;
+>       for (auto &net : track) {
+>         //format is rect xbot ybot xtop ytop
+>         // Skip metal1 for pure vertical net or net with no vias
+>         if ( abs(net.horizontal.second - net.horizontal.first) > 1 ) {
+>           metal1 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.second + 1
+>                  << ' ' << row_y + tracknum + 1 << std::endl;
+>           wire_length += net.horizontal.second - net.horizontal.first;
+>           via << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' '
+>               << net.horizontal.first + 1 << ' ' << row_y + tracknum + 1 << std::endl;
+>           via << "rect " << net.horizontal.second << ' ' << row_y + tracknum << ' '
+>               << net.horizontal.second + 1 << ' ' << row_y + tracknum + 1 << std::endl;
+>         }
+>         if ( net.left_up ) {
+>           int ytop;
+>           if ( std::next(channel) == routed_tracks.end() ) {
+>             ytop = channel->first + row_offsets.second[channel->first] + 6;
+>           }
+>           else {
+>             ytop = std::next(channel)->first + row_offsets.second[std::next(channel)->first-6];
+>           }
+>           metal2 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.first + 1
+>                  << ' ' << ytop + 1 << std::endl;
+>           wire_length += ytop - (row_y + tracknum);
+>         }
+>         else {
+>           metal2 << "rect " << net.horizontal.first << ' ' << row_y << ' ' << net.horizontal.first + 1
+>                  << ' ' << row_y + tracknum + 1 << std::endl;
+>           wire_length += tracknum;
+>         }
+>         if ( net.right_up ) {
+>           int ytop;
+>           if ( std::next(channel) == routed_tracks.end() ) {
+>             ytop = channel->first + row_offsets.second[channel->first] + 6;
+>           }
+>           else {
+>             ytop = std::next(channel)->first + row_offsets.second[std::next(channel)->first-6];
+>           }
+>           metal2 << "rect " << net.horizontal.second << ' ' << row_y + tracknum << ' ' << net.horizontal.second + 1
+>                  << ' ' << ytop + 1 << std::endl;
+>           wire_length += ytop - (row_y + tracknum);
+>         }
+>         else {
+>           metal2 << "rect " << net.horizontal.second << ' ' << row_y << ' ' << net.horizontal.second + 1
+>                  << ' ' << row_y + tracknum + 1 << std::endl;
+>           wire_length += tracknum;
+>         }
+>       }
+>     }
+>   }
+>   fp << metal1.str() << metal2.str() << via.str();
+>   fp << "<< end >>" << std::endl;
+> 
+>   fp.close();
+> }
+> 
+> void channel_router::print_net_stats() const
+> {
+>   std::cout << "Stranded terminals:              " << stranded_nets << std::endl;
+>   //std::cout << "Unroutable terminals:       " << unroutable_nets << std::endl;
+>   std::cout << "Vertically unroutable terminals: " << cyclical_nets << std::endl;
+>   std::cout << "Vias:                            " << bumps << std::endl;
+>   std::cout << "Total wire length:               " << wire_length << std::endl;
+>   int feedthrough_cells = 0;
+>   for (auto& cell : this->cells) {
+>     if ( cell.getCellWidth() == 3 ) {
+>       ++feedthrough_cells;
+>     }
+>   }
+>   std::cout << "Feedthrough cells:               " << feedthrough_cells << std::endl;
+> }
