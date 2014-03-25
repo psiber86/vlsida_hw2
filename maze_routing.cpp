@@ -263,7 +263,15 @@ bool maze_router::lee_algorithm(int x1, int y1, int x2, int y2, int m){
     
     cur = next;
     
-    if ((cur.x == x1) && (cur.y == y1)) {routeFound = 1;}
+    if ((cur.x == x1) && (cur.y == y1)) {
+      //add final wire
+      if (m == 1){
+	metal1.push_back(wire(wstart.x, wstart.y, cur.x, cur.y));
+      } else {
+	metal2.push_back(wire(wstart.x, wstart.y, cur.x, cur.y));
+      }
+      routeFound = 1;
+    }
   }
     
   //this->print_grid(ccols, crows);
