@@ -600,6 +600,8 @@ void Placer::placeFeedThruCells()
                 }
             }
 
+            if (numFeedThrus == 0) { continue; }
+
             do {
                 //determine which way to shift currently placed cells
                 for (int icol = leftColBounding; icol <= rightColBounding; icol++) {
