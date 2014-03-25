@@ -93,6 +93,13 @@ void Cell::setCellCoordinates(int y, int x)
 //x and y are the bottom left corner coordinates of the cell
 void Cell::setLambdaCoordinates(int y, int x)
 {
+//temp fix
+#ifdef CHANNEL_ROUTING
+    int termOffset = 4;
+#else 
+    int termOffset = 5;
+#endif
+
     //set coordinates of lower left corner
     xLbot = x;
     yLbot = y;
@@ -107,14 +114,14 @@ void Cell::setLambdaCoordinates(int y, int x)
         termXY[0][1] = yLbot;
         //terminal 2
         termXY[1][0] = xLbot + T1T3_OFFSET;
-        termXY[1][1] = yLbot + 5;
+        termXY[1][1] = yLbot + termOffset;
     } else {
       //terminal 1
       termXY[0][0] = xLbot + T1T3_OFFSET;
-      termXY[0][1] = yLbot + 5;
+      termXY[0][1] = yLbot + termOffset;
       //terminal52
       termXY[1][0] = xLbot + T2T4_OFFSET;
-      termXY[1][1] = yLbot + 5;
+      termXY[1][1] = yLbot + termOffset;
       //terminal 3
       termXY[2][0] = xLbot + T1T3_OFFSET;
       termXY[2][1] = yLbot;
