@@ -279,7 +279,7 @@ int channel_router::route_all() {
         num_routed += this->route(bottom_row, 0);
       }
       else {
-        num_routed += this->route(bottom_row + 2, bottom_row);
+        num_routed += this->route(bottom_row + row_spacing, bottom_row);
       }
       continue;
     }
