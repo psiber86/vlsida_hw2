@@ -240,7 +240,7 @@ int Cell::getTermLocInCell(int term)
 {
     int loc = TOP;
 
-    if (termXY[term-1][1] == yLbot) {
+    if (termXY[term-1][1] == yLbot + T1T3_OFFSET || termXY[term-1][1] == yLbot + T2T4_OFFSET) {
         loc = BOTTOM;
     } else {
         loc = TOP;

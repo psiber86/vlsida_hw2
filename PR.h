@@ -24,7 +24,7 @@ enum cellTypes {
 };
 
 enum cellOrientation {
-    NORM,
+    NORM = 0,
     ROTATED,
     FLIPHORZ,
     FLIPVERT,

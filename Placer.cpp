@@ -210,6 +210,7 @@ void Placer::computeTargetLoc(int curCell, int *tarRow, int *tarCol)
     for (int iOrien = 0; iOrien < ORIEN_COUNT; iOrien++) {
         switch (iOrien) {
         case NORM:
+            cells[forceOrderMap[curCell]]->resetTermCoords();
             break;
         case ROTATED:
             cells[forceOrderMap[curCell]]->rotateCell();
@@ -278,6 +279,13 @@ void Placer::computeTargetLoc(int curCell, int *tarRow, int *tarCol)
         cells[forceOrderMap[curCell]]->flipVertCell();
         break;
     }
+    if (debug) {
+        for (int iterm = 1; iterm <= 4; iterm++) { 
+            std::pair<int, int> loc = cells[forceOrderMap[curCell]]->getTerminalCoordinates(iterm);
+            printf("term%i @ %i,%i\n", iterm, loc.first, loc.second);
+        }
+    }
+               
 
     if (weightSum[finalOrien] == 0) {
         *tarCol = int(ceil(cellGridCols/2.0));
@@ -505,6 +513,7 @@ void Placer::placeFeedThruCells()
                 float rem = float(remCell) + remTerm/10.0;
                 if (placedFeedCells[i1].first == rem && placedFeedCells[i1].second == cur) {
                     placed = true;
+                    if(debug) printf("feed thru for cell %i have already been placed\n", curCell);
                 }
             }
 
@@ -519,6 +528,11 @@ void Placer::placeFeedThruCells()
 
             int iFeed = 1;
             int numFeedThrus = abs(delta/2)-1;
+#ifdef DEBUG
+                printf("cell %i-%i (bottom=%i) is separated from cell %i-%i (bottom=%i) by %i rows\n",
+                        curCell, iterm, cells[forceOrderMap[icell]]->getTermLocInCell(iterm),
+                        remCell, remTerm, cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm), numFeedThrus);
+#endif
 
             //place feed thru cell in each row until remote cell is reached
             tarRow = cellRow;
@@ -585,7 +599,8 @@ void Placer::placeFeedThruCells()
                         rightOf++;
                     }
 #ifdef DEBUG
-                printf("cell %i (bottom=%i) is separated from cell %i (bottom=%i) by %i rows\n",
+                printf("cell orientation is %i\n", cells[forceOrderMap[icell]]->getCellOrientation());
+                printf("cell %i (bottom=%i) to cell %i (bottom=%i) needs %i feed thru cells\n",
                         curCell, cells[forceOrderMap[icell]]->getTermLocInCell(iterm),
                         remCell, cells[forceOrderMap[remCell]]->getTermLocInCell(remTerm), numFeedThrus);
 #endif
