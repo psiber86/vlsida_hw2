@@ -133,7 +133,7 @@ void channel_router::insert_net(std::vector<std::set<wires > >& tracks, const in
     for (auto &track : tracks) {
       bool found_track = true;
       for (auto &net : track) {
-        if ( !(net_right < net.horizontal.first || net_left > net.horizontal.second) ) {
+        if ( !(net_right < net.horizontal.first-1 || net_left > net.horizontal.second+1) ) {
           // The nets overlap
           found_track = false;
           break;
