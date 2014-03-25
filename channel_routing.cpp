@@ -63,7 +63,7 @@ std::vector<std::set<int> > channel_router::construct_vcg(const std::vector<int>
   }
   for (unsigned int i = 0; i < top.size(); i++) {
     if ( top[i] ) {
-      for (unsigned int j = i-wire_spacing; j <= i+wire_spacing; j++) {
+      for (unsigned int j = i-wire_spacing; j <= i+wire_spacing && j < bottom.size(); j++) {
         if ( bottom[j] && (bottom[j] != top[i]) ) {
           vcg[top[i]].insert(bottom[j]);
         }
