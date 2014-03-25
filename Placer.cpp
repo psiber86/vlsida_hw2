@@ -50,6 +50,7 @@ Placer::Placer(const char *filename, int cellCountIn, Cell **cellList, bool debu
         printf("MALLOC ERROR!\n");
         exit(1); 
     }
+    memset(lockStatus, 0, sizeof(int)*(cellCount+1));
     
     bypassLock = false;
 }
