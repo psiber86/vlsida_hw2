@@ -310,6 +310,7 @@ std::pair<std::map<int,int>,std::map<int,int> > channel_router::calc_row_offsets
     row_offsets[tracks.first] = offset;
   }
   row_offsets[std::prev(row_offsets.end())->first+6] = offset;
+  //row_offsets[row_offsets.begin()->first-6] = row_offsets.begin()->second;
   // Translate from terminal location to cell location
   std::map<int,int> ret;
   for (auto &cell : this->cells) {
@@ -321,6 +322,8 @@ std::pair<std::map<int,int>,std::map<int,int> > channel_router::calc_row_offsets
       }
     }
   }
+  ret[ret.begin()->first-6] = 6;
+  ret[std::prev(ret.end())->first+6] = offset;
   return make_pair(ret,row_offsets);
 }
 
