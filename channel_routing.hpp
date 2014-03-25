@@ -68,6 +68,7 @@ private:
   int max_net_num;
   int bumps;
   int cyclical_nets;
+  int wire_length;
 };
 
 #endif

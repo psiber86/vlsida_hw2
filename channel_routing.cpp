@@ -21,7 +21,7 @@
 
 channel_router::channel_router(std::vector<Cell> cells, int max_net_num)
   : cells(cells), num_nets(0), stranded_nets(0), unroutable_nets(0),
-        max_net_num(max_net_num), bumps(0), cyclical_nets(0) {
+    max_net_num(max_net_num), bumps(0), cyclical_nets(0), wire_length(0) {
   for (auto &cell : cells) {
     if ( cell.getCellWidth() == 6 ) {
       switch (cell.getCellOrientation()) {
@@ -503,6 +503,7 @@ void channel_router::write_mag_file(std::string magfile)
         if ( abs(net.horizontal.second - net.horizontal.first) > 1 ) {
           metal1 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.second + 1
                  << ' ' << row_y + tracknum + 1 << std::endl;
+          wire_length += net.horizontal.second - net.horizontal.first;
           via << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' '
               << net.horizontal.first + 1 << ' ' << row_y + tracknum + 1 << std::endl;
           via << "rect " << net.horizontal.second << ' ' << row_y + tracknum << ' '
@@ -518,10 +519,12 @@ void channel_router::write_mag_file(std::string magfile)
           }
           metal2 << "rect " << net.horizontal.first << ' ' << row_y + tracknum << ' ' << net.horizontal.first + 1
                  << ' ' << ytop + 1 << std::endl;
+          wire_length += ytop - (row_y + tracknum);
         }
         else {
           metal2 << "rect " << net.horizontal.first << ' ' << row_y << ' ' << net.horizontal.first + 1
                  << ' ' << row_y + tracknum + 1 << std::endl;
+          wire_length += tracknum;
         }
         if ( net.right_up ) {
           int ytop;
@@ -533,10 +536,12 @@ void channel_router::write_mag_file(std::string magfile)
           }
           metal2 << "rect " << net.horizontal.second << ' ' << row_y + tracknum << ' ' << net.horizontal.second + 1
                  << ' ' << ytop + 1 << std::endl;
+          wire_length += ytop - (row_y + tracknum);
         }
         else {
           metal2 << "rect " << net.horizontal.second << ' ' << row_y << ' ' << net.horizontal.second + 1
                  << ' ' << row_y + tracknum + 1 << std::endl;
+          wire_length += tracknum;
         }
       }
     }
@@ -549,8 +554,16 @@ void channel_router::write_mag_file(std::string magfile)
 
 void channel_router::print_net_stats() const
 {
-  std::cout << "Stranded terminals:         " << stranded_nets << std::endl;
-  std::cout << "Unroutable terminals:       " << unroutable_nets << std::endl;
-  std::cout << "Vertically unroutable nets: " << cyclical_nets << std::endl;
-  std::cout << "Vias:                       " << bumps << std::endl;
+  std::cout << "Stranded terminals:              " << stranded_nets << std::endl;
+  //std::cout << "Unroutable terminals:       " << unroutable_nets << std::endl;
+  std::cout << "Vertically unroutable terminals: " << cyclical_nets << std::endl;
+  std::cout << "Vias:                            " << bumps << std::endl;
+  std::cout << "Total wire length:               " << wire_length << std::endl;
+  int feedthrough_cells = 0;
+  for (auto& cell : this->cells) {
+    if ( cell.getCellWidth() == 3 ) {
+      ++feedthrough_cells;
+    }
+  }
+  std::cout << "Feedthrough cells:               " << feedthrough_cells << std::endl;
 }

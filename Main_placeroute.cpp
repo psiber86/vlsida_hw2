@@ -95,8 +95,8 @@ int main(int argc, char* argv[])
     placer = NULL;
     std::cout << channelRouter.route_all();
     std::cout << " of " << channelRouter.get_num_nets() << " terminals routed" << std::endl;
-    channelRouter.print_net_stats();
     channelRouter.write_mag_file(filename);
+    channelRouter.print_net_stats();
 #else
     std::cout << "Maze Routing." << std::endl;
     maze_router mazeRouter(placer->get_cells(), placer->topRowBounding*6+placer->topRowBounding, placer->rightColBounding*6+placer->rightColBounding*3, netcount, nets, filename);
