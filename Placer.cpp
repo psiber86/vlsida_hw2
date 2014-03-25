@@ -507,6 +507,7 @@ void Placer::placeFeedThruCells()
                 continue; 
             }
 
+
             //check if net feed thru cells have already been placed
             for (int i1 = 0; i1 < int(placedFeedCells.size()); i1++) {
                 float cur = float(curCell) + iterm/10.0;
@@ -528,6 +529,7 @@ void Placer::placeFeedThruCells()
 
             int iFeed = 1;
             int numFeedThrus = abs(delta/2)-1;
+            assert(remTerm != 0);
 #ifdef DEBUG
                 printf("cell %i-%i (bottom=%i) is separated from cell %i-%i (bottom=%i) by %i rows\n",
                         curCell, iterm, cells[forceOrderMap[icell]]->getTermLocInCell(iterm),

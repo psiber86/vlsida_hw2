@@ -116,21 +116,33 @@ void Cell::setLambdaCoordinates(int y, int x)
         termXY[1][0] = xLbot + T1T3_OFFSET;
         termXY[1][1] = yLbot + termOffset;
     } else {
-      //terminal 1
-      termXY[0][0] = xLbot + T1T3_OFFSET;
-      termXY[0][1] = yLbot + termOffset;
-      //terminal52
-      termXY[1][0] = xLbot + T2T4_OFFSET;
-      termXY[1][1] = yLbot + termOffset;
-      //terminal 3
-      termXY[2][0] = xLbot + T1T3_OFFSET;
-      termXY[2][1] = yLbot;
-      //terminal 4
-      termXY[3][0] = xLbot + T2T4_OFFSET;
-      termXY[3][1] = yLbot;
-      
-    }
-    
+        switch(orientation) {
+        case ROTATED:
+            rotateCell();
+            break;
+        case FLIPHORZ:
+            flipHorzCell();
+            break;
+        case FLIPVERT:
+            flipVertCell();
+            break;
+        case NORM:
+        default:
+            //terminal 1
+            termXY[0][0] = xLbot + T1T3_OFFSET;
+            termXY[0][1] = yLbot + termOffset;
+            //terminal52
+            termXY[1][0] = xLbot + T2T4_OFFSET;
+            termXY[1][1] = yLbot + termOffset;
+            //terminal 3
+            termXY[2][0] = xLbot + T1T3_OFFSET;
+            termXY[2][1] = yLbot;
+            //terminal 4
+            termXY[3][0] = xLbot + T2T4_OFFSET;
+            termXY[3][1] = yLbot;
+            break;
+        }      
+    } 
 }
 
 void Cell::resetTermCoords()
@@ -240,7 +252,7 @@ int Cell::getTermLocInCell(int term)
 {
     int loc = TOP;
 
-    if (termXY[term-1][1] == yLbot + T1T3_OFFSET || termXY[term-1][1] == yLbot + T2T4_OFFSET) {
+    if (termXY[term-1][1] == yLbot || termXY[term-1][1] == yLbot) {
         loc = BOTTOM;
     } else {
         loc = TOP;
