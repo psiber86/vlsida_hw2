@@ -348,10 +348,50 @@ void maze_router::write_mag_file(std::string magfile, std::vector<Cell> cells)
   met2 << "<< metal2 >>" << std::endl;
   //format is rect xbot ybot xtop ytop
   for (int i = 0; i < metal1.size(); i++){
-    met1 << "rect " << metal1[i].xbot << " " << metal1[i].ybot << " " << metal1[i].xtop << " " << metal1[i].ytop << std::endl;
+    int xbot = metal1[i].xbot;
+    int ybot = metal1[i].ybot;
+    int xtop = metal1[i].xtop;
+    int ytop = metal1[i].ytop;
+    if (xbot == xtop) {
+      if (ytop < ybot){
+	int temp = ybot;
+	ybot = ytop;
+	ytop = temp;
+      }
+      xtop++;
+    }
+    if (ybot == ytop) {
+      if (xtop < xbot){
+	int temp = xbot;
+	xbot = xtop;
+	xtop = temp;
+      }
+      ytop++;
+    }
+    met1 << "rect " << xbot << " " << ybot << " " << xtop << " " << ytop << std::endl;
   }
   for (int i = 0; i < metal2.size(); i++){
-    met2 << "rect " << metal2[i].xbot << " " << metal2[i].ybot << " " << metal2[i].xtop << " " << metal2[i].ytop << std::endl;
+    int xbot = metal2[i].xbot;
+    int ybot = metal2[i].ybot;
+    int xtop = metal2[i].xtop;
+    int ytop = metal2[i].ytop;
+    if (xbot == xtop) {
+      if (ytop < ybot){
+	int temp = ybot;
+	ybot = ytop;
+	ytop = temp;
+      }
+      xtop++;
+    }
+    if (ybot == ytop) {
+      if (xtop < xbot){
+	int temp = xbot;
+	xbot = xtop;
+	xtop = temp;
+      }
+      ytop++;
+    }
+    met2 << "rect " << xbot << " " << ybot << " " << xtop << " " << ytop << std::endl;
   }
     
   fp << met1.str() << met2.str();
